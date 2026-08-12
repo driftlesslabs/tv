@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="tomato" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Auto Ownership - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Work Location" href="work-location.html" /><link rel="prev" title="Data Validation" href="data-validation.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/extra.css?v=e0fc98bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/code-annotations.css?v=fec28d62" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="Auto Ownership"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/driftless-icon.svg" alt="Traveler" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/driftless-icon-dark.svg" alt="Traveler" height="28" loading="lazy" />
+      <strong>Traveler</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../user-guide/index.html">User Guide</a></li><li class="link"><a href="index.html">Demo</a></li><li class="link"><a href="../api/index.html">API</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="2"><ul class="current">
+<li class="toctree-l1 _expand"><a class="reference internal" href="tables.html">Table Definitions</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="data-validation.html">Data Validation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Auto Ownership</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="work-location.html">Work Location</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="data-access.html">Full Data</a></li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+  data-type="github" data-user="driftlesslabs" data-repo="traveler">
+  <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </span>
+  <span class="flex-grow px-2 break-all">
+    
+    
+      <span>traveler</span>
+    
+    <span class="flex text-sm repo-stats-count">
+      <span class="flex items-center pr-3">
+        <iconify-icon icon="lucide:star"></iconify-icon>
+        <strong class="js-repo-stars ml-1">0</strong>
+      </span>
+      <span class="flex items-center">
+        <iconify-icon icon="lucide:git-fork"></iconify-icon>
+        <strong class="js-repo-forks ml-1">0</strong>
+      </span>
+    </span>
+  </span>
+</a><div class="edit-this-page">
+  <a href="https://github.com/driftlesslabs/traveler/blob/main/docs/demo-mtc/auto-ownership.ipynb">Edit this page</a>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">Traveler</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Demo</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Auto Ownership</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="auto-ownership">
+<h1>Auto Ownership<a class="headerlink" href="#auto-ownership" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tv</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="n">tv</span><span class="o">.</span><span class="n">log_to_stdout</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:00.85] INFO: Logging to stdout set to level 20
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">mtc</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">store</span> <span class="o">=</span> <span class="n">mtc</span><span class="o">.</span><span class="n">mini</span><span class="p">()</span>
+</span><span data-line="4"><span class="n">store</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;Store with keys households, persons, skims, land_use, time_periods, tours&gt;
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">SampleHouseholds</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">store</span> <span class="o">=</span> <span class="n">SampleHouseholds</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">100_000</span><span class="p">)</span><span class="o">.</span><span class="n">run_on</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">/Users/jpn/Git/traveler/src/traveler/steps/_sample_households.py:268: UserWarning: n (100000) is greater than the number of households in the store, returning all households.
+</span><span data-line="2">  return self.run_via_polars(store)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hhsize</th>
+      <th>num_workers</th>
+      <th>auto_ownership</th>
+      <th>TAZ</th>
+      <th>HHT</th>
+      <th>income</th>
+      <th>home_zone_id</th>
+    </tr>
+    <tr>
+      <th>household_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2717868</th>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>25</td>
+      <td>1</td>
+      <td>361000</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>763899</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6</td>
+      <td>4</td>
+      <td>59220</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>2222791</th>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>9</td>
+      <td>2</td>
+      <td>197000</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>112477</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>17</td>
+      <td>6</td>
+      <td>2200</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>370491</th>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>21</td>
+      <td>1</td>
+      <td>16500</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>109218</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>10</td>
+      <td>4</td>
+      <td>15000</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>570708</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>23</td>
+      <td>6</td>
+      <td>13100</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>2762199</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>2049372</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>18</td>
+      <td>4</td>
+      <td>103000</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>702559</th>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13</td>
+      <td>1</td>
+      <td>14800</td>
+      <td>13</td>
+    </tr>
+  </tbody>
+</table>
+<p>5000 rows × 7 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>household_id</th>
+      <th>age</th>
+      <th>PNUM</th>
+      <th>sex</th>
+      <th>pemploy</th>
+      <th>pstudent</th>
+      <th>ptype</th>
+      <th>_household_idx_</th>
+    </tr>
+    <tr>
+      <th>person_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>25671</th>
+      <td>25671</td>
+      <td>47</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>3817</td>
+    </tr>
+    <tr>
+      <th>25675</th>
+      <td>25675</td>
+      <td>27</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4066</td>
+    </tr>
+    <tr>
+      <th>25678</th>
+      <td>25678</td>
+      <td>30</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>3498</td>
+    </tr>
+    <tr>
+      <th>25683</th>
+      <td>25683</td>
+      <td>23</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>4539</td>
+    </tr>
+    <tr>
+      <th>25684</th>
+      <td>25684</td>
+      <td>52</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>4710</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>7554848</th>
+      <td>2863513</td>
+      <td>68</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>1559</td>
+    </tr>
+    <tr>
+      <th>7554855</th>
+      <td>2863520</td>
+      <td>68</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>4711</td>
+    </tr>
+    <tr>
+      <th>7554859</th>
+      <td>2863524</td>
+      <td>93</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>1148</td>
+    </tr>
+    <tr>
+      <th>7554887</th>
+      <td>2863552</td>
+      <td>76</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>371</td>
+    </tr>
+    <tr>
+      <th>7554903</th>
+      <td>2863568</td>
+      <td>82</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>4690</td>
+    </tr>
+  </tbody>
+</table>
+<p>8212 rows × 8 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;mtc.tables.store.Store&gt;
+</span><span data-line="2">  households = &lt;JaxTable with shape (5000,)&gt;
+</span><span data-line="3">  persons = &lt;JaxTable with shape (8212,)&gt;
+</span><span data-line="4">  skims = &lt;Skims with 21 keys&gt;
+</span><span data-line="5">  land_use = &lt;JaxTable with shape (25,)&gt;
+</span><span data-line="6">  time_periods = {&#39;EA&#39;: 0, &#39;AM&#39;: 1, &#39;MD&#39;: 2, &#39;PM&#39;: 3, &#39;EV&#39;: 4}
+</span><span data-line="7">  tours = &lt;JaxTable with shape (20000,)&gt;
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_households</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="2">    <span class="n">annotate_households</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">household_value_of_time</span><span class="p">,</span>
+</span><span data-line="4"><span class="p">)</span>
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_landuse</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotate_landuse</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_persons</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="7">    <span class="n">annotate_persons</span><span class="p">,</span>
+</span><span data-line="8"><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+</span><span data-line="2">- household_id         (5000,) int32
+</span><span data-line="3">- hhsize               (5000,) int8
+</span><span data-line="4">- num_workers          (5000,) int8
+</span><span data-line="5">- auto_ownership       (5000,) int8
+</span><span data-line="6">- TAZ                  (5000,) int32
+</span><span data-line="7">- HHT                  (5000,) int8
+</span><span data-line="8">- income               (5000,) int32
+</span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+</span><span data-line="2">- person_id            (8212,) int32
+</span><span data-line="3">- household_id         (8212,) int32
+</span><span data-line="4">- age                  (8212,) int32
+</span><span data-line="5">- PNUM                 (8212,) int32
+</span><span data-line="6">- sex                  (8212,) int32
+</span><span data-line="7">- pemploy              (8212,) int32
+</span><span data-line="8">- pstudent             (8212,) int32
+</span><span data-line="9">- ptype                (8212,) int32
+</span><span data-line="10">- _household_idx_      (8212,) int32
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># household_value_of_time.__step__._compute_values.chunk_size = 10_000_000</span>
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># type: ignore</span>
+</span><span data-line="2"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">annotate_landuse</span><span class="p">,</span> <span class="n">annotate_persons</span><span class="p">,</span> <span class="n">annotate_households</span><span class="p">,</span> <span class="n">household_value_of_time</span>
+</span><span data-line="4"><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.32] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_landuse</span> completed in 0:00:00.05
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.69] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_persons</span> completed in 0:00:00.36
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.86] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_households</span> completed in 0:00:00.16
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.94] INFO: compute_values step <span class=" -Color -Color-Bold">household_value_of_time</span> completed in 0:00:00.07
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+</span><span data-line="2">- household_id         (5000,) int32
+</span><span data-line="3">- hhsize               (5000,) int8
+</span><span data-line="4">- num_workers          (5000,) int8
+</span><span data-line="5">- auto_ownership       (5000,) int8
+</span><span data-line="6">- TAZ                  (5000,) int32
+</span><span data-line="7">- HHT                  (5000,) int8
+</span><span data-line="8">- income               (5000,) int32
+</span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
+</span><span data-line="10">- income_in_thousands  (5000,) float32
+</span><span data-line="11">- income_segment       (5000,) int8
+</span><span data-line="12">- family               (5000,) bool
+</span><span data-line="13">- non_family           (5000,) bool
+</span><span data-line="14">- num_drivers          (5000,) int8
+</span><span data-line="15">- num_adults           (5000,) int8
+</span><span data-line="16">- num_children         (5000,) int8
+</span><span data-line="17">- num_young_children   (5000,) int8
+</span><span data-line="18">- num_children_5_to_15 (5000,) int8
+</span><span data-line="19">- num_children_16_to_17 (5000,) int8
+</span><span data-line="20">- num_college_age      (5000,) int8
+</span><span data-line="21">- num_young_adults     (5000,) int8
+</span><span data-line="22">- home_is_urban        (5000,) bool
+</span><span data-line="23">- home_is_rural        (5000,) bool
+</span><span data-line="24">- median_value_of_time (5000,) float32
+</span><span data-line="25">- random_vot           (5000,) float32
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">completed_steps</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">{&#39;annotate_households&#39;,
+</span><span data-line="2"> &#39;annotate_landuse&#39;,
+</span><span data-line="3"> &#39;annotate_persons&#39;,
+</span><span data-line="4"> &#39;household_value_of_time&#39;}
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+</span><span data-line="2">- person_id            (8212,) int32
+</span><span data-line="3">- household_id         (8212,) int32
+</span><span data-line="4">- age                  (8212,) int32
+</span><span data-line="5">- PNUM                 (8212,) int32
+</span><span data-line="6">- sex                  (8212,) int32
+</span><span data-line="7">- pemploy              (8212,) int32
+</span><span data-line="8">- pstudent             (8212,) int32
+</span><span data-line="9">- ptype                (8212,) int32
+</span><span data-line="10">- _household_idx_      (8212,) int32
+</span><span data-line="11">- age_16_to_19         (8212,) bool
+</span><span data-line="12">- age_16_p             (8212,) bool
+</span><span data-line="13">- adult                (8212,) bool
+</span><span data-line="14">- male                 (8212,) bool
+</span><span data-line="15">- female               (8212,) bool
+</span><span data-line="16">- has_non_worker       (8212,) bool
+</span><span data-line="17">- has_retiree          (8212,) bool
+</span><span data-line="18">- has_preschool_kid    (8212,) bool
+</span><span data-line="19">- has_driving_kid      (8212,) bool
+</span><span data-line="20">- has_school_kid       (8212,) bool
+</span><span data-line="21">- has_full_time        (8212,) bool
+</span><span data-line="22">- has_part_time        (8212,) bool
+</span><span data-line="23">- has_university       (8212,) bool
+</span><span data-line="24">- student_is_employed  (8212,) bool
+</span><span data-line="25">- nonstudent_to_school (8212,) bool
+</span><span data-line="26">- is_student           (8212,) bool
+</span><span data-line="27">- is_gradeschool       (8212,) bool
+</span><span data-line="28">- is_highschool        (8212,) bool
+</span><span data-line="29">- is_university        (8212,) bool
+</span><span data-line="30">- school_segment       (8212,) int8
+</span><span data-line="31">- is_worker            (8212,) bool
+</span><span data-line="32">- home_zone_id         (8212,) categorical: (25 categories)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+</span><span data-line="2">- household_id         (5000,) int32
+</span><span data-line="3">- hhsize               (5000,) int8
+</span><span data-line="4">- num_workers          (5000,) int8
+</span><span data-line="5">- auto_ownership       (5000,) int8
+</span><span data-line="6">- TAZ                  (5000,) int32
+</span><span data-line="7">- HHT                  (5000,) int8
+</span><span data-line="8">- income               (5000,) int32
+</span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
+</span><span data-line="10">- income_in_thousands  (5000,) float32
+</span><span data-line="11">- income_segment       (5000,) int8
+</span><span data-line="12">- family               (5000,) bool
+</span><span data-line="13">- non_family           (5000,) bool
+</span><span data-line="14">- num_drivers          (5000,) int8
+</span><span data-line="15">- num_adults           (5000,) int8
+</span><span data-line="16">- num_children         (5000,) int8
+</span><span data-line="17">- num_young_children   (5000,) int8
+</span><span data-line="18">- num_children_5_to_15 (5000,) int8
+</span><span data-line="19">- num_children_16_to_17 (5000,) int8
+</span><span data-line="20">- num_college_age      (5000,) int8
+</span><span data-line="21">- num_young_adults     (5000,) int8
+</span><span data-line="22">- home_is_urban        (5000,) bool
+</span><span data-line="23">- home_is_rural        (5000,) bool
+</span><span data-line="24">- median_value_of_time (5000,) float32
+</span><span data-line="25">- random_vot           (5000,) float32
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="s2">&quot;safe&quot;</span><span class="p">,</span> <span class="n">missing_fields</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Found 2 category groups for validation.
+</span><span data-line="2">  TIMEPERIOD: [&#39;EA&#39;, &#39;AM&#39;, &#39;MD&#39;, &#39;PM&#39;, &#39;EV&#39;] (ordered=False)
+</span><span data-line="3">  TAZ: [ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+</span><span data-line="4"> 25] (ordered=False)
+</span><span data-line="5">table households is &lt;mtc.tables.households.Households object at 0x12c5cce50&gt;
+</span><span data-line="6">Validating table &#39;households&#39;...
+</span><span data-line="7">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="8">Field &#39;TAZ&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="9">Field &#39;HHT&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="10">Field &#39;hhsize&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="11">Field &#39;income&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="12">Field &#39;auto_ownership&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="13">Field &#39;random_vot&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
+</span><span data-line="14">Field &#39;income_segment&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="15">Field &#39;family&#39; validated as &lt;class &#39;bool&#39;&gt;.
+</span><span data-line="16">Field &#39;non_family&#39; validated as &lt;class &#39;bool&#39;&gt;.
+</span><span data-line="17">Field &#39;num_drivers&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="18">Field &#39;num_adults&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="19">Field &#39;num_children&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="20">Field &#39;num_young_children&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="21">Field &#39;num_children_5_to_15&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="22">Field &#39;num_children_16_to_17&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="23">Field &#39;num_college_age&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="24">Field &#39;num_young_adults&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="25">Field &#39;num_workers&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="26">table tours is &lt;mtc.tables.tours.Tours object at 0x12b2be650&gt;
+</span><span data-line="27">Validating table &#39;tours&#39;...
+</span><span data-line="28">Field &#39;tour_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="29">Field &#39;person_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="30">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="31">Field &#39;_household_idx_&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="32">Field &#39;_person_idx_&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="33">table persons is &lt;mtc.tables.persons.Persons object at 0x12c609a90&gt;
+</span><span data-line="34">Validating table &#39;persons&#39;...
+</span><span data-line="35">Field &#39;person_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="36">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="37">Field &#39;_household_idx_&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="38">Field &#39;age&#39; coerced to &lt;class &#39;jax.numpy.int8&#39;&gt; without loss of information.
+</span><span data-line="39">Field &#39;sex&#39; coerced to &lt;class &#39;jax.numpy.int8&#39;&gt; without loss of information.
+</span><span data-line="40">Field &#39;ptype&#39; coerced to &lt;class &#39;jax.numpy.int8&#39;&gt; without loss of information.
+</span><span data-line="41">Field &#39;pemploy&#39; coerced to &lt;class &#39;jax.numpy.int8&#39;&gt; without loss of information.
+</span><span data-line="42">Field &#39;pstudent&#39; coerced to &lt;class &#39;jax.numpy.int8&#39;&gt; without loss of information.
+</span><span data-line="43">Field &#39;adult&#39; validated as &lt;class &#39;bool&#39;&gt;.
+</span><span data-line="44">Field &#39;male&#39; validated as &lt;class &#39;bool&#39;&gt;.
+</span><span data-line="45">Field &#39;female&#39; validated as &lt;class &#39;bool&#39;&gt;.
+</span><span data-line="46">Field &#39;age_16_to_19&#39; validated as &lt;class &#39;numpy.bool&#39;&gt;.
+</span><span data-line="47">Field &#39;age_16_p&#39; validated as &lt;class &#39;numpy.bool&#39;&gt;.
+</span><span data-line="48">table land_use is &lt;mtc.tables.landuse.LandUse object at 0x12c5e8f50&gt;
+</span><span data-line="49">Validating table &#39;land_use&#39;...
+</span><span data-line="50">Field &#39;TAZ&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="51">Field &#39;TOTACRE&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
+</span><span data-line="52">Field &#39;county_id&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="53">Field &#39;TOTHH&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="54">Field &#39;TOTPOP&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="55">Field &#39;TOTEMP&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="56">Field &#39;RESACRE&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
+</span><span data-line="57">Field &#39;CIACRE&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
+</span><span data-line="58">Field &#39;DISTRICT&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="59">Field &#39;SD&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
+</span><span data-line="60">Field &#39;AGE0519&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="61">Field &#39;RETEMPN&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="62">Field &#39;FPSEMPN&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="63">Field &#39;HEREMPN&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
+</span><span data-line="64">Field &#39;density_index&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.auto_ownership</span><span class="w"> </span><span class="kn">import</span> <span class="n">auto_ownership</span>
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">run_on</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+</span><span data-line="2">- household_id         (5000,) int32
+</span><span data-line="3">- hhsize               (5000,) int8
+</span><span data-line="4">- num_workers          (5000,) int8
+</span><span data-line="5">- auto_ownership       (5000,) int8
+</span><span data-line="6">- TAZ                  (5000,) int32
+</span><span data-line="7">- HHT                  (5000,) int8
+</span><span data-line="8">- income               (5000,) int32
+</span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
+</span><span data-line="10">- income_in_thousands  (5000,) float32
+</span><span data-line="11">- income_segment       (5000,) int8
+</span><span data-line="12">- family               (5000,) bool
+</span><span data-line="13">- non_family           (5000,) bool
+</span><span data-line="14">- num_drivers          (5000,) int8
+</span><span data-line="15">- num_adults           (5000,) int8
+</span><span data-line="16">- num_children         (5000,) int8
+</span><span data-line="17">- num_young_children   (5000,) int8
+</span><span data-line="18">- num_children_5_to_15 (5000,) int8
+</span><span data-line="19">- num_children_16_to_17 (5000,) int8
+</span><span data-line="20">- num_college_age      (5000,) int8
+</span><span data-line="21">- num_young_adults     (5000,) int8
+</span><span data-line="22">- home_is_urban        (5000,) bool
+</span><span data-line="23">- home_is_rural        (5000,) bool
+</span><span data-line="24">- median_value_of_time (5000,) float32
+</span><span data-line="25">- random_vot           (5000,) float32
+</span><span data-line="26">- auto_ownership_sim   (5000,) int8
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5_000, 25)</small><table border="1" class="dataframe"><thead><tr><th>household_id</th><th>hhsize</th><th>num_workers</th><th>auto_ownership</th><th>TAZ</th><th>HHT</th><th>income</th><th>home_zone_id</th><th>income_in_thousands</th><th>income_segment</th><th>family</th><th>non_family</th><th>num_drivers</th><th>num_adults</th><th>num_children</th><th>num_young_children</th><th>num_children_5_to_15</th><th>num_children_16_to_17</th><th>num_college_age</th><th>num_young_adults</th><th>home_is_urban</th><th>home_is_rural</th><th>median_value_of_time</th><th>random_vot</th><th>auto_ownership_sim</th></tr><tr><td>i32</td><td>i8</td><td>i8</td><td>i8</td><td>i32</td><td>i8</td><td>i32</td><td>enum</td><td>f32</td><td>i8</td><td>bool</td><td>bool</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>bool</td><td>bool</td><td>f32</td><td>f32</td><td>i8</td></tr></thead><tbody><tr><td>2717868</td><td>2</td><td>1</td><td>1</td><td>25</td><td>1</td><td>361000</td><td>&quot;TAZ-25&quot;</td><td>361.0</td><td>4</td><td>true</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>true</td><td>false</td><td>60.0</td><td>0.351049</td><td>4</td></tr><tr><td>763899</td><td>1</td><td>0</td><td>1</td><td>6</td><td>4</td><td>59220</td><td>&quot;TAZ-6&quot;</td><td>59.220001</td><td>2</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>25.0</td><td>0.489543</td><td>1</td></tr><tr><td>2222791</td><td>2</td><td>2</td><td>2</td><td>9</td><td>2</td><td>197000</td><td>&quot;TAZ-9&quot;</td><td>197.0</td><td>4</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>1.229426</td><td>1</td></tr><tr><td>112477</td><td>1</td><td>1</td><td>0</td><td>17</td><td>6</td><td>2200</td><td>&quot;TAZ-17&quot;</td><td>2.2</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.188264</td><td>1</td></tr><tr><td>370491</td><td>3</td><td>1</td><td>0</td><td>21</td><td>1</td><td>16500</td><td>&quot;TAZ-21&quot;</td><td>16.5</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.640115</td><td>1</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>109218</td><td>1</td><td>1</td><td>0</td><td>10</td><td>4</td><td>15000</td><td>&quot;TAZ-10&quot;</td><td>15.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.933671</td><td>1</td></tr><tr><td>570708</td><td>1</td><td>0</td><td>0</td><td>23</td><td>6</td><td>13100</td><td>&quot;TAZ-23&quot;</td><td>13.1</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.532178</td><td>1</td></tr><tr><td>2762199</td><td>1</td><td>0</td><td>0</td><td>21</td><td>0</td><td>0</td><td>&quot;TAZ-21&quot;</td><td>0.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.651419</td><td>0</td></tr><tr><td>2049372</td><td>1</td><td>1</td><td>1</td><td>18</td><td>4</td><td>103000</td><td>&quot;TAZ-18&quot;</td><td>103.0</td><td>4</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>2.995311</td><td>1</td></tr><tr><td>702559</td><td>2</td><td>0</td><td>0</td><td>13</td><td>1</td><td>14800</td><td>&quot;TAZ-13&quot;</td><td>14.8</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.999762</td><td>1</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">simulate_choice</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([4, 1, 1, ..., 0, 1, 1], dtype=int8)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">auto_ownership</span><span class="o">.</span><span class="n">utility</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">trace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>income_in_thousands</th>
+      <th>three_drivers</th>
+      <th>two_drivers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>361.000031</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>59.220001</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>197.000015</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2.200000</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>16.500000</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>4995</th>
+      <td>15.000001</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4996</th>
+      <td>13.100000</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4997</th>
+      <td>0.000000</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4998</th>
+      <td>103.000008</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4999</th>
+      <td>14.800001</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+<p>5000 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">simulate_choice</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([4, 1, 1, ..., 0, 1, 1], dtype=int8)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([0.26307496, 0.5855463 , 0.02963491, 0.00279747, 0.11894631],      dtype=float32)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share_loss</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="4">        <span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="5">        <span class="mi">1</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+</span><span data-line="6">        <span class="mi">2</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+</span><span data-line="7">        <span class="mi">3</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="8">        <span class="mi">4</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="9">    <span class="p">},</span>
+</span><span data-line="10"><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array(0.25510776, dtype=float32)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">g</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share_loss_grad</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="4">        <span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="5">        <span class="mi">1</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+</span><span data-line="6">        <span class="mi">2</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+</span><span data-line="7">        <span class="mi">3</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="8">        <span class="mi">4</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="9">    <span class="p">},</span>
+</span><span data-line="10"><span class="p">)</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="n">g</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">AutoOwnershipParams(
+</span><span data-line="2">    coef_cars1_asc=Array(0.07327148, dtype=float32, weak_type=True),
+</span><span data-line="3">    coef_cars1_asc_county=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="4">    coef_cars1_asc_marin=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="5">    coef_cars1_asc_san_francisco=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="6">    coef_cars1_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="7">    coef_cars1_density_0_10_no_workers=Array(0.22252251, dtype=float32, weak_type=True),
+</span><span data-line="8">    coef_cars1_density_10_up_no_workers=Array(1.7848635, dtype=float32, weak_type=True),
+</span><span data-line="9">    coef_cars1_density_10_up_workers=Array(2.4006515, dtype=float32, weak_type=True),
+</span><span data-line="10">    coef_cars1_drivers_2=Array(0.03263084, dtype=float32, weak_type=True),
+</span><span data-line="11">    coef_cars1_drivers_3=Array(0.00229748, dtype=float32, weak_type=True),
+</span><span data-line="12">    coef_cars1_drivers_4_up=Array(0.0008286, dtype=float32, weak_type=True),
+</span><span data-line="13">    coef_cars1_hh_income_0_30k=Array(1.5066861, dtype=float32, weak_type=True),
+</span><span data-line="14">    coef_cars1_hh_income_30_up=Array(1.8867602, dtype=float32, weak_type=True),
+</span><span data-line="15">    coef_cars1_num_workers_clip_3=Array(0.07202546, dtype=float32, weak_type=True),
+</span><span data-line="16">    coef_cars1_persons_16_17=Array(0.00185995, dtype=float32, weak_type=True),
+</span><span data-line="17">    coef_cars1_persons_18_24=Array(0.01011639, dtype=float32, weak_type=True),
+</span><span data-line="18">    coef_cars1_persons_25_34=Array(0.02964097, dtype=float32, weak_type=True),
+</span><span data-line="19">    coef_cars1_presence_children_0_4=Array(0.00396558, dtype=float32, weak_type=True),
+</span><span data-line="20">    coef_cars1_presence_children_5_17=Array(0.00998919, dtype=float32, weak_type=True),
+</span><span data-line="21">    coef_cars234_asc_marin=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="22">    coef_cars234_presence_children_0_4=Array(-0.00331472, dtype=float32, weak_type=True),
+</span><span data-line="23">    coef_cars2_asc=Array(-0.02221743, dtype=float32, weak_type=True),
+</span><span data-line="24">    coef_cars2_asc_county=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="25">    coef_cars2_asc_san_francisco=Array(-0.02221743, dtype=float32, weak_type=True),
+</span><span data-line="26">    coef_cars2_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="27">    coef_cars2_density_0_10_no_workers=Array(-0.02364007, dtype=float32, weak_type=True),
+</span><span data-line="28">    coef_cars2_density_10_up_no_workers=Array(-0.21981671, dtype=float32, weak_type=True),
+</span><span data-line="29">    coef_cars2_density_10_up_workers=Array(-0.34944877, dtype=float32, weak_type=True),
+</span><span data-line="30">    coef_cars2_drivers_2=Array(-0.0156795, dtype=float32, weak_type=True),
+</span><span data-line="31">    coef_cars2_drivers_3=Array(-0.00141119, dtype=float32, weak_type=True),
+</span><span data-line="32">    coef_cars2_drivers_4_up=Array(-0.00030825, dtype=float32, weak_type=True),
+</span><span data-line="33">    coef_cars2_hh_income_0_30k=Array(-0.586473, dtype=float32, weak_type=True),
+</span><span data-line="34">    coef_cars2_hh_income_30_up=Array(-0.94900423, dtype=float32, weak_type=True),
+</span><span data-line="35">    coef_cars2_num_workers_clip_3=Array(-0.03074503, dtype=float32, weak_type=True),
+</span><span data-line="36">    coef_cars2_persons_16_17=Array(-0.0006489, dtype=float32, weak_type=True),
+</span><span data-line="37">    coef_cars2_persons_18_24=Array(-0.00259443, dtype=float32, weak_type=True),
+</span><span data-line="38">    coef_cars2_persons_25_34=Array(-0.01191693, dtype=float32, weak_type=True),
+</span><span data-line="39">    coef_cars2_presence_children_5_17=Array(-0.00367055, dtype=float32, weak_type=True),
+</span><span data-line="40">    coef_cars34_asc_county=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="41">    coef_cars34_asc_san_francisco=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="42">    coef_cars34_density_0_10_no_workers=Array(-0.00011447, dtype=float32, weak_type=True),
+</span><span data-line="43">    coef_cars34_density_10_up_no_workers=Array(-7.9052865e-05, dtype=float32, weak_type=True),
+</span><span data-line="44">    coef_cars34_persons_16_17=Array(-0.00098679, dtype=float32, weak_type=True),
+</span><span data-line="45">    coef_cars34_persons_18_24=Array(-0.00365545, dtype=float32, weak_type=True),
+</span><span data-line="46">    coef_cars34_persons_25_34=Array(-0.01036393, dtype=float32, weak_type=True),
+</span><span data-line="47">    coef_cars34_presence_children_5_17=Array(-0.00444413, dtype=float32, weak_type=True),
+</span><span data-line="48">    coef_cars3_asc=Array(0.00015584, dtype=float32, weak_type=True),
+</span><span data-line="49">    coef_cars3_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="50">    coef_cars3_drivers_2=Array(0.00024149, dtype=float32, weak_type=True),
+</span><span data-line="51">    coef_cars3_drivers_3=Array(5.5594464e-05, dtype=float32, weak_type=True),
+</span><span data-line="52">    coef_cars3_drivers_4_up=Array(-2.7979536e-07, dtype=float32, weak_type=True),
+</span><span data-line="53">    coef_cars3_hh_income_0_30k=Array(0.0056824, dtype=float32, weak_type=True),
+</span><span data-line="54">    coef_cars3_hh_income_30_up=Array(0.01130291, dtype=float32, weak_type=True),
+</span><span data-line="55">    coef_cars3_num_workers_clip_3=Array(0.00050934, dtype=float32, weak_type=True),
+</span><span data-line="56">    coef_cars4_asc=Array(-0.01873321, dtype=float32, weak_type=True),
+</span><span data-line="57">    coef_cars4_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="58">    coef_cars4_drivers_2=Array(-0.01417157, dtype=float32, weak_type=True),
+</span><span data-line="59">    coef_cars4_drivers_3=Array(-0.00117014, dtype=float32, weak_type=True),
+</span><span data-line="60">    coef_cars4_drivers_4_up=Array(-0.00054256, dtype=float32, weak_type=True),
+</span><span data-line="61">    coef_cars4_hh_income_0_30k=Array(-0.50299746, dtype=float32, weak_type=True),
+</span><span data-line="62">    coef_cars4_hh_income_30_up=Array(-0.76541436, dtype=float32, weak_type=True),
+</span><span data-line="63">    coef_cars4_num_workers_clip_3=Array(-0.0266102, dtype=float32, weak_type=True),
+</span><span data-line="64">    coef_retail_auto_no_workers=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="65">    coef_retail_auto_workers=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="66">    coef_retail_non_motor=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="67">    coef_retail_transit_no_workers=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="68">    coef_retail_transit_workers=Array(0., dtype=float32, weak_type=True),
+</span><span data-line="69">)
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">calibrate_analytic_share</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="4">        <span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="5">        <span class="mi">1</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+</span><span data-line="6">        <span class="mi">2</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+</span><span data-line="7">        <span class="mi">3</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="8">        <span class="mi">4</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="9">    <span class="p">},</span>
+</span><span data-line="10">    <span class="n">calib_params</span><span class="o">=</span><span class="p">[</span>
+</span><span data-line="11">        <span class="s2">&quot;coef_cars1_asc&quot;</span><span class="p">,</span>
+</span><span data-line="12">        <span class="s2">&quot;coef_cars2_asc&quot;</span><span class="p">,</span>
+</span><span data-line="13">        <span class="s2">&quot;coef_cars3_asc&quot;</span><span class="p">,</span>
+</span><span data-line="14">        <span class="s2">&quot;coef_cars4_asc&quot;</span><span class="p">,</span>
+</span><span data-line="15">    <span class="p">],</span>
+</span><span data-line="16"><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">  message: Optimization terminated successfully.
+</span><span data-line="2">  success: True
+</span><span data-line="3">   status: 0
+</span><span data-line="4">      fun: 0.012498477473855019
+</span><span data-line="5">        x: [ 1.679e+00  6.343e+00 -3.334e+00 -2.961e+00]
+</span><span data-line="6">      nit: 17
+</span><span data-line="7">      jac: [ 1.570e-06 -3.571e-06 -1.522e-06  5.138e-07]
+</span><span data-line="8"> hess_inv: [[ 4.255e+01  4.628e+01 -7.460e-01  5.284e+01]
+</span><span data-line="9">            [ 4.628e+01  9.476e+01 -1.335e+00  7.839e+01]
+</span><span data-line="10">            [-7.460e-01 -1.335e+00  1.021e+00 -1.567e+00]
+</span><span data-line="11">            [ 5.284e+01  7.839e+01 -1.567e+00  1.718e+02]]
+</span><span data-line="12">     nfev: 24
+</span><span data-line="13">     njev: 24
+</span><span data-line="14">   shares: [ 1.250e-01  3.250e-01  4.250e-01  6.097e-06  1.250e-01]
+</span></pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
+</span><span data-line="3"><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([1.2501623e-01, 3.2500395e-01, 4.2497578e-01, 6.0965403e-06,
+</span><span data-line="2">       1.2499795e-01], dtype=float32)
+</span></pre></div>
+</div>
+</div>
+</div>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="data-validation.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Data Validation</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="work-location.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Work Location</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>© 2026, Driftless Labs</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script defer="defer" src="../_static/code-annotations.js?v=15a4c152"></script>
+      <script defer="defer" src="../_static/toc-breakpoints.js?v=b079cf6d"></script></body>
+</html>

@@ -1,0 +1,106 @@
+/* html[data-accent-color="green"] {
+    --accent-9: #3e8f00;
+    --accent-10: #377f00;
+    --accent-11: #2f6d00;
+}
+
+html.dark[data-accent-color="green"] {
+    --accent-9: #8bcf5a;
+    --accent-10: #9cdb6f;
+    --accent-11: #b1e58c;
+} */
+
+html.light .sy-head-blur {
+    background-color: #d6dcd1;
+    box-shadow: 0 0 .2rem rgba(0,0,0,.1),0 .2rem .4rem rgba(0,0,0,.2);
+}
+
+html.dark .sy-head-blur {
+    background-color: #53674b;
+}
+
+.sy-head-brand img + strong {
+    display: inline;
+}
+
+/* Top-level sections live in the navbar; the left rail shows their children. */
+body:not(:has(#lside .globaltoc > ul)) [aria-controls="lside"],
+.sy-lside:not(:has(.globaltoc > ul)),
+.sy-lside:not(:has(.globaltoc > ul)) + .lside-overlay {
+    display: none;
+}
+
+/* Let dotted API names wrap while staying clear of disclosure buttons. */
+.sy-lside .globaltoc li > a {
+    display: block;
+    min-width: 0;
+}
+
+.sy-lside .globaltoc li:has(> button) > a {
+    padding-inline-end: 1.6rem;
+}
+
+/* Keep API source links available without competing with the signatures. */
+.yue a.reference.external:has(> .viewcode-link) {
+    color: var(--sy-c-light);
+    font-weight: 400;
+    opacity: .7;
+    text-decoration-color: transparent;
+    transition: color .15s ease, opacity .15s ease;
+}
+
+.yue a.reference.external:has(> .viewcode-link):hover,
+.yue a.reference.external:has(> .viewcode-link):focus-visible {
+    color: var(--sy-c-link-hover);
+    opacity: 1;
+    text-decoration-color: currentColor;
+}
+
+.yue div.cell div.cell_input {
+    background-color: var(--code-block-background);
+}
+
+.yue .cell_output .output.text_html {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.yue .cell_output .output.stderr {
+    background: var(--red-a3);
+    border-color: var(--red-a6);
+}
+
+.yue .cell_output .output.stderr pre {
+    color: var(--red-11);
+}
+
+@media print {
+    .yue .cell_output .output.text_html {
+        max-width: none;
+        overflow-x: visible;
+    }
+}
+
+:root, .light, .light-theme {
+    --sy-c-surface: #ffffff09;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+    @media (color-gamut: p3) {
+        :root, .light, .light-theme {
+            --sy-c-surface: color(display-p3 1 1 1/.34);
+        }
+    }
+}
+
+.dark, .dark-theme {
+    --sy-c-surface: #ffffff09;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+    @media (color-gamut: p3) {
+        .dark, .dark-theme {
+            --sy-c-surface: color(display-p3 1 1 1/.34);
+        }
+    }
+}

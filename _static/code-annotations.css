@@ -1,0 +1,136 @@
+.code-annotation-group {
+    position: relative;
+}
+
+.code-annotation-group .code-annotation-list {
+    position: static;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.code-annotation-marker {
+    display: inline-flex;
+    width: .75rem;
+    height: .75rem;
+    margin: 0 0.08rem;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    vertical-align: -0.06rem;
+    color: var(--sy-c-light);
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+}
+
+.code-annotation-marker-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    flex: none;
+}
+
+.code-annotation-marker:hover {
+    color: var(--accent-9);
+    transform: scale(1.08);
+}
+
+.code-annotation-marker[aria-expanded="true"] {
+    color: var(--accent-10);
+    transform: rotate(45deg);
+}
+
+.code-annotation-marker[aria-expanded="true"]:hover {
+    transform: rotate(45deg) scale(1.08);
+}
+
+.code-annotation-marker:focus-visible,
+.code-annotation-close:focus-visible {
+    outline: 3px solid var(--accent-10);
+    outline-offset: 2px;
+}
+
+.code-annotation-popover {
+    position: absolute;
+    z-index: 20;
+    box-sizing: border-box;
+    width: min(28rem, calc(100% - 1rem));
+    max-height: min(20rem, calc(100vh - 2rem));
+    margin: 0;
+    padding: 1rem 2.75rem 1rem 1rem;
+    overflow: auto;
+    color: var(--sy-c-text);
+    list-style: none;
+    background: var(--sy-c-background);
+    border: 1px solid var(--sy-c-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 22%);
+}
+
+.code-annotation-popover > :last-child {
+    margin-bottom: 0;
+}
+
+.code-annotation-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.55rem;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    color: var(--sy-c-light);
+    font: 700 1.3rem/1 var(--sy-f-text);
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: 0.3rem;
+}
+
+.code-annotation-close::before {
+    content: "×";
+}
+
+.code-annotation-close:hover {
+    color: var(--sy-c-text);
+    background: var(--sy-c-surface);
+}
+
+.code-annotation-popover[hidden] {
+    display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .code-annotation-popover {
+        transition: background-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .code-annotation-marker {
+        transition: color 120ms ease, transform 120ms ease;
+    }
+}
+
+@media print {
+    .code-annotation-group .code-annotation-list {
+        margin: 1rem 0 1rem 1.5rem;
+        padding-left: 1.5rem;
+        list-style: decimal;
+    }
+
+    .code-annotation-popover,
+    .code-annotation-popover[hidden] {
+        position: static;
+        display: list-item;
+        width: auto;
+        max-height: none;
+        padding: 0;
+        overflow: visible;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .code-annotation-close {
+        display: none;
+    }
+}

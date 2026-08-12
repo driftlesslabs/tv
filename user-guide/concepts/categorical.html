@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="tomato" data-content_root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Categorical Data - Traveler</title><link rel="shortcut icon" href="../../_static/favicon.png"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Steps" href="steps.html" /><link rel="prev" title="Multi-Dim Datasets" href="datasets.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../_static/extra.css?v=e0fc98bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/code-annotations.css?v=fec28d62" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="Categorical Data"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../index.html">
+      <img class="light-logo" src="../../_static/driftless-icon.svg" alt="Traveler" height="28" loading="lazy" />
+      <img class="dark-logo" src="../../_static/driftless-icon-dark.svg" alt="Traveler" height="28" loading="lazy" />
+      <strong>Traveler</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../index.html">User Guide</a></li><li class="link"><a href="../../demo-mtc/index.html">Demo</a></li><li class="link"><a href="../../api/index.html">API</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="2"><ul class="current">
+<li class="toctree-l1 _expand"><a class="reference internal" href="../getting-started.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2 _expand"><a class="reference internal" href="store.html">Store</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="tables.html">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="datasets.html">Multi-Dim Datasets</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Categorical Data</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="steps.html">Steps</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="nested-logit.html">Nested logit choice</a></li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../benchmarking.html">Benchmarking</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../development-tasks.html">Development tasks</a></li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#why-jax-needs-a-special-representation">Why JAX needs a special representation</a></li>
+<li><a class="reference internal" href="#runtime-data-and-annotation-helpers">Runtime data and annotation helpers</a></li>
+<li><a class="reference internal" href="#creating-and-loading-categorical-data">Creating and loading categorical data</a></li>
+<li><a class="reference internal" href="#validation">Validation</a></li>
+<li><a class="reference internal" href="#using-categorical-values-in-model-code">Using categorical values in model code</a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+  data-type="github" data-user="driftlesslabs" data-repo="traveler">
+  <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </span>
+  <span class="flex-grow px-2 break-all">
+    
+    
+      <span>traveler</span>
+    
+    <span class="flex text-sm repo-stats-count">
+      <span class="flex items-center pr-3">
+        <iconify-icon icon="lucide:star"></iconify-icon>
+        <strong class="js-repo-stars ml-1">0</strong>
+      </span>
+      <span class="flex items-center">
+        <iconify-icon icon="lucide:git-fork"></iconify-icon>
+        <strong class="js-repo-forks ml-1">0</strong>
+      </span>
+    </span>
+  </span>
+</a><div class="edit-this-page">
+  <a href="https://github.com/driftlesslabs/traveler/blob/main/docs/user-guide/concepts/categorical.md">Edit this page</a>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Traveler</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">User Guide</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Concepts</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Categorical Data</strong>
+        <meta itemprop="position" content="4" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="categorical-data">
+<h1>Categorical Data<a class="headerlink" href="#categorical-data" title="Link to this heading">#</a></h1>
+<p>Categorical data represents values drawn from a finite set of labels. A travel
+mode, for example, might be one of <code class="docutils literal notranslate"><span class="pre">&quot;walk&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;bike&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;car&quot;</span></code>; a zone field
+might contain one of the zone identifiers defined by a land-use table.</p>
+<p>Traveler separates a categorical variable into two parts:</p>
+<ul class="simple">
+<li><p><strong>categories</strong> define the possible values and their order;</p></li>
+<li><p><strong>codes</strong> are integer positions into that category list.</p></li>
+</ul>
+<p>The runtime representation is
+<a class="reference internal" href="../../api/generated/traveler.core.categorical.CategoricalArray.html#traveler.core.categorical.CategoricalArray" title="traveler.core.categorical.CategoricalArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalArray</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="kn">import</span> <span class="n">CategoricalArray</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">modes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;bike&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">]</span>
+</span><span data-line="5"><span class="n">mode</span> <span class="o">=</span> <span class="n">CategoricalArray</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span>
+</span><span data-line="6">    <span class="n">categories</span><span class="o">=</span><span class="n">modes</span><span class="p">,</span>
+</span><span data-line="7">    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">],</span>
+</span><span data-line="8"><span class="p">)</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="n">mode</span><span class="o">.</span><span class="n">categories</span>  <span class="c1"># [&quot;walk&quot;, &quot;bike&quot;, &quot;car&quot;]</span>
+</span><span data-line="11"><span class="n">mode</span><span class="o">.</span><span class="n">codes</span>       <span class="c1"># Array([2, 0, 2], dtype=uint8)</span>
+</span><span data-line="12"><span class="n">mode</span><span class="o">.</span><span class="n">ordered</span>     <span class="c1"># False</span>
+</span></pre></div>
+</div>
+<p>The labels carry meaning for people and for validation. The codes are the
+compact numerical representation used by model calculations. Codes should
+not be interpreted independently of their categories: code <code class="docutils literal notranslate"><span class="pre">2</span></code> means <code class="docutils literal notranslate"><span class="pre">&quot;car&quot;</span></code>
+only for this particular category list.</p>
+<section id="why-jax-needs-a-special-representation">
+<h2>Why JAX needs a special representation<a class="headerlink" href="#why-jax-needs-a-special-representation" title="Link to this heading">#</a></h2>
+<p>JAX has no native categorical dtype. Its arrays contain numerical, boolean,
+and a few other JAX-supported scalar types, but they cannot directly contain
+arbitrary Python strings together with category metadata. Converting a column
+of labels with <code class="docutils literal notranslate"><span class="pre">jnp.asarray()</span></code> therefore cannot produce an array suitable for
+JAX transformations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code> bridges that gap. It is registered as a JAX pytree with:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">codes</span></code>, a JAX integer array, as its dynamic array data;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">categories</span></code>, <code class="docutils literal notranslate"><span class="pre">ordered</span></code>, and <code class="docutils literal notranslate"><span class="pre">mark</span></code> as the metadata describing those codes.</p></li>
+</ul>
+<p>Numerical work can operate on the codes under <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code> while the category
+definition remains attached to the value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+</span><span data-line="5"><span class="k">def</span><span class="w"> </span><span class="nf">is_car</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+</span><span data-line="6">    <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">codes</span> <span class="o">==</span> <span class="mi">2</span>
+</span><span data-line="7">
+</span><span data-line="8">
+</span><span data-line="9"><span class="n">is_car</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>  <span class="c1"># Array([ True, False,  True], dtype=bool)</span>
+</span></pre></div>
+</div>
+<p>Traveler also has special handlers for categorical values when flattening
+pytrees, selecting rows, assigning fields, and converting tables. A generic
+array conversion would either reject string labels or discard the metadata
+needed to decode and validate the integer codes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Categories are static pytree metadata from JAX’s perspective. Passing a
+categorical array with a different category definition to compiled code may
+therefore result in a different JAX compilation. The codes can vary normally
+between calls.</p>
+</div>
+</section>
+<section id="runtime-data-and-annotation-helpers">
+<h2>Runtime data and annotation helpers<a class="headerlink" href="#runtime-data-and-annotation-helpers" title="Link to this heading">#</a></h2>
+<p>Traveler uses three related concepts on the data and schema sides:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Role</p></th>
+<th class="head"><p>Contains data?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code></p></td>
+<td><p>Runtime categorical value</p></td>
+<td><p>Yes: JAX codes plus category metadata</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CategoricalType</span></code></p></td>
+<td><p>Builds a shape- and category-aware annotation</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Categorical</span></code></p></td>
+<td><p>Names a shared category family such as <code class="docutils literal notranslate"><span class="pre">TAZ</span></code></p></td>
+<td><p>No</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><a class="reference internal" href="../../api/generated/traveler.core.typing.CategoricalType.html#traveler.core.typing.CategoricalType" title="traveler.core.typing.CategoricalType"><code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalType</span></code></a> is the annotation helper
+behind <code class="docutils literal notranslate"><span class="pre">TypeMaker.Categorical</span></code>. It binds a symbolic array shape to a category
+definition and produces a <code class="docutils literal notranslate"><span class="pre">typing.Annotated</span></code> type whose underlying runtime
+type is <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code>. Application code normally uses it through a
+<a class="reference internal" href="../../api/generated/traveler.core.typing.TypeMaker.html#traveler.core.typing.TypeMaker" title="traveler.core.typing.TypeMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeMaker</span></code></a> rather than constructing a
+<code class="docutils literal notranslate"><span class="pre">CategoricalType</span></code> directly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeMaker</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
+</span><span data-line="3">
+</span><span data-line="4">
+</span><span data-line="5"><span class="n">trip</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;trip&quot;</span><span class="p">)</span>
+</span><span data-line="6"><span class="n">modes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;bike&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">]</span>
+</span><span data-line="7">
+</span><span data-line="8">
+</span><span data-line="9"><span class="k">class</span><span class="w"> </span><span class="nc">Trips</span><span class="p">(</span><span class="n">JaxTable</span><span class="p">):</span>
+</span><span data-line="10">    <span class="n">mode</span><span class="p">:</span> <span class="n">trip</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="n">modes</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Conceptually, the annotation records all of the following:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">runtime type: CategoricalArray
+</span><span data-line="2">categories:   [&quot;walk&quot;, &quot;bike&quot;, &quot;car&quot;]
+</span><span data-line="3">ordered:      False
+</span><span data-line="4">shape:        &quot;trip&quot;
+</span></pre></div>
+</div>
+<p><a class="reference internal" href="../../api/generated/traveler.core.typing.Categorical.html#traveler.core.typing.Categorical" title="traveler.core.typing.Categorical"><code class="xref py py-class docutils literal notranslate"><span class="pre">Categorical</span></code></a> provides another annotation
+form for a named category family. It is used in typed stored-table views when
+the category values are defined elsewhere:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.stored</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoredTable</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Categorical</span>
+</span><span data-line="3">
+</span><span data-line="4">
+</span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">Tours</span><span class="p">(</span><span class="n">StoredTable</span><span class="p">):</span>
+</span><span data-line="6">    <span class="n">table_name</span> <span class="o">=</span> <span class="s2">&quot;tours&quot;</span>
+</span><span data-line="7">
+</span><span data-line="8">    <span class="n">origin</span><span class="p">:</span> <span class="n">Categorical</span><span class="o">.</span><span class="n">TAZ</span>
+</span><span data-line="9">    <span class="n">destination</span><span class="p">:</span> <span class="n">Categorical</span><span class="o">.</span><span class="n">TAZ</span>
+</span></pre></div>
+</div>
+<p>Accessing <code class="docutils literal notranslate"><span class="pre">Categorical.TAZ</span></code> creates a lightweight categorical type whose
+<code class="docutils literal notranslate"><span class="pre">mark</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;TAZ&quot;</span></code>. Both fields therefore declare that they use the same
+category family. The actual columns returned by <code class="docutils literal notranslate"><span class="pre">tours.origin</span></code> and
+<code class="docutils literal notranslate"><span class="pre">tours.destination</span></code> are still <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code> instances; <code class="docutils literal notranslate"><span class="pre">Categorical</span></code> is
+schema information, not an alternative container.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is also a lower-level metaclass named
+<a class="reference internal" href="../../api/generated/traveler.core.categorical.CategoricalType.html#traveler.core.categorical.CategoricalType" title="traveler.core.categorical.CategoricalType"><code class="xref py py-class docutils literal notranslate"><span class="pre">traveler.core.categorical.CategoricalType</span></code></a> that makes annotation
+forms such as <code class="docutils literal notranslate"><span class="pre">CategoricalArray[...]</span></code> possible. It serves the same general
+annotation layer and is not categorical data itself. Normal table and dataset
+schemas should prefer <code class="docutils literal notranslate"><span class="pre">TypeMaker.Categorical</span></code>, while stored-table views use
+<code class="docutils literal notranslate"><span class="pre">Categorical.GROUP</span></code> when they need to name a shared category family.</p>
+</div>
+</section>
+<section id="creating-and-loading-categorical-data">
+<h2>Creating and loading categorical data<a class="headerlink" href="#creating-and-loading-categorical-data" title="Link to this heading">#</a></h2>
+<p>When source data contains labels, <code class="docutils literal notranslate"><span class="pre">from_values()</span></code> is the clearest constructor.
+It creates the integer codes and rejects values that are not present in the
+provided category list:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">mode</span> <span class="o">=</span> <span class="n">CategoricalArray</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;bike&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">],</span>
+</span><span data-line="3">    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">],</span>
+</span><span data-line="4">    <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">mark</span><span class="o">=</span><span class="s2">&quot;MODE&quot;</span><span class="p">,</span>
+</span><span data-line="6"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>If the source already contains codes and the code-to-category mapping is
+known, construct the array directly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">mode</span> <span class="o">=</span> <span class="n">CategoricalArray</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;bike&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">],</span>
+</span><span data-line="6">    <span class="n">codes</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+</span><span data-line="7">    <span class="n">mark</span><span class="o">=</span><span class="s2">&quot;MODE&quot;</span><span class="p">,</span>
+</span><span data-line="8"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The direct constructor checks that codes are non-negative and below the
+number of categories. For small category sets it stores them in a compact
+integer dtype. Prefer <code class="docutils literal notranslate"><span class="pre">from_values()</span></code> when beginning with labels because it
+establishes the mapping instead of assuming the input codes already follow
+it.</p>
+<p>Traveler preserves categorical information at its supported table-conversion
+boundaries:</p>
+<ul class="simple">
+<li><p>a Pandas categorical <code class="docutils literal notranslate"><span class="pre">Series</span></code> becomes a <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code> when used to
+construct a <code class="docutils literal notranslate"><span class="pre">JaxDataset</span></code> or <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code>;</p></li>
+<li><p>a Polars <code class="docutils literal notranslate"><span class="pre">Enum</span></code> column becomes a <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code> in
+<code class="docutils literal notranslate"><span class="pre">JaxTable.from_polars()</span></code>;</p></li>
+<li><p>converting a <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code> back to Pandas or Polars reconstructs categorical
+columns from their codes and categories.</p></li>
+</ul>
+<p>For example, a Polars enum carries the complete category vocabulary into a
+typed JAX table:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">frame</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+</span><span data-line="5">    <span class="p">{</span>
+</span><span data-line="6">        <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+</span><span data-line="7">            <span class="p">[</span><span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;car&quot;</span><span class="p">],</span>
+</span><span data-line="8">            <span class="n">dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="n">modes</span><span class="p">),</span>
+</span><span data-line="9">        <span class="p">)</span>
+</span><span data-line="10">    <span class="p">}</span>
+</span><span data-line="11"><span class="p">)</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="n">trips</span> <span class="o">=</span> <span class="n">Trips</span><span class="o">.</span><span class="n">from_polars</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</span><span data-line="14"><span class="n">trips</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">categories</span>  <span class="c1"># [&quot;walk&quot;, &quot;bike&quot;, &quot;car&quot;]</span>
+</span><span data-line="15"><span class="n">trips</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">codes</span>       <span class="c1"># Array([2, 0, 2], dtype=uint8)</span>
+</span></pre></div>
+</div>
+<p>CSV and ordinary Parquet columns do not necessarily carry a complete,
+application-defined category vocabulary. A loader should therefore cast a
+prepared Polars column to <code class="docutils literal notranslate"><span class="pre">Enum</span></code> or explicitly call <code class="docutils literal notranslate"><span class="pre">from_values()</span></code> before
+placing the data in a JAX-backed object. Nullable source values must also be
+resolved during preparation because <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code> does not use a
+negative or null code.</p>
+</section>
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">#</a></h2>
+<p>Construction establishes a valid code range. Dataset validation goes further
+by comparing the runtime value with its schema annotation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">trips</span> <span class="o">=</span> <span class="n">Trips</span><span class="p">({</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="n">mode</span><span class="p">})</span>
+</span><span data-line="2"><span class="n">trips</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">coerce</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>For a <code class="docutils literal notranslate"><span class="pre">TypeMaker.Categorical</span></code> annotation, validation checks that:</p>
+<ul class="simple">
+<li><p>the field is actually a <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code>;</p></li>
+<li><p>its codes are JAX integer data;</p></li>
+<li><p>its code-array shape matches the declared symbolic dimensions;</p></li>
+<li><p>its categories match in both values and order; and</p></li>
+<li><p>its <code class="docutils literal notranslate"><span class="pre">ordered</span></code> flag matches the annotation.</p></li>
+</ul>
+<p>Categorical dimensions participate in the same named-dimension consistency
+checks as numerical arrays. If <code class="docutils literal notranslate"><span class="pre">mode</span></code> and another field both use the <code class="docutils literal notranslate"><span class="pre">&quot;trip&quot;</span></code>
+dimension, their lengths must agree.</p>
+<p>Some category sets are defined by model data rather than a literal list in a
+class definition. Prefixing a category name with <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> declares a shared
+category group:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">trip</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;trip&quot;</span><span class="p">)</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">Trips</span><span class="p">(</span><span class="n">JaxTable</span><span class="p">):</span>
+</span><span data-line="5">    <span class="n">origin</span><span class="p">:</span> <span class="n">trip</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="s2">&quot;@TAZ&quot;</span><span class="p">)</span>
+</span><span data-line="6">
+</span><span data-line="7">    <span class="k">def</span><span class="w"> </span><span class="nf">__category_validation__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="8">        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;TAZ&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">]}</span>
+</span><span data-line="9">
+</span><span data-line="10">
+</span><span data-line="11"><span class="n">origin</span> <span class="o">=</span> <span class="n">CategoricalArray</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span>
+</span><span data-line="12">    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">],</span>
+</span><span data-line="13">    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">103</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">],</span>
+</span><span data-line="14">    <span class="n">mark</span><span class="o">=</span><span class="s2">&quot;TAZ&quot;</span><span class="p">,</span>
+</span><span data-line="15"><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="n">trips</span> <span class="o">=</span> <span class="n">Trips</span><span class="p">({</span><span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="p">})</span>
+</span><span data-line="18"><span class="n">trips</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">coerce</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Here <code class="docutils literal notranslate"><span class="pre">&#64;TAZ</span></code> means “validate against the category group named <code class="docutils literal notranslate"><span class="pre">TAZ</span></code>.”
+Validation checks both the group’s category values and the array’s <code class="docutils literal notranslate"><span class="pre">mark</span></code>.
+A dataset can provide groups through <code class="docutils literal notranslate"><span class="pre">__category_validation__()</span></code>, and a
+<a class="reference internal" href="store.html"><span class="doc">Store</span></a> collects compatible groups from its contents so related
+tables can use the same vocabulary.  For example, a LandUseMAZ table might
+define a <code class="docutils literal notranslate"><span class="pre">MAZ</span></code> group, which will serve as the category labels for any other
+table in the same store that uses <code class="docutils literal notranslate"><span class="pre">Categorical.MAZ</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">microzone</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;MAZ&quot;</span><span class="p">)</span>
+</span><span data-line="4"><span class="n">trip</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;trip&quot;</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6">
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">LandUseMAZ</span><span class="p">(</span><span class="n">StoredTable</span><span class="p">):</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="n">MAZ</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span>
+</span><span data-line="10"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unique identifier for the MAZ.&quot;&quot;&quot;</span>
+</span><span data-line="11">
+</span><span data-line="12">    <span class="k">def</span><span class="w"> </span><span class="nf">__category_validation__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span data-line="13">        <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="14">            <span class="s2">&quot;MAZ&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAZ</span><span class="p">,</span>
+</span><span data-line="15">        <span class="p">}</span>
+</span><span data-line="16">
+</span><span data-line="17">
+</span><span data-line="18"><span class="k">class</span><span class="w"> </span><span class="nc">Trip</span><span class="p">(</span><span class="n">StoredTable</span><span class="p">):</span>
+</span><span data-line="19">
+</span><span data-line="20">    <span class="n">origin</span><span class="p">:</span> <span class="n">Categorical</span><span class="o">.</span><span class="n">MAZ</span>
+</span><span data-line="21"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Origin MAZ for the trip.&quot;&quot;&quot;</span>
+</span><span data-line="22">
+</span><span data-line="23">    <span class="n">destination</span><span class="p">:</span> <span class="n">Categorical</span><span class="o">.</span><span class="n">MAZ</span>
+</span><span data-line="24"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Destination MAZ for the trip.&quot;&quot;&quot;</span>
+</span><span data-line="25">
+</span></pre></div>
+</div>
+<p>When that store already defines a group,
+<code class="docutils literal notranslate"><span class="pre">CategoricalArray.from_values_predefined()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CategoricalArray.from_codes_predefined()</span></code> can construct an array from the
+shared definition.</p>
+</section>
+<section id="using-categorical-values-in-model-code">
+<h2>Using categorical values in model code<a class="headerlink" href="#using-categorical-values-in-model-code" title="Link to this heading">#</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">codes</span></code> for JAX indexing, comparisons, and other numerical operations.
+Use the category metadata or convert to Pandas or Polars when labels are
+needed for display or data preparation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">mode</span><span class="o">.</span><span class="n">codes</span>                    <span class="c1"># numerical model representation</span>
+</span><span data-line="2"><span class="n">mode</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>     <span class="c1"># [&quot;car&quot;, &quot;walk&quot;, &quot;car&quot;]</span>
+</span></pre></div>
+</div>
+<p>For nominal data, the numerical ordering of codes is only an encoding detail.
+For ordinal data, set <code class="docutils literal notranslate"><span class="pre">ordered=True</span></code> and keep the category list in its intended
+order. In either case, retaining the <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code> wrapper ensures that
+the codes, their meaning, and the validation rules continue to travel
+together.</p>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="datasets.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Multi-Dim Datasets</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="steps.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Steps</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>© 2026, Driftless Labs</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../../_static/shibuya.js?v=50760d75"></script>
+      <script defer="defer" src="../../_static/code-annotations.js?v=15a4c152"></script>
+      <script defer="defer" src="../../_static/toc-breakpoints.js?v=b079cf6d"></script></body>
+</html>

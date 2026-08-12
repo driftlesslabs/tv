@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="tomato" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Benchmarking - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development tasks" href="development-tasks.html" /><link rel="prev" title="Nested logit choice" href="concepts/nested-logit.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/extra.css?v=e0fc98bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/code-annotations.css?v=fec28d62" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="Benchmarking"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/driftless-icon.svg" alt="Traveler" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/driftless-icon-dark.svg" alt="Traveler" height="28" loading="lazy" />
+      <strong>Traveler</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="index.html">User Guide</a></li><li class="link"><a href="../demo-mtc/index.html">Demo</a></li><li class="link"><a href="../api/index.html">API</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="2"><ul class="current">
+<li class="toctree-l1 _expand"><a class="reference internal" href="getting-started.html">Installation</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="concepts/index.html">Concepts</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="concepts/store.html">Store</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="concepts/tables.html">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="concepts/datasets.html">Multi-Dim Datasets</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="concepts/categorical.html">Categorical Data</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="concepts/steps.html">Steps</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="concepts/nested-logit.html">Nested logit choice</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Benchmarking</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="development-tasks.html">Development tasks</a></li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#set-up-the-benchmark">Set up the benchmark</a></li>
+<li><a class="reference internal" href="#full-scale-results">Full-scale results</a></li>
+<li><a class="reference internal" href="#in-what-ways-is-this-apples-to-apples">In what ways is this apples-to-apples?</a></li>
+<li><a class="reference internal" href="#in-what-ways-is-it-not-apples-to-apples">In what ways is it not apples-to-apples?</a></li>
+<li><a class="reference internal" href="#outlook">Outlook</a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+  data-type="github" data-user="driftlesslabs" data-repo="traveler">
+  <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </span>
+  <span class="flex-grow px-2 break-all">
+    
+    
+      <span>traveler</span>
+    
+    <span class="flex text-sm repo-stats-count">
+      <span class="flex items-center pr-3">
+        <iconify-icon icon="lucide:star"></iconify-icon>
+        <strong class="js-repo-stars ml-1">0</strong>
+      </span>
+      <span class="flex items-center">
+        <iconify-icon icon="lucide:git-fork"></iconify-icon>
+        <strong class="js-repo-forks ml-1">0</strong>
+      </span>
+    </span>
+  </span>
+</a><div class="edit-this-page">
+  <a href="https://github.com/driftlesslabs/traveler/blob/main/docs/user-guide/benchmarking.md">Edit this page</a>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">Traveler</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">User Guide</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Benchmarking</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="benchmarking">
+<h1>Benchmarking<a class="headerlink" href="#benchmarking" title="Link to this heading">#</a></h1>
+<p>Traveler includes a repeatable benchmark based on the full MTC example model.
+It measures two Traveler implementations and two ActivitySim implementations
+of the same modeling sequence:</p>
+<ol class="arabic simple">
+<li><p>Load and annotate households, persons, land use, and selected OMX skims.</p></li>
+<li><p>Run a five-alternative auto-ownership model.</p></li>
+<li><p>Run work-location choice with tour-mode logsums from the same 21-mode
+utility specification.</p></li>
+</ol>
+<p>The benchmark is useful for evaluating runtime and memory, but it is not a
+claim that Traveler already replaces the complete ActivitySim platform. The
+model sequence here is intentionally much narrower than a production
+activity-based model.</p>
+<section id="set-up-the-benchmark">
+<h2>Set up the benchmark<a class="headerlink" href="#set-up-the-benchmark" title="Link to this heading">#</a></h2>
+<p>Traveler and ActivitySim use separate environments. ActivitySim 1.5.1 requires
+an older Python and NumPy stack, so the benchmark creates a locked Python 3.11
+environment containing the released ActivitySim 1.5.1 and sharrow 2.15.0
+packages:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py setup-activitysim</span>
+</span></pre></div>
+</div>
+<p>Download and conversion time is deliberately excluded. A normal benchmark run
+first prepares the MTC inputs, warms the JAX and sharrow compilation caches,
+and only then launches each measured implementation in a fresh process:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py run --engine all --repeat 3</span>
+</span></pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--engine</span> <span class="pre">all</span></code> runs these four implementations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">traveler</span></code> evaluates work-location logsums for all 1,454 destination zones.
+This not how ActivitySim is normally configured, and doing so is generally
+considered to be computationally infeasible in ActivitySim. It is included
+here as proof that this is now possible in Traveler.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">traveler-sampled</span></code> uses a 30-zone sample-logsum-simulate workflow.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activitysim</span></code> uses the same 30-zone workflow in one process, with sharrow
+required for expression evaluation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activitysim-multiprocess</span></code> uses ActivitySim’s native pipeline
+multiprocessing, shared skims, and the same model specifications. The tuned
+default is ten single-threaded worker processes on an 18-core Apple Silicon
+workstation.</p></li>
+</ul>
+<p>For a quick functional check, reduce the population and chunk sizes. The
+number of ActivitySim processes cannot exceed the number of households:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py run \</span>
+</span><span data-line="2"><span class="go">  --engine all --households 20 \</span>
+</span><span data-line="3"><span class="go">  --traveler-chunk-size 20 \</span>
+</span><span data-line="4"><span class="go">  --traveler-sampled-chunk-size 20 \</span>
+</span><span data-line="5"><span class="go">  --activitysim-chunk-size 20 \</span>
+</span><span data-line="6"><span class="go">  --activitysim-processes 10 \</span>
+</span><span data-line="7"><span class="go">  --repeat 1</span>
+</span></pre></div>
+</div>
+<p>Preparation can also be performed separately. This is useful when several
+measured runs will use the same population and chunk shapes:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py prepare \</span>
+</span><span data-line="2"><span class="go">  --engine all --households 500000 \</span>
+</span><span data-line="3"><span class="go">  --traveler-chunk-size 500 \</span>
+</span><span data-line="4"><span class="go">  --traveler-sampled-chunk-size 2500 \</span>
+</span><span data-line="5"><span class="go">  --activitysim-chunk-size 10000000 \</span>
+</span><span data-line="6"><span class="go">  --activitysim-processes 10</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="go">uv run python benchmarking/mtc_full.py run \</span>
+</span><span data-line="9"><span class="go">  --engine all --households 500000 \</span>
+</span><span data-line="10"><span class="go">  --traveler-chunk-size 500 \</span>
+</span><span data-line="11"><span class="go">  --traveler-sampled-chunk-size 2500 \</span>
+</span><span data-line="12"><span class="go">  --activitysim-chunk-size 10000000 \</span>
+</span><span data-line="13"><span class="go">  --activitysim-processes 10 \</span>
+</span><span data-line="14"><span class="go">  --repeat 3 --skip-prepare</span>
+</span></pre></div>
+</div>
+<p>Do not use <code class="docutils literal notranslate"><span class="pre">--skip-prepare</span></code> after changing a population or chunk shape unless
+you intend to include compilation in the measurement. Timestamped JSON reports
+are written under <code class="docutils literal notranslate"><span class="pre">benchmarking/results/</span></code>. They contain individual phase
+timings, whole-process wall time, configuration, record counts, output checks,
+and sampled peak memory for the worker process and its descendants.</p>
+</section>
+<section id="full-scale-results">
+<h2>Full-scale results<a class="headerlink" href="#full-scale-results" title="Link to this heading">#</a></h2>
+<p>The following results were collected using
+<code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">poe</span> <span class="pre">benchmark</span></code> on an 18-core Apple Silicon workstation with 128 GiB of
+RAM. Each implementation selected 500,000 households from the full MTC inputs.
+The runner completed an unmeasured preparation pass and then ran each engine
+three times in fresh processes. Compilation caches were warm and data download
+was not measured.</p>
+<p>Wall times are medians, with the observed three-run range in parentheses. Peak
+process-tree RSS is also the median of the three sampled peaks.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Implementation</p></th>
+<th class="head"><p>Work-location method</p></th>
+<th class="head text-right"><p>Processes</p></th>
+<th class="head text-right"><p>Median wall time (range)</p></th>
+<th class="head text-right"><p>Median peak process-tree RSS</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Traveler</p></td>
+<td><p>All 1,454 zones</p></td>
+<td class="text-right"><p>1</p></td>
+<td class="text-right"><p>35.84 s (34.66–35.85)</p></td>
+<td class="text-right"><p>5.16 GiB</p></td>
+</tr>
+<tr class="row-odd"><td><p>Traveler sampled</p></td>
+<td><p>30-zone sample</p></td>
+<td class="text-right"><p>1</p></td>
+<td class="text-right"><p><strong>7.11 s (6.99–7.32)</strong></p></td>
+<td class="text-right"><p><strong>3.06 GiB</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>ActivitySim + sharrow</p></td>
+<td><p>30-zone sample</p></td>
+<td class="text-right"><p>1</p></td>
+<td class="text-right"><p>44.40 s (42.94–44.43)</p></td>
+<td class="text-right"><p>19.94 GiB</p></td>
+</tr>
+<tr class="row-odd"><td><p>ActivitySim + sharrow, multiprocess</p></td>
+<td><p>30-zone sample</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>34.51 s (33.38–34.55)</p></td>
+<td class="text-right"><p>34.79 GiB</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The ranges show modest run-to-run variation, but three repetitions are still a
+small sample. Repeated, interleaved runs on an otherwise idle machine remain
+important when drawing precise performance conclusions.</p>
+<p>Using the medians, native multiprocessing reduced ActivitySim wall time by
+about 22 percent. Sampled Traveler was about 6.2 times as fast as
+single-process ActivitySim and 4.9 times as fast as multiprocess ActivitySim.
+All-zone Traveler was about 4 percent slower than multiprocess ActivitySim and
+used 19 percent less wall time than single-process ActivitySim, even though it
+calculated logsums for every destination instead of only 30 sampled zones.</p>
+<p>The RSS figures need special care. They are the sum of resident memory reported
+for the root process and all descendants. Shared pages can therefore be counted
+once for each ActivitySim worker. Unique set size was unavailable on the test
+machine, so 34.79 GiB should not be read as 34.79 GiB of distinct physical
+memory. The single-process figures are easier to compare: sampled Traveler’s
+3.06 GiB median RSS was about 85 percent below ActivitySim’s 19.94 GiB.</p>
+</section>
+<section id="in-what-ways-is-this-apples-to-apples">
+<h2>In what ways is this apples-to-apples?<a class="headerlink" href="#in-what-ways-is-this-apples-to-apples" title="Link to this heading">#</a></h2>
+<p>The benchmark controls several important sources of variation:</p>
+<ul class="simple">
+<li><p>All implementations use the same released MTC household, person, land-use,
+and OMX inputs, and load the same subset of skim matrices.</p></li>
+<li><p>The auto-ownership, work-location, and tour-mode utility equations were
+translated directly between the Traveler and ActivitySim representations.</p></li>
+<li><p>The three sampled implementations use the same sample size of 30 zones and
+the standard sample-of-alternatives correction.</p></li>
+<li><p>ActivitySim is configured to require sharrow rather than falling back to
+ordinary expression evaluation.</p></li>
+<li><p>Download, input conversion, and one-time compilation are outside the measured
+region. Each recorded repetition otherwise starts in a fresh process, and
+process startup and input loading are included.</p></li>
+<li><p>Single- and multiprocess ActivitySim produced identical household and person
+counts, auto-ownership counts, and aggregate work-location output checks in
+the full-scale run.</p></li>
+</ul>
+<p>For the core sample-logsum-simulate sequence, <code class="docutils literal notranslate"><span class="pre">traveler-sampled</span></code> versus either
+ActivitySim implementation is therefore a reasonable engineering comparison.
+It measures the cost of expressing and executing nearly the same numerical
+work through the two platforms.</p>
+</section>
+<section id="in-what-ways-is-it-not-apples-to-apples">
+<h2>In what ways is it not apples-to-apples?<a class="headerlink" href="#in-what-ways-is-it-not-apples-to-apples" title="Link to this heading">#</a></h2>
+<p>The results should not be generalized without these qualifications:</p>
+<ul class="simple">
+<li><p>All-zone Traveler does much more logsum work than the other three
+implementations. This is an intentional handicap, not an equal-algorithm
+comparison. Sampled Traveler is the appropriate Traveler reference for the
+ActivitySim tests.</p></li>
+<li><p>The platforms select 500,000 households using their own deterministic
+sampling machinery. Traveler loaded 1,315,472 persons and ActivitySim loaded
+1,315,695, a difference of 223 people (about 0.017 percent). Single- and
+multiprocess ActivitySim use exactly the same sampled population.</p></li>
+<li><p>ActivitySim brings mature, general-purpose workflow infrastructure to this
+small sequence, including table management, random-number channels, pipeline
+apportioning, checkpoint storage, and coalescing. Traveler’s benchmark path
+is narrower and does not yet provide all equivalent production services.</p></li>
+<li><p>Conversely, the ActivitySim multiprocess path was optimized for this model:
+skims are shared, numerical libraries are limited to one thread per worker,
+unused shadow-pricing buffers and tables are omitted, and redundant
+intermediate checkpoints are disabled. Ten workers was selected after
+full-scale tests on this machine; a different computer may have a different
+optimum.</p></li>
+<li><p>Warm-cache measurement reflects repeated production runs more than a first
+run on a new model specification. JAX and sharrow have different compilation
+behavior, so cold-start timing is a separate question.</p></li>
+<li><p>Only one model sequence, dataset, operating system, and hardware platform is
+represented. The reported pass used three repetitions and fixed,
+implementation-specific chunk sizes. It reduces sensitivity to one unusually
+fast or slow run, but remains evidence rather than a universal ranking.</p></li>
+<li><p>The benchmark does not include most of a production ActivitySim model:
+accessibility, school location, tour generation and scheduling, stop and
+trip models, shadow pricing, summaries, tracing, estimation, restartability,
+and many validation and reporting tasks are outside its scope.</p></li>
+</ul>
+</section>
+<section id="outlook">
+<h2>Outlook<a class="headerlink" href="#outlook" title="Link to this heading">#</a></h2>
+<p>The results support a conservative conclusion: Traveler has a credible path
+to materially faster and lower-memory execution for the dense numerical core
+of an activity-based model. They do not establish that a future full Traveler
+platform will preserve the roughly five-to-six-fold runtime advantage seen in
+this small sampled workflow.</p>
+<p>Several architectural features make continued gains plausible:</p>
+<ul class="simple">
+<li><p><strong>Compiled and fused array programs.</strong> JAX/XLA can compile a complete utility,
+probability, logsum, and choice kernel and fuse adjacent array operations.
+This reduces Python dispatch and avoids repeatedly materializing temporary
+pandas objects.</p></li>
+<li><p><strong>Regular, compact data.</strong> <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code>, <code class="docutils literal notranslate"><span class="pre">JaxDataset</span></code>, encoded categoricals, and
+explicitly selected dtypes can keep frequently used model data in compact
+arrays. Polars can handle columnar preparation without forcing the numerical
+core through object-heavy tables.</p></li>
+<li><p><strong>Fewer representation changes.</strong> Keeping model state in JAX-compatible
+arrays across consecutive steps can avoid dataframe joins, index rebuilding,
+and conversions at every model boundary. Zero-copy interchange should be
+used where a boundary is unavoidable.</p></li>
+<li><p><strong>Native accelerator and parallel execution.</strong> The same numerical kernels can
+target multicore CPUs and, where model size and transfer costs justify it,
+GPUs or other JAX accelerators. Longer term, independent chunks can be
+sharded without duplicating the entire model state in conventional worker
+processes.</p></li>
+<li><p><strong>Purpose-built persistence.</strong> Checkpoints can store only changed arrays and
+metadata at deliberate boundaries instead of serializing a general table
+pipeline after many individual components. This can reduce both I/O and peak
+memory while retaining restartability.</p></li>
+</ul>
+<p>Building the missing platform features will consume some of today’s advantage.
+Production-quality reproducibility, validation, checkpointing, tracing,
+estimation, scheduling constraints, shadow pricing, diagnostics, and clear
+error handling all have real costs. Some models are irregular or
+data-dependent and will not map neatly to large static JAX kernels. JIT
+compilation, shape specialization, device transfers, and accelerator memory
+also require careful management.</p>
+<p>ActivitySim and sharrow will continue to improve as well. They already provide
+a broad, proven modeling system, and newer data backends, reduced pipeline I/O,
+and better parallel scheduling can narrow the gap. The relevant future test is
+therefore not today’s small Traveler prototype against a static ActivitySim
+release, but two complete platforms running the same production model with the
+same correctness, reproducibility, and operational requirements.</p>
+<p>Even after allowing for those costs, it is reasonable to expect Traveler to
+retain a meaningful advantage in computation-heavy choice and logsum models,
+and likely a substantial memory advantage when a single compact array state
+replaces replicated dataframe-oriented worker state. End-to-end gains for a
+complete model will probably be smaller than the kernel-level gains and will
+need to be demonstrated component by component as Traveler’s feature coverage
+grows.</p>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="concepts/nested-logit.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Nested logit choice</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="development-tasks.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Development tasks</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>© 2026, Driftless Labs</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script defer="defer" src="../_static/code-annotations.js?v=15a4c152"></script>
+      <script defer="defer" src="../_static/toc-breakpoints.js?v=b079cf6d"></script></body>
+</html>

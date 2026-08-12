@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="tomato" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Table Definitions - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Data Validation" href="data-validation.html" /><link rel="prev" title="Demo" href="index.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/extra.css?v=e0fc98bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/code-annotations.css?v=fec28d62" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="Table Definitions"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/driftless-icon.svg" alt="Traveler" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/driftless-icon-dark.svg" alt="Traveler" height="28" loading="lazy" />
+      <strong>Traveler</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../user-guide/index.html">User Guide</a></li><li class="link"><a href="index.html">Demo</a></li><li class="link"><a href="../api/index.html">API</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="2"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Table Definitions</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="data-validation.html">Data Validation</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="auto-ownership.html">Auto Ownership</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="work-location.html">Work Location</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="data-access.html">Full Data</a></li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+  data-type="github" data-user="driftlesslabs" data-repo="traveler">
+  <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </span>
+  <span class="flex-grow px-2 break-all">
+    
+    
+      <span>traveler</span>
+    
+    <span class="flex text-sm repo-stats-count">
+      <span class="flex items-center pr-3">
+        <iconify-icon icon="lucide:star"></iconify-icon>
+        <strong class="js-repo-stars ml-1">0</strong>
+      </span>
+      <span class="flex items-center">
+        <iconify-icon icon="lucide:git-fork"></iconify-icon>
+        <strong class="js-repo-forks ml-1">0</strong>
+      </span>
+    </span>
+  </span>
+</a><div class="edit-this-page">
+  <a href="https://github.com/driftlesslabs/traveler/blob/main/docs/demo-mtc/tables.md">Edit this page</a>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">Traveler</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Demo</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Table Definitions</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="table-definitions">
+<h1>Table Definitions<a class="headerlink" href="#table-definitions" title="Link to this heading">#</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">traveler.examples.mtc_mini.tables</span></code> package contains table definitions
+for the MTC Mini example, including classes for households and tours, among
+others. These tables are implemented as subclasses of <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code> and define
+the schema for each data table in the model.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Households</label><div class="sd-tab-content docutils">
+<div class="code-annotated highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeMaker</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">t</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;household&quot;</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">Households</span><span class="p">(</span><span class="n">JaxTable</span><span class="p">):</span>
+</span><span data-line="7"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="8"><span class="sd">    A class representing households in the ActivityJAX framework.</span>
+</span><span data-line="9"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="10">
+</span><span data-line="11">    <span class="n">household_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>  <span class="c1"># (3)</span>
+</span><span data-line="12"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unique identifier for the household.&quot;&quot;&quot;</span>  <span class="c1"># (1)</span>
+</span><span data-line="13">
+</span><span data-line="14">    <span class="n">home_zone_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="15"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Identifier for the home zone of the household.&quot;&quot;&quot;</span>
+</span><span data-line="16">
+</span><span data-line="17">    <span class="n">income_in_thousands</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Float32</span>
+</span><span data-line="18">    <span class="n">hhsize</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int8</span>  <span class="c1"># (2)</span>
+</span><span data-line="19">    <span class="n">non_family</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Bool</span>
+</span><span data-line="20">
+</span><span data-line="21">    <span class="n">_household_idx_</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Docstrings can be added to each field to describe its purpose and any
+relevant details.</p></li>
+<li><p>The data type for <code class="docutils literal notranslate"><span class="pre">hhsize</span></code> is set to <code class="docutils literal notranslate"><span class="pre">Int8</span></code>, which is a small integer type
+suitable for household sizes. The validation tool can be set to safely
+coerce integer values to this type if the underlying data can be
+represented accurately.</p></li>
+<li><p>Type annotations are used to define the data types of each field in the
+<code class="docutils literal notranslate"><span class="pre">Households</span></code> class. The <code class="docutils literal notranslate"><span class="pre">t.Int32</span></code> type is used for 32-bit integers,
+<code class="docutils literal notranslate"><span class="pre">t.Float32</span></code> for 32-bit floating-point numbers, and <code class="docutils literal notranslate"><span class="pre">t.Bool</span></code> for boolean
+values. The <code class="docutils literal notranslate"><span class="pre">TypeMaker</span></code> utility is used to create type aliases for
+various numeric types, and also ensures that data arrays added to the
+table have appropriate dimensions (e.g. match the number of rows in the
+table, or are a scalar value that can be broadcast to the rows).</p></li>
+</ol>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+Tours</label><div class="sd-tab-content docutils">
+<div class="code-annotated highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeMaker</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">t</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;tour&quot;</span><span class="p">)</span>
+</span><span data-line="5"><span class="n">time_periods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;EA&quot;</span><span class="p">,</span> <span class="s2">&quot;AM&quot;</span><span class="p">,</span> <span class="s2">&quot;MD&quot;</span><span class="p">,</span> <span class="s2">&quot;PM&quot;</span><span class="p">,</span> <span class="s2">&quot;EV&quot;</span><span class="p">]</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">Tours</span><span class="p">(</span><span class="n">JaxTable</span><span class="p">):</span>
+</span><span data-line="8"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="9"><span class="sd">    A class representing households in the ActivityJAX framework.</span>
+</span><span data-line="10"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="11">
+</span><span data-line="12">    <span class="n">tour_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="13">    <span class="n">person_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="14">    <span class="n">household_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="15">
+</span><span data-line="16">    <span class="n">otaz</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="17">    <span class="n">dtaz</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="18">
+</span><span data-line="19">    <span class="n">out_period</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="n">time_periods</span><span class="p">)</span>  <span class="c1"># (3)</span>
+</span><span data-line="20"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Skims time period for the outbound (first) half of the tour.&quot;&quot;&quot;</span>
+</span><span data-line="21">
+</span><span data-line="22">    <span class="n">in_period</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="n">time_periods</span><span class="p">)</span>
+</span><span data-line="23"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Skims time period for the inbound (second, return) half of the tour.&quot;&quot;&quot;</span>
+</span><span data-line="24">
+</span><span data-line="25">    <span class="n">_household_idx_</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="26">    <span class="n">_person_idx_</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="27">
+</span><span data-line="28">    <span class="nd">@lazy</span>  <span class="c1"># (1)</span>
+</span><span data-line="29">    <span class="k">def</span><span class="w"> </span><span class="nf">sov_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">:</span> <span class="n">AbstractStore</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Bool</span><span class="p">:</span>
+</span><span data-line="30"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the SOV mode is available for this tour.&quot;&quot;&quot;</span>
+</span><span data-line="31">        <span class="n">odt_skims</span> <span class="o">=</span> <span class="n">skims_data</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">otaz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtaz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_period</span><span class="p">)</span>
+</span><span data-line="32">        <span class="n">dot_skims</span> <span class="o">=</span> <span class="n">skims_data</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtaz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">otaz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_period</span><span class="p">)</span>
+</span><span data-line="33">        <span class="k">return</span> <span class="p">(</span><span class="n">odt_skims</span><span class="p">(</span><span class="s2">&quot;SOV_TIME&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dot_skims</span><span class="p">(</span><span class="s2">&quot;SOV_TIME&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="34">
+</span><span data-line="35">    <span class="n">is_joint</span><span class="p">:</span> <span class="n">Endog</span><span class="p">(</span><span class="s2">&quot;tour_preprocessor&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Bool</span><span class="p">)</span>  <span class="c1"># (2)</span>
+</span><span data-line="36"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether this is a joint tour.&quot;&quot;&quot;</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">lazy</span></code> decorator is used to define a lazy-loaded property that
+computes a new table column only when demanded. This allows for
+efficient computation and avoids unnecessary calculations. The computed
+column is cached in the table, so it is only computed once per
+table row, and can be used in subsequent computations without
+recomputing it.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Endog</span></code> annotation is used to define an endogenous variable that
+is computed by some step that is part of the model. Data validation
+will expect that the endogenous variable does not need to exist unless
+that step has been run, but if that step has been run, the variable
+will be validated for shape and dtype.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Categorical</span></code> type is used to define a categorical variable with
+nominal or ordinal categories. This is useful for representing discrete
+choices or categories in the data, such as time periods in this case.
+Data validation will ensure that the categories in the data match the
+defined categories, and will raise an error if they do not match.</p></li>
+</ol>
+</div>
+</div>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="index.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Demo</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="data-validation.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Data Validation</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>© 2026, Driftless Labs</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script defer="defer" src="../_static/code-annotations.js?v=15a4c152"></script>
+      <script defer="defer" src="../_static/toc-breakpoints.js?v=b079cf6d"></script></body>
+</html>

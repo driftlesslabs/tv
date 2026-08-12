@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="tomato" data-content_root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Steps - Traveler</title><link rel="shortcut icon" href="../../_static/favicon.png"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Nested logit choice" href="nested-logit.html" /><link rel="prev" title="Categorical Data" href="categorical.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../_static/extra.css?v=e0fc98bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/code-annotations.css?v=fec28d62" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="Steps"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../index.html">
+      <img class="light-logo" src="../../_static/driftless-icon.svg" alt="Traveler" height="28" loading="lazy" />
+      <img class="dark-logo" src="../../_static/driftless-icon-dark.svg" alt="Traveler" height="28" loading="lazy" />
+      <strong>Traveler</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../index.html">User Guide</a></li><li class="link"><a href="../../demo-mtc/index.html">Demo</a></li><li class="link"><a href="../../api/index.html">API</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="2"><ul class="current">
+<li class="toctree-l1 _expand"><a class="reference internal" href="../getting-started.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
+<li class="toctree-l2 _expand"><a class="reference internal" href="store.html">Store</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="tables.html">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="datasets.html">Multi-Dim Datasets</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="categorical.html">Categorical Data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Steps</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="nested-logit.html">Nested logit choice</a></li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../benchmarking.html">Benchmarking</a></li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../development-tasks.html">Development tasks</a></li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#the-basic-contract">The basic contract</a></li>
+<li><a class="reference internal" href="#running-a-sequence">Running a sequence</a></li>
+<li><a class="reference internal" href="#updating-the-store">Updating the store</a><ul>
+<li><a class="reference internal" href="#completion-metadata">Completion metadata</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-computing-derived-fields">Example: computing derived fields</a></li>
+<li><a class="reference internal" href="#example-simulating-a-choice">Example: simulating a choice</a></li>
+<li><a class="reference internal" href="#example-sampling-related-records">Example: sampling related records</a></li>
+<li><a class="reference internal" href="#grouping-steps-into-a-phase">Grouping steps into a phase</a></li>
+<li><a class="reference internal" href="#a-complete-simulation-flow">A complete simulation flow</a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+  data-type="github" data-user="driftlesslabs" data-repo="traveler">
+  <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </span>
+  <span class="flex-grow px-2 break-all">
+    
+    
+      <span>traveler</span>
+    
+    <span class="flex text-sm repo-stats-count">
+      <span class="flex items-center pr-3">
+        <iconify-icon icon="lucide:star"></iconify-icon>
+        <strong class="js-repo-stars ml-1">0</strong>
+      </span>
+      <span class="flex items-center">
+        <iconify-icon icon="lucide:git-fork"></iconify-icon>
+        <strong class="js-repo-forks ml-1">0</strong>
+      </span>
+    </span>
+  </span>
+</a><div class="edit-this-page">
+  <a href="https://github.com/driftlesslabs/traveler/blob/main/docs/user-guide/concepts/steps.md">Edit this page</a>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Traveler</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">User Guide</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Concepts</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Steps</strong>
+        <meta itemprop="position" content="4" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="steps">
+<h1>Steps<a class="headerlink" href="#steps" title="Link to this heading">#</a></h1>
+<p>A Traveler simulation is an ordered series of operations on a
+<a class="reference internal" href="store.html"><span class="doc">Store</span></a>. Each operation reads the current model state, computes
+something, and returns the state that the next operation should receive.
+Traveler calls one such operation a <strong>step</strong>.</p>
+<p>A step might:</p>
+<ul class="simple">
+<li><p>prepare or sample input records;</p></li>
+<li><p>derive new columns from existing data;</p></li>
+<li><p>simulate a choice and store the result;</p></li>
+<li><p>update metadata about the model run; or</p></li>
+<li><p>group several smaller steps into a reusable model phase.</p></li>
+</ul>
+<p>The <a class="reference internal" href="../../api/generated/traveler.steps.Step.html#traveler.steps.Step" title="traveler.steps.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">Step</span></code></a> base class gives these operations a common
+interface. This lets a model pipeline focus on the sequence of work rather
+than on the implementation details of each operation.</p>
+<section id="the-basic-contract">
+<h2>The basic contract<a class="headerlink" href="#the-basic-contract" title="Link to this heading">#</a></h2>
+<p>Every concrete <code class="docutils literal notranslate"><span class="pre">Step</span></code> has a name and implements one essential method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">run_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+</span><span data-line="2">    <span class="o">...</span>
+</span><span data-line="3">    <span class="k">return</span> <span class="n">updated_store</span>
+</span></pre></div>
+</div>
+<p>The input is the complete model store available at that point in the
+simulation. The return value is the store that should be passed to the next
+step. A step can therefore read several tables even when it writes only one
+of them—for example, a household annotation can use person and land-use data
+while adding fields to the household table.</p>
+<p>A step can also carry:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>, a stable identifier used for display, logging, random-number
+derivation, or completion tracking;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">param</span></code>, a dictionary or <a class="reference internal" href="../../api/generated/traveler.core.parameters.Parameters.html#traveler.core.parameters.Parameters" title="traveler.core.parameters.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a>
+object containing model coefficients or settings; and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>, the typed <a class="reference internal" href="../../api/generated/traveler.core.stored.StoredTable.html#traveler.core.stored.StoredTable" title="traveler.core.stored.StoredTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StoredTable</span></code></a> class that the
+step primarily operates on.</p></li>
+</ul>
+<p>Not every step needs parameters or a primary table. The only universal
+behavior is accepting a store and returning a store.</p>
+</section>
+<section id="running-a-sequence">
+<h2>Running a sequence<a class="headerlink" href="#running-a-sequence" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../api/generated/traveler.core.store.AbstractStore.run_steps.html#traveler.core.store.AbstractStore.run_steps" title="traveler.core.store.AbstractStore.run_steps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_steps()</span></code></a> executes its arguments
+in order. Internally, it keeps the return value from each step and supplies it
+to the next one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">sample_households</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">annotate_persons</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">choose_auto_ownership</span><span class="p">,</span>
+</span><span data-line="5"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Conceptually, the state flows through the pipeline like this:</p>
+<pre  class="mermaid">
+        flowchart LR
+    loaded[&quot;Loaded store&quot;] --&gt;|&quot;sample households&quot;| sampled[&quot;Sampled store&quot;]
+    sampled --&gt;|&quot;derive person fields&quot;| annotated[&quot;Annotated store&quot;]
+    annotated --&gt;|&quot;simulate auto ownership&quot;| choices[&quot;Store with choices&quot;]
+    choices --&gt; outputs[&quot;Results and reports&quot;]
+    </pre><p>Each step sees all results produced before it. Order therefore matters: a
+choice model cannot consume a derived field until the annotation step that
+creates it has run. <code class="docutils literal notranslate"><span class="pre">run_steps()</span></code> is deliberately a small, explicit
+sequencer—not a scheduler that discovers dependencies or reorders work.</p>
+<p>Both <code class="docutils literal notranslate"><span class="pre">Step</span></code> instances and functions created by Traveler’s step decorators can
+appear in this sequence. A <code class="docutils literal notranslate"><span class="pre">Step</span></code> exposes itself through its <code class="docutils literal notranslate"><span class="pre">__step__</span></code>
+property. A decorated function receives a <code class="docutils literal notranslate"><span class="pre">__step__</span></code> attribute pointing to
+the step object built by the decorator. <code class="docutils literal notranslate"><span class="pre">run_steps()</span></code> uses that shared
+interface to handle both forms uniformly.</p>
+</section>
+<section id="updating-the-store">
+<h2>Updating the store<a class="headerlink" href="#updating-the-store" title="Link to this heading">#</a></h2>
+<p>A step mutates the <strong>logical simulation state</strong>, but it does not have to
+mutate the same Python object in place. In fact, Traveler’s built-in model
+steps generally use a functional update style:</p>
+<ol class="arabic simple">
+<li><p>read from the input store;</p></li>
+<li><p>make a shallow store copy or construct a replacement store;</p></li>
+<li><p>replace the affected <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code> or <code class="docutils literal notranslate"><span class="pre">JaxDataset</span></code>; and</p></li>
+<li><p>return the updated store.</p></li>
+</ol>
+<p>For example, a small custom step can add a derived household field with
+<code class="docutils literal notranslate"><span class="pre">assign_on()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">Step</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">IncomeThousands</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+</span><span data-line="5">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="6">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;income_thousands&quot;</span><span class="p">)</span>
+</span><span data-line="7">
+</span><span data-line="8">    <span class="k">def</span><span class="w"> </span><span class="nf">run_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+</span><span data-line="9">        <span class="n">out</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">assign_on</span><span class="p">(</span>
+</span><span data-line="10">            <span class="s2">&quot;households&quot;</span><span class="p">,</span>
+</span><span data-line="11">            <span class="n">income_thousands</span><span class="o">=</span><span class="n">store</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">income</span> <span class="o">/</span> <span class="mi">1_000</span><span class="p">,</span>
+</span><span data-line="12">        <span class="p">)</span>
+</span><span data-line="13">        <span class="n">out</span><span class="o">.</span><span class="n">completed_steps</span> <span class="o">|=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+</span><span data-line="14">        <span class="k">return</span> <span class="n">out</span>
+</span></pre></div>
+</div>
+<p>Running it produces a different store whose household table has the new
+column:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">updated</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">IncomeThousands</span><span class="p">())</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">updated</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">income_thousands</span>
+</span><span data-line="4"><span class="s2">&quot;income_thousands&quot;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">]</span>  <span class="c1"># False</span>
+</span></pre></div>
+</div>
+<p>An application-specific step is allowed to update the input store directly,
+but it must still return a store. Code that invokes a step should never rely
+on object identity or ignore the return value:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Correct: preserve the state returned by the step.</span>
+</span><span data-line="2"><span class="n">store</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">run_on</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Also correct: run_steps handles the returned state automatically.</span>
+</span><span data-line="5"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>This contract allows different step implementations to choose the update
+strategy appropriate to their work while remaining composable.</p>
+<section id="completion-metadata">
+<h3>Completion metadata<a class="headerlink" href="#completion-metadata" title="Link to this heading">#</a></h3>
+<p>A step can add its name to <code class="docutils literal notranslate"><span class="pre">store.completed_steps</span></code>. This metadata records
+which phases have run and can be used by validation. In particular, a field
+annotated with <a class="reference internal" href="../../api/generated/traveler.core.stored.from_step.html#traveler.core.stored.from_step" title="traveler.core.stored.from_step"><code class="xref py py-class docutils literal notranslate"><span class="pre">from_step</span></code></a> is not required
+until its producing step is complete.</p>
+<p>Completion tracking is not automatic in the <code class="docutils literal notranslate"><span class="pre">Step</span></code> base class; a concrete
+step decides when its work is complete and records the name as part of its
+returned state. This avoids marking a step complete before all of its updates
+have succeeded.</p>
+</section>
+</section>
+<section id="example-computing-derived-fields">
+<h2>Example: computing derived fields<a class="headerlink" href="#example-computing-derived-fields" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../api/generated/traveler.steps.compute_values.html#traveler.steps.compute_values" title="traveler.steps.compute_values"><code class="xref py py-class docutils literal notranslate"><span class="pre">compute_values</span></code></a> turns a three-argument function
+into a step. The function receives:</p>
+<ol class="arabic simple">
+<li><p>a detached <a class="reference internal" href="../../api/generated/traveler.core.stored.ReferencedTable.html#traveler.core.stored.ReferencedTable" title="traveler.core.stored.ReferencedTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferencedTable</span></code></a> identifying
+the records being processed;</p></li>
+<li><p>the store, for access to other model data; and</p></li>
+<li><p>a parameter object.</p></li>
+</ol>
+<p>It returns a dictionary of fields to add to its configured table:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameters</span>
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.stored</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReferencedTable</span>
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_values</span>
+</span><span data-line="6">
+</span><span data-line="7">
+</span><span data-line="8"><span class="k">class</span><span class="w"> </span><span class="nc">IncomeParameters</span><span class="p">(</span><span class="n">Parameters</span><span class="p">):</span>
+</span><span data-line="9">    <span class="n">high_income_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">75_000.0</span>
+</span><span data-line="10">
+</span><span data-line="11">
+</span><span data-line="12"><span class="nd">@compute_values</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">Households</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="n">IncomeParameters</span><span class="p">,</span> <span class="n">use_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="13"><span class="k">def</span><span class="w"> </span><span class="nf">annotate_income</span><span class="p">(</span>
+</span><span data-line="14">    <span class="n">households_ref</span><span class="p">:</span> <span class="n">ReferencedTable</span><span class="p">[</span><span class="n">Households</span><span class="p">],</span>
+</span><span data-line="15">    <span class="n">store</span><span class="p">:</span> <span class="n">Store</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">param</span><span class="p">:</span> <span class="n">IncomeParameters</span><span class="p">,</span>
+</span><span data-line="17"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span data-line="18">    <span class="n">households</span> <span class="o">=</span> <span class="n">households_ref</span><span class="o">.</span><span class="n">with_store</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span><span data-line="19">    <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="20">        <span class="s2">&quot;high_income&quot;</span><span class="p">:</span> <span class="n">households</span><span class="o">.</span><span class="n">income</span> <span class="o">&gt;=</span> <span class="n">param</span><span class="o">.</span><span class="n">high_income_threshold</span><span class="p">,</span>
+</span><span data-line="21">    <span class="p">}</span>
+</span></pre></div>
+</div>
+<p>The decorated name remains a function for direct inspection, while
+<code class="docutils literal notranslate"><span class="pre">annotate_income.__step__</span></code> is the <code class="docutils literal notranslate"><span class="pre">compute_values</span></code> step. Either can be passed
+through the step workflow:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">annotate_income</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>When run this way, <code class="docutils literal notranslate"><span class="pre">compute_values</span></code> resolves the complete chooser table,
+executes the calculation, adds the returned fields with <code class="docutils literal notranslate"><span class="pre">assign_on()</span></code>, and
+records the step name in <code class="docutils literal notranslate"><span class="pre">completed_steps</span></code>. With <code class="docutils literal notranslate"><span class="pre">use_jit=True</span></code>, compatible
+computations can use Traveler’s JAX and chunked execution path.</p>
+<p>This pattern works well for preprocessing and annotation steps: the function
+describes the calculation, while the reusable step wrapper handles table
+selection and incorporation of the results into the store.</p>
+</section>
+<section id="example-simulating-a-choice">
+<h2>Example: simulating a choice<a class="headerlink" href="#example-simulating-a-choice" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../api/generated/traveler.steps.simple_choice.html#traveler.steps.simple_choice" title="traveler.steps.simple_choice"><code class="xref py py-class docutils literal notranslate"><span class="pre">simple_choice</span></code></a> is a higher-level step for
+multinomial or nested logit models. Its utility function evaluates alternatives
+for a typed chooser table:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">mode_utilities</span><span class="p">(</span><span class="n">tours_ref</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+</span><span data-line="2">    <span class="n">tours</span> <span class="o">=</span> <span class="n">tours_ref</span><span class="o">.</span><span class="n">with_store</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span><span data-line="3">    <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="4">        <span class="s2">&quot;walk&quot;</span><span class="p">:</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;walk_constant&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">tours</span><span class="o">.</span><span class="n">walk_time</span><span class="p">,</span>
+</span><span data-line="5">        <span class="s2">&quot;drive&quot;</span><span class="p">:</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;drive_constant&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">tours</span><span class="o">.</span><span class="n">drive_time</span><span class="p">,</span>
+</span><span data-line="6">    <span class="p">}</span>
+</span><span data-line="7">
+</span><span data-line="8">
+</span><span data-line="9"><span class="n">choose_mode</span> <span class="o">=</span> <span class="n">simple_choice</span><span class="p">(</span>
+</span><span data-line="10">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;choose_mode&quot;</span><span class="p">,</span>
+</span><span data-line="11">    <span class="n">utility_func</span><span class="o">=</span><span class="n">mode_utilities</span><span class="p">,</span>
+</span><span data-line="12">    <span class="n">altnames</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;drive&quot;</span><span class="p">),</span>
+</span><span data-line="13">    <span class="n">param</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="14">        <span class="s2">&quot;walk_constant&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span data-line="15">        <span class="s2">&quot;drive_constant&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+</span><span data-line="16">        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span data-line="17">    <span class="p">},</span>
+</span><span data-line="18">    <span class="n">on</span><span class="o">=</span><span class="n">Tours</span><span class="p">,</span>
+</span><span data-line="19">    <span class="n">result_name</span><span class="o">=</span><span class="s2">&quot;mode&quot;</span><span class="p">,</span>
+</span><span data-line="20"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">choose_mode.run_on(store)</span></code> computes utilities and probabilities, draws one
+alternative per tour using deterministic JAX random keys, and returns a store
+whose tours table contains the new <code class="docutils literal notranslate"><span class="pre">mode</span></code> field. String alternatives are
+represented as a <a class="reference internal" href="categorical.html"><span class="doc">categorical value</span></a>, so their labels stay
+attached to the simulated codes.</p>
+<p>The same model object also exposes methods for utilities, probabilities,
+logsums, analytic shares, and calibration. Those methods compute particular
+model quantities; <code class="docutils literal notranslate"><span class="pre">run_on()</span></code> is the operation that incorporates simulated
+choices into the store and participates in a step pipeline.</p>
+</section>
+<section id="example-sampling-related-records">
+<h2>Example: sampling related records<a class="headerlink" href="#example-sampling-related-records" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../api/generated/traveler.steps.SampleHouseholds.html#traveler.steps.SampleHouseholds" title="traveler.steps.SampleHouseholds"><code class="xref py py-class docutils literal notranslate"><span class="pre">SampleHouseholds</span></code></a> is a data-preparation step. It
+selects households and then filters related persons and tours so the returned
+store remains internally consistent. Other store contents, such as land use
+or skims, are carried forward.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">SampleHouseholds</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">sampled</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">SampleHouseholds</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5_000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+</span><span data-line="6"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>This illustrates why a step receives the complete store instead of one table:
+sampling households also requires updating tables whose records refer to
+those households.</p>
+</section>
+<section id="grouping-steps-into-a-phase">
+<h2>Grouping steps into a phase<a class="headerlink" href="#grouping-steps-into-a-phase" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../api/generated/traveler.steps.compound_step.html#traveler.steps.compound_step" title="traveler.steps.compound_step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compound_step</span></code></a> packages an ordered list of smaller
+steps as one reusable step. An initialization phase might derive land-use,
+person, and household fields in dependency order:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">compound_step</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">initialize</span> <span class="o">=</span> <span class="n">compound_step</span><span class="p">(</span>
+</span><span data-line="5">    <span class="p">[</span>
+</span><span data-line="6">        <span class="n">annotate_land_use</span><span class="p">,</span>
+</span><span data-line="7">        <span class="n">annotate_persons</span><span class="p">,</span>
+</span><span data-line="8">        <span class="n">annotate_households</span><span class="p">,</span>
+</span><span data-line="9">        <span class="n">household_value_of_time</span><span class="p">,</span>
+</span><span data-line="10">    <span class="p">],</span>
+</span><span data-line="11">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;initialize&quot;</span><span class="p">,</span>
+</span><span data-line="12"><span class="p">)</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">initialize</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The compound step does not merge the calculations or run them concurrently.
+It simply passes each component’s returned store to the next component and
+returns the final result. The group is useful for naming and reusing a stable
+phase of the model.</p>
+</section>
+<section id="a-complete-simulation-flow">
+<h2>A complete simulation flow<a class="headerlink" href="#a-complete-simulation-flow" title="Link to this heading">#</a></h2>
+<p>A small simulation can combine all of these forms while keeping the control
+flow visible:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">load_inputs</span><span class="p">()</span>
+</span><span data-line="2"><span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">missing_fields</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">SampleHouseholds</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5_000</span><span class="p">),</span>
+</span><span data-line="6">    <span class="n">initialize</span><span class="p">,</span>
+</span><span data-line="7">    <span class="n">auto_ownership</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">work_location</span><span class="p">,</span>
+</span><span data-line="9">    <span class="n">choose_mode</span><span class="p">,</span>
+</span><span data-line="10"><span class="p">)</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</span><span data-line="13"><span class="n">write_results</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The resulting pipeline has a straightforward interpretation:</p>
+<ol class="arabic simple">
+<li><p>load and check the initial model state;</p></li>
+<li><p>reduce it to the desired simulation population;</p></li>
+<li><p>derive the fields required by later models;</p></li>
+<li><p>run choice models in dependency order;</p></li>
+<li><p>validate the completed state; and</p></li>
+<li><p>convert or write the resulting tables.</p></li>
+</ol>
+<p>Because every component follows the same store-to-store contract, individual
+steps can be tested alone, grouped into phases, reused in other pipelines, or
+replaced without changing how the surrounding simulation is orchestrated.</p>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="categorical.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Categorical Data</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="nested-logit.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Nested logit choice</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>© 2026, Driftless Labs</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../../_static/shibuya.js?v=50760d75"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: auto;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: auto;\n}\n\n.mermaid-container > pre > svg {\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false, "themeVariables": {"fontFamily": "Inter, sans-serif", "fontSize": "14px"}, "block": {"padding": 12}},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false, "themeVariables": {"fontFamily": "Inter, sans-serif", "fontSize": "14px"}, "block": {"padding": 12}},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+      <script defer="defer" src="../../_static/code-annotations.js?v=15a4c152"></script>
+      <script defer="defer" src="../../_static/toc-breakpoints.js?v=b079cf6d"></script></body>
+</html>
