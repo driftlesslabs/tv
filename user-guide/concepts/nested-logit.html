@@ -192,6 +192,17 @@ coefficients participate in JAX automatic differentiation, so they can be used
 with analytic-share calibration. Coefficients use ActivitySim’s relative
 convention: an elemental utility is divided by the product of coefficients on
 its path from the root.</p>
+<p>Calibration does not mutate the choice model’s parameter object or a parameter
+mapping supplied by the caller. It returns the fitted values in the optimizer
+result, so use <code class="docutils literal notranslate"><span class="pre">result[&quot;param&quot;]</span></code> for subsequent calculations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">result</span> <span class="o">=</span> <span class="n">tour_mode</span><span class="o">.</span><span class="n">calibrate_analytic_share</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;SOV&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;HOV&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;Walk&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;Bike&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">},</span>
+</span><span data-line="4">    <span class="n">calib_params</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;auto_nest&quot;</span><span class="p">],</span>
+</span><span data-line="5"><span class="p">)</span>
+</span><span data-line="6"><span class="n">shares</span> <span class="o">=</span> <span class="n">tour_mode</span><span class="o">.</span><span class="n">analytic_share</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">])</span>
+</span></pre></div>
+</div>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -237,7 +248,7 @@ its path from the root.</p>
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../../_static/documentation_options.js?v=eb646870"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

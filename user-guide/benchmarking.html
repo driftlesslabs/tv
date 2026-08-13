@@ -87,10 +87,10 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#set-up-the-benchmark">Set up the benchmark</a></li>
 <li><a class="reference internal" href="#full-scale-results">Full-scale results</a></li>
 <li><a class="reference internal" href="#in-what-ways-is-this-apples-to-apples">In what ways is this apples-to-apples?</a></li>
 <li><a class="reference internal" href="#in-what-ways-is-it-not-apples-to-apples">In what ways is it not apples-to-apples?</a></li>
+<li><a class="reference internal" href="#reproducing-these-benchmarks">Reproducing these benchmarks</a></li>
 <li><a class="reference internal" href="#outlook">Outlook</a></li>
 </ul>
 </div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
@@ -161,73 +161,19 @@ of the same modeling sequence:</p>
 utility specification.</p></li>
 </ol>
 <p>The benchmark is useful for evaluating runtime and memory, but it is not a
-claim that Traveler already replaces the complete ActivitySim platform. The
-model sequence here is intentionally much narrower than a production
-activity-based model.</p>
-<section id="set-up-the-benchmark">
-<h2>Set up the benchmark<a class="headerlink" href="#set-up-the-benchmark" title="Link to this heading">#</a></h2>
-<p>Traveler and ActivitySim use separate environments. ActivitySim 1.5.1 requires
-an older Python and NumPy stack, so the benchmark creates a locked Python 3.11
-environment containing the released ActivitySim 1.5.1 and sharrow 2.15.0
-packages:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py setup-activitysim</span>
-</span></pre></div>
+claim that Traveler already replaces the complete ActivitySim platform, because
+it doesn’t (yet). The model sequence here is intentionally much narrower than
+a full activity-based model, and focuses mostly on showcasing the possibilities
+of JAX and Polars for the numerical core of an ABM, by taking on one of the more
+computationally complex component types: a location choice model with tour mode
+logsums.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The benchmarking script was built by AI and only given a cursory review. Mistakes
+are possible. While the results should be interpreted with caution, they are
+representative of our expectations for performance and memory usage, based on
+work to date on the core <code class="docutils literal notranslate"><span class="pre">traveler</span></code> code, which is much more carefully reviewed.</p>
 </div>
-<p>Download and conversion time is deliberately excluded. A normal benchmark run
-first prepares the MTC inputs, warms the JAX and sharrow compilation caches,
-and only then launches each measured implementation in a fresh process:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py run --engine all --repeat 3</span>
-</span></pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">--engine</span> <span class="pre">all</span></code> runs these four implementations:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">traveler</span></code> evaluates work-location logsums for all 1,454 destination zones.
-This not how ActivitySim is normally configured, and doing so is generally
-considered to be computationally infeasible in ActivitySim. It is included
-here as proof that this is now possible in Traveler.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">traveler-sampled</span></code> uses a 30-zone sample-logsum-simulate workflow.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">activitysim</span></code> uses the same 30-zone workflow in one process, with sharrow
-required for expression evaluation.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">activitysim-multiprocess</span></code> uses ActivitySim’s native pipeline
-multiprocessing, shared skims, and the same model specifications. The tuned
-default is ten single-threaded worker processes on an 18-core Apple Silicon
-workstation.</p></li>
-</ul>
-<p>For a quick functional check, reduce the population and chunk sizes. The
-number of ActivitySim processes cannot exceed the number of households:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py run \</span>
-</span><span data-line="2"><span class="go">  --engine all --households 20 \</span>
-</span><span data-line="3"><span class="go">  --traveler-chunk-size 20 \</span>
-</span><span data-line="4"><span class="go">  --traveler-sampled-chunk-size 20 \</span>
-</span><span data-line="5"><span class="go">  --activitysim-chunk-size 20 \</span>
-</span><span data-line="6"><span class="go">  --activitysim-processes 10 \</span>
-</span><span data-line="7"><span class="go">  --repeat 1</span>
-</span></pre></div>
-</div>
-<p>Preparation can also be performed separately. This is useful when several
-measured runs will use the same population and chunk shapes:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py prepare \</span>
-</span><span data-line="2"><span class="go">  --engine all --households 500000 \</span>
-</span><span data-line="3"><span class="go">  --traveler-chunk-size 500 \</span>
-</span><span data-line="4"><span class="go">  --traveler-sampled-chunk-size 2500 \</span>
-</span><span data-line="5"><span class="go">  --activitysim-chunk-size 10000000 \</span>
-</span><span data-line="6"><span class="go">  --activitysim-processes 10</span>
-</span><span data-line="7">
-</span><span data-line="8"><span class="go">uv run python benchmarking/mtc_full.py run \</span>
-</span><span data-line="9"><span class="go">  --engine all --households 500000 \</span>
-</span><span data-line="10"><span class="go">  --traveler-chunk-size 500 \</span>
-</span><span data-line="11"><span class="go">  --traveler-sampled-chunk-size 2500 \</span>
-</span><span data-line="12"><span class="go">  --activitysim-chunk-size 10000000 \</span>
-</span><span data-line="13"><span class="go">  --activitysim-processes 10 \</span>
-</span><span data-line="14"><span class="go">  --repeat 3 --skip-prepare</span>
-</span></pre></div>
-</div>
-<p>Do not use <code class="docutils literal notranslate"><span class="pre">--skip-prepare</span></code> after changing a population or chunk shape unless
-you intend to include compilation in the measurement. Timestamped JSON reports
-are written under <code class="docutils literal notranslate"><span class="pre">benchmarking/results/</span></code>. They contain individual phase
-timings, whole-process wall time, configuration, record counts, output checks,
-and sampled peak memory for the worker process and its descendants.</p>
-</section>
 <section id="full-scale-results">
 <h2>Full-scale results<a class="headerlink" href="#full-scale-results" title="Link to this heading">#</a></h2>
 <p>The following results were collected using
@@ -351,6 +297,74 @@ trip models, shadow pricing, summaries, tracing, estimation, restartability,
 and many validation and reporting tasks are outside its scope.</p></li>
 </ul>
 </section>
+<section id="reproducing-these-benchmarks">
+<h2>Reproducing these benchmarks<a class="headerlink" href="#reproducing-these-benchmarks" title="Link to this heading">#</a></h2>
+<p>Everything needed to reproduce the benchmark is included in the Traveler repository.
+The whole process is substantially automated, via the <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">poe</span> <span class="pre">benchmark</span></code> command,
+but that command is a convenience wrapper for the underlying processes described here.</p>
+<p>Traveler and ActivitySim use separate environments. ActivitySim 1.5.1 requires
+an older Python and NumPy stack, so the benchmark creates a locked Python 3.11
+environment containing the released ActivitySim 1.5.1 and sharrow 2.15.0
+packages:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py setup-activitysim</span>
+</span></pre></div>
+</div>
+<p>The time to set all this up, including also downloading the MTC full-scale
+input data needed for the benchmark, is deliberately excluded from benchmark profiling.
+A normal benchmark run first prepares the MTC inputs, warms the JAX and sharrow compilation
+caches, and only then launches each measured implementation in a fresh process:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py run --engine all --repeat 3</span>
+</span></pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--engine</span> <span class="pre">all</span></code> runs these four implementations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">traveler</span></code> evaluates work-location logsums for all 1,454 destination zones.
+This not how ActivitySim is normally configured, and doing so is generally
+considered to be computationally infeasible in ActivitySim. It is included
+here as proof that this is now possible in Traveler.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">traveler-sampled</span></code> uses a 30-zone sample-logsum-simulate workflow.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activitysim</span></code> uses the same 30-zone workflow in one process, with sharrow
+required for expression evaluation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activitysim-multiprocess</span></code> uses ActivitySim’s native pipeline
+multiprocessing, shared skims, and the same model specifications. The tuned
+default is ten single-threaded worker processes on an 18-core Apple Silicon
+workstation.</p></li>
+</ul>
+<p>For a quick functional check, reduce the population and chunk sizes. The
+number of ActivitySim processes cannot exceed the number of households:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py run \</span>
+</span><span data-line="2"><span class="go">  --engine all --households 20 \</span>
+</span><span data-line="3"><span class="go">  --traveler-chunk-size 20 \</span>
+</span><span data-line="4"><span class="go">  --traveler-sampled-chunk-size 20 \</span>
+</span><span data-line="5"><span class="go">  --activitysim-chunk-size 20 \</span>
+</span><span data-line="6"><span class="go">  --activitysim-processes 10 \</span>
+</span><span data-line="7"><span class="go">  --repeat 1</span>
+</span></pre></div>
+</div>
+<p>Preparation can also be performed separately. This is useful when several
+measured runs will use the same population and chunk shapes:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="go">uv run python benchmarking/mtc_full.py prepare \</span>
+</span><span data-line="2"><span class="go">  --engine all --households 500000 \</span>
+</span><span data-line="3"><span class="go">  --traveler-chunk-size 500 \</span>
+</span><span data-line="4"><span class="go">  --traveler-sampled-chunk-size 2500 \</span>
+</span><span data-line="5"><span class="go">  --activitysim-chunk-size 10000000 \</span>
+</span><span data-line="6"><span class="go">  --activitysim-processes 10</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="go">uv run python benchmarking/mtc_full.py run \</span>
+</span><span data-line="9"><span class="go">  --engine all --households 500000 \</span>
+</span><span data-line="10"><span class="go">  --traveler-chunk-size 500 \</span>
+</span><span data-line="11"><span class="go">  --traveler-sampled-chunk-size 2500 \</span>
+</span><span data-line="12"><span class="go">  --activitysim-chunk-size 10000000 \</span>
+</span><span data-line="13"><span class="go">  --activitysim-processes 10 \</span>
+</span><span data-line="14"><span class="go">  --repeat 3 --skip-prepare</span>
+</span></pre></div>
+</div>
+<p>Do not use <code class="docutils literal notranslate"><span class="pre">--skip-prepare</span></code> after changing a population or chunk shape unless
+you intend to include compilation in the measurement. Timestamped JSON reports
+are written under <code class="docutils literal notranslate"><span class="pre">benchmarking/results/</span></code>. They contain individual phase
+timings, whole-process wall time, configuration, record counts, output checks,
+and sampled peak memory for the worker process and its descendants.</p>
+</section>
 <section id="outlook">
 <h2>Outlook<a class="headerlink" href="#outlook" title="Link to this heading">#</a></h2>
 <p>The results support a conservative conclusion: Traveler has a credible path
@@ -448,7 +462,7 @@ grows.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../_static/documentation_options.js?v=eb646870"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

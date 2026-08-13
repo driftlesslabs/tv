@@ -145,27 +145,30 @@ the schema for each data table in the model.</p>
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
 <label class="sd-tab-label" for="sd-tab-item-0">
 Households</label><div class="sd-tab-content docutils">
-<div class="code-annotated highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
-</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeMaker</span>
-</span><span data-line="3">
-</span><span data-line="4"><span class="n">t</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;household&quot;</span><span class="p">)</span>
-</span><span data-line="5">
-</span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">Households</span><span class="p">(</span><span class="n">JaxTable</span><span class="p">):</span>
-</span><span data-line="7"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="8"><span class="sd">    A class representing households in the ActivityJAX framework.</span>
-</span><span data-line="9"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="10">
-</span><span data-line="11">    <span class="n">household_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>  <span class="c1"># (3)</span>
-</span><span data-line="12"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unique identifier for the household.&quot;&quot;&quot;</span>  <span class="c1"># (1)</span>
+<div class="code-annotated highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeMaker</span>
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.stored</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_step</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="n">t</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;household&quot;</span><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="k">class</span><span class="w"> </span><span class="nc">Households</span><span class="p">(</span><span class="n">JaxTable</span><span class="p">):</span>
+</span><span data-line="10"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="11"><span class="sd">    A class representing households in the ActivityJAX framework.</span>
+</span><span data-line="12"><span class="sd">    &quot;&quot;&quot;</span>
 </span><span data-line="13">
-</span><span data-line="14">    <span class="n">home_zone_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
-</span><span data-line="15"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Identifier for the home zone of the household.&quot;&quot;&quot;</span>
+</span><span data-line="14">    <span class="n">household_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>  <span class="c1"># (3)</span>
+</span><span data-line="15"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unique identifier for the household.&quot;&quot;&quot;</span>  <span class="c1"># (1)</span>
 </span><span data-line="16">
-</span><span data-line="17">    <span class="n">income_in_thousands</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Float32</span>
-</span><span data-line="18">    <span class="n">hhsize</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int8</span>  <span class="c1"># (2)</span>
-</span><span data-line="19">    <span class="n">non_family</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Bool</span>
-</span><span data-line="20">
-</span><span data-line="21">    <span class="n">_household_idx_</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="17">    <span class="n">home_zone_id</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
+</span><span data-line="18"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Identifier for the home zone of the household.&quot;&quot;&quot;</span>
+</span><span data-line="19">
+</span><span data-line="20">    <span class="n">income_in_thousands</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Float32</span>
+</span><span data-line="21">    <span class="n">hhsize</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int8</span>  <span class="c1"># (2)</span>
+</span><span data-line="22">    <span class="n">non_family</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Bool</span>
+</span><span data-line="23">
+</span><span data-line="24">    <span class="n">_household_idx_</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Int32</span>
 </span></pre></div>
 </div>
 <ol class="arabic simple">
@@ -221,22 +224,19 @@ Tours</label><div class="sd-tab-content docutils">
 </span><span data-line="32">        <span class="n">dot_skims</span> <span class="o">=</span> <span class="n">skims_data</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtaz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">otaz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_period</span><span class="p">)</span>
 </span><span data-line="33">        <span class="k">return</span> <span class="p">(</span><span class="n">odt_skims</span><span class="p">(</span><span class="s2">&quot;SOV_TIME&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dot_skims</span><span class="p">(</span><span class="s2">&quot;SOV_TIME&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
 </span><span data-line="34">
-</span><span data-line="35">    <span class="n">is_joint</span><span class="p">:</span> <span class="n">Endog</span><span class="p">(</span><span class="s2">&quot;tour_preprocessor&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Bool</span><span class="p">)</span>  <span class="c1"># (2)</span>
+</span><span data-line="35">    <span class="n">is_joint</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Bool</span><span class="p">,</span> <span class="n">from_step</span><span class="p">(</span><span class="s2">&quot;tour_preprocessor&quot;</span><span class="p">)]</span>  <span class="c1"># (2)</span>
 </span><span data-line="36"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether this is a joint tour.&quot;&quot;&quot;</span>
 </span></pre></div>
 </div>
 <ol class="arabic simple">
-<li><p>The <code class="docutils literal notranslate"><span class="pre">lazy</span></code> decorator is used to define a lazy-loaded property that
-computes a new table column only when demanded. This allows for
-efficient computation and avoids unnecessary calculations. The computed
-column is cached in the table, so it is only computed once per
-table row, and can be used in subsequent computations without
-recomputing it.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">Endog</span></code> annotation is used to define an endogenous variable that
-is computed by some step that is part of the model. Data validation
-will expect that the endogenous variable does not need to exist unless
-that step has been run, but if that step has been run, the variable
-will be validated for shape and dtype.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">lazy</span></code> decorator defines a derived property that is computed when
+demanded. To persist it as a table column, use the store’s functional
+<code class="docutils literal notranslate"><span class="pre">push_down_on()</span></code> method and keep the returned store; the input table is not
+modified.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">from_step</span></code> metadata identifies a variable computed by a model step.
+Data validation does not require the variable until that step has run. Once
+the step is complete, the variable is required and validated for shape and
+dtype.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">Categorical</span></code> type is used to define a categorical variable with
 nominal or ordinal categories. This is useful for representing discrete
 choices or categories in the data, such as time periods in this case.
@@ -290,7 +290,7 @@ defined categories, and will raise an error if they do not match.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../_static/documentation_options.js?v=eb646870"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

@@ -266,7 +266,8 @@ those names. <code class="docutils literal notranslate"><span class="pre">store[
 the store. Typed tables are declared with annotations alone; they do not have
 class-level default values. Calling <code class="docutils literal notranslate"><span class="pre">store.validate()</span></code> checks registered
 tables together, including constraints that depend on shared categorical
-values.</p>
+values. Validation returns the original store when it is already valid, or a
+new store when safe dtype coercions are required; it never rewrites the input.</p>
 <p>The typed attribute is a read-only view. Replace its underlying data with item
 assignment, such as <code class="docutils literal notranslate"><span class="pre">store[&quot;households&quot;]</span> <span class="pre">=</span> <span class="pre">new_table</span></code>, or use a helper such as
 <code class="docutils literal notranslate"><span class="pre">assign_on()</span></code> to produce an updated store.</p>
@@ -287,6 +288,22 @@ leaving the original table unchanged:</p>
 <p>This style makes the flow of model state explicit: load or construct a store,
 pass it through model steps, and receive a store containing the resulting
 tables and metadata.</p>
+<p>Completion metadata follows the same pattern:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">updated</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">with_completed_step</span><span class="p">(</span><span class="s2">&quot;annotate_households&quot;</span><span class="p">)</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">store</span><span class="o">.</span><span class="n">completed_steps</span>    <span class="c1"># frozenset()</span>
+</span><span data-line="4"><span class="n">updated</span><span class="o">.</span><span class="n">completed_steps</span>  <span class="c1"># frozenset({&#39;annotate_households&#39;})</span>
+</span></pre></div>
+</div>
+<p>For typed tables that declare <code class="docutils literal notranslate"><span class="pre">table_id_col</span></code>, the store materializes one
+deterministic PRNG key per row when the table is inserted. Reading
+<code class="docutils literal notranslate"><span class="pre">store.households._prng_key_</span></code> is therefore a cheap, side-effect-free column
+lookup. Ordinary <code class="docutils literal notranslate"><span class="pre">assign_on()</span></code> updates reuse those keys, while replacing the
+ID column regenerates them on the new table. To change a table’s seed
+explicitly, produce a new store:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">reseeded</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">with_prng_seed</span><span class="p">(</span><span class="s2">&quot;households&quot;</span><span class="p">,</span> <span class="mi">1234</span><span class="p">)</span>
+</span></pre></div>
+</div>
 </section>
 </section>
 
@@ -333,7 +350,7 @@ tables and metadata.</p>
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../../_static/documentation_options.js?v=eb646870"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

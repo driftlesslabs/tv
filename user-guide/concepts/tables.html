@@ -315,6 +315,12 @@ created earlier:</p>
 </span><span data-line="8"><span class="n">store</span> <span class="o">=</span> <span class="n">Store</span><span class="p">(</span><span class="n">households</span><span class="o">=</span><span class="n">table</span><span class="p">)</span>
 </span></pre></div>
 </div>
+<p>Because <code class="docutils literal notranslate"><span class="pre">Households</span></code> declares <code class="docutils literal notranslate"><span class="pre">table_id_col</span></code>, insertion also materializes its
+deterministic per-row PRNG keys. They are stored as a normal internal column:
+property access does not create or cache anything. This avoids repeatedly
+rebuilding keys in hot model code. A functional ID-column update regenerates
+the keys, and <code class="docutils literal notranslate"><span class="pre">store.with_prng_seed(&quot;households&quot;,</span> <span class="pre">seed)</span></code> is the explicit way to
+return a copy using another seed.</p>
 <p>When connected to a store, <code class="docutils literal notranslate"><span class="pre">Households</span></code> retrieves those columns from
 <code class="docutils literal notranslate"><span class="pre">store[&quot;households&quot;]</span></code>. The annotation alone declares this connection; no
 class-level default or descriptor is needed. An optional index array makes it
@@ -332,6 +338,9 @@ a view of particular rows:</p>
 <p>A <code class="docutils literal notranslate"><span class="pre">StoredTable</span></code> can also define validation rules, lazy derived columns, and
 relationships to other stored tables. For example, a person view can return a
 household view indexed to each person’s household.</p>
+<p>Lazy derived columns can be persisted functionally with
+<code class="docutils literal notranslate"><span class="pre">store.push_down_on(&quot;households&quot;,</span> <span class="pre">&quot;derived_name&quot;)</span></code>. The method returns a new
+store and leaves the original table unchanged.</p>
 <p>Because it retains a reference to the entire store, a <code class="docutils literal notranslate"><span class="pre">StoredTable</span></code> cannot be
 flattened as a JAX pytree. Detach it before passing the selection through code
 that expects a pytree.</p>
@@ -427,7 +436,7 @@ arrays in the store’s <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../../_static/documentation_options.js?v=eb646870"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

@@ -177,7 +177,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">/Users/jpn/Git/traveler/src/traveler/steps/_sample_households.py:268: UserWarning: n (100000) is greater than the number of households in the store, returning all households.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">/Users/jpn/Git/traveler/src/traveler/steps/_sample_households.py:262: UserWarning: n (100000) is greater than the number of households in the store, returning all households.
 </span><span data-line="2">  return self.run_via_polars(store)
 </span></pre></div>
 </div>
@@ -215,9 +215,11 @@ data-aria-dark="Switch to auto color mode">
       <th>HHT</th>
       <th>income</th>
       <th>home_zone_id</th>
+      <th>_prng_key_</th>
     </tr>
     <tr>
       <th>household_id</th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -237,6 +239,7 @@ data-aria-dark="Switch to auto color mode">
       <td>1</td>
       <td>361000</td>
       <td>25</td>
+      <td>15767225188018600536</td>
     </tr>
     <tr>
       <th>763899</th>
@@ -247,6 +250,7 @@ data-aria-dark="Switch to auto color mode">
       <td>4</td>
       <td>59220</td>
       <td>6</td>
+      <td>14249247257885037026</td>
     </tr>
     <tr>
       <th>2222791</th>
@@ -257,6 +261,7 @@ data-aria-dark="Switch to auto color mode">
       <td>2</td>
       <td>197000</td>
       <td>9</td>
+      <td>11490395827286565799</td>
     </tr>
     <tr>
       <th>112477</th>
@@ -267,6 +272,7 @@ data-aria-dark="Switch to auto color mode">
       <td>6</td>
       <td>2200</td>
       <td>17</td>
+      <td>17101579320042102679</td>
     </tr>
     <tr>
       <th>370491</th>
@@ -277,9 +283,11 @@ data-aria-dark="Switch to auto color mode">
       <td>1</td>
       <td>16500</td>
       <td>21</td>
+      <td>5222445121369432989</td>
     </tr>
     <tr>
       <th>...</th>
+      <td>...</td>
       <td>...</td>
       <td>...</td>
       <td>...</td>
@@ -297,6 +305,7 @@ data-aria-dark="Switch to auto color mode">
       <td>4</td>
       <td>15000</td>
       <td>10</td>
+      <td>7523481964464160280</td>
     </tr>
     <tr>
       <th>570708</th>
@@ -307,6 +316,7 @@ data-aria-dark="Switch to auto color mode">
       <td>6</td>
       <td>13100</td>
       <td>23</td>
+      <td>13936936436250680516</td>
     </tr>
     <tr>
       <th>2762199</th>
@@ -317,6 +327,7 @@ data-aria-dark="Switch to auto color mode">
       <td>0</td>
       <td>0</td>
       <td>21</td>
+      <td>5181451548477488279</td>
     </tr>
     <tr>
       <th>2049372</th>
@@ -327,6 +338,7 @@ data-aria-dark="Switch to auto color mode">
       <td>4</td>
       <td>103000</td>
       <td>18</td>
+      <td>14513684321777940963</td>
     </tr>
     <tr>
       <th>702559</th>
@@ -337,10 +349,11 @@ data-aria-dark="Switch to auto color mode">
       <td>1</td>
       <td>14800</td>
       <td>13</td>
+      <td>16452319291433101042</td>
     </tr>
   </tbody>
 </table>
-<p>5000 rows × 7 columns</p>
+<p>5000 rows × 8 columns</p>
 </div></div></div>
 </div>
 <div class="cell docutils container">
@@ -375,10 +388,12 @@ data-aria-dark="Switch to auto color mode">
       <th>pemploy</th>
       <th>pstudent</th>
       <th>ptype</th>
+      <th>_prng_key_</th>
       <th>_household_idx_</th>
     </tr>
     <tr>
       <th>person_id</th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -399,6 +414,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>4</td>
+      <td>6571566880290666777</td>
       <td>3817</td>
     </tr>
     <tr>
@@ -410,6 +426,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>2</td>
       <td>3</td>
+      <td>4991301075266436201</td>
       <td>4066</td>
     </tr>
     <tr>
@@ -421,6 +438,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>4</td>
+      <td>16083176361397607792</td>
       <td>3498</td>
     </tr>
     <tr>
@@ -432,6 +450,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>4</td>
+      <td>16587057218973660541</td>
       <td>4539</td>
     </tr>
     <tr>
@@ -443,10 +462,12 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>4</td>
+      <td>16193036017997595926</td>
       <td>4710</td>
     </tr>
     <tr>
       <th>...</th>
+      <td>...</td>
       <td>...</td>
       <td>...</td>
       <td>...</td>
@@ -465,6 +486,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>5</td>
+      <td>12657125112145005282</td>
       <td>1559</td>
     </tr>
     <tr>
@@ -476,6 +498,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>5</td>
+      <td>15310746177928554435</td>
       <td>4711</td>
     </tr>
     <tr>
@@ -487,6 +510,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>5</td>
+      <td>15991084268004204639</td>
       <td>1148</td>
     </tr>
     <tr>
@@ -498,6 +522,7 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>5</td>
+      <td>16995667094222658877</td>
       <td>371</td>
     </tr>
     <tr>
@@ -509,11 +534,12 @@ data-aria-dark="Switch to auto color mode">
       <td>3</td>
       <td>3</td>
       <td>5</td>
+      <td>4454040046226196150</td>
       <td>4690</td>
     </tr>
   </tbody>
 </table>
-<p>8212 rows × 8 columns</p>
+<p>8212 rows × 9 columns</p>
 </div></div></div>
 </div>
 <div class="cell docutils container">
@@ -555,7 +581,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=household_id&gt;
 </span><span data-line="2">- household_id         (5000,) int32
 </span><span data-line="3">- hhsize               (5000,) int8
 </span><span data-line="4">- num_workers          (5000,) int8
@@ -564,6 +590,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="7">- HHT                  (5000,) int8
 </span><span data-line="8">- income               (5000,) int32
 </span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
+</span><span data-line="10">- _prng_key_           (5000,) key&lt;fry&gt;
 </span></pre></div>
 </div>
 </div>
@@ -575,7 +602,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=person_id&gt;
 </span><span data-line="2">- person_id            (8212,) int32
 </span><span data-line="3">- household_id         (8212,) int32
 </span><span data-line="4">- age                  (8212,) int32
@@ -584,7 +611,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="7">- pemploy              (8212,) int32
 </span><span data-line="8">- pstudent             (8212,) int32
 </span><span data-line="9">- ptype                (8212,) int32
-</span><span data-line="10">- _household_idx_      (8212,) int32
+</span><span data-line="10">- _prng_key_           (8212,) key&lt;fry&gt;
+</span><span data-line="11">- _household_idx_      (8212,) int32
 </span></pre></div>
 </div>
 </div>
@@ -606,16 +634,16 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.32] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_landuse</span> completed in 0:00:00.05
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.13] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_landuse</span> completed in 0:00:00.06
 </span></pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.69] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_persons</span> completed in 0:00:00.36
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.45] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_persons</span> completed in 0:00:00.31
 </span></pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.86] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_households</span> completed in 0:00:00.16
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.61] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_households</span> completed in 0:00:00.16
 </span></pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.94] INFO: compute_values step <span class=" -Color -Color-Bold">household_value_of_time</span> completed in 0:00:00.07
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.67] INFO: compute_values step <span class=" -Color -Color-Bold">household_value_of_time</span> completed in 0:00:00.06
 </span></pre></div>
 </div>
 </div>
@@ -627,7 +655,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=household_id&gt;
 </span><span data-line="2">- household_id         (5000,) int32
 </span><span data-line="3">- hhsize               (5000,) int8
 </span><span data-line="4">- num_workers          (5000,) int8
@@ -636,22 +664,23 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="7">- HHT                  (5000,) int8
 </span><span data-line="8">- income               (5000,) int32
 </span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
-</span><span data-line="10">- income_in_thousands  (5000,) float32
-</span><span data-line="11">- income_segment       (5000,) int8
-</span><span data-line="12">- family               (5000,) bool
-</span><span data-line="13">- non_family           (5000,) bool
-</span><span data-line="14">- num_drivers          (5000,) int8
-</span><span data-line="15">- num_adults           (5000,) int8
-</span><span data-line="16">- num_children         (5000,) int8
-</span><span data-line="17">- num_young_children   (5000,) int8
-</span><span data-line="18">- num_children_5_to_15 (5000,) int8
-</span><span data-line="19">- num_children_16_to_17 (5000,) int8
-</span><span data-line="20">- num_college_age      (5000,) int8
-</span><span data-line="21">- num_young_adults     (5000,) int8
-</span><span data-line="22">- home_is_urban        (5000,) bool
-</span><span data-line="23">- home_is_rural        (5000,) bool
-</span><span data-line="24">- median_value_of_time (5000,) float32
-</span><span data-line="25">- random_vot           (5000,) float32
+</span><span data-line="10">- _prng_key_           (5000,) key&lt;fry&gt;
+</span><span data-line="11">- income_in_thousands  (5000,) float32
+</span><span data-line="12">- income_segment       (5000,) int8
+</span><span data-line="13">- family               (5000,) bool
+</span><span data-line="14">- non_family           (5000,) bool
+</span><span data-line="15">- num_drivers          (5000,) int8
+</span><span data-line="16">- num_adults           (5000,) int8
+</span><span data-line="17">- num_children         (5000,) int8
+</span><span data-line="18">- num_young_children   (5000,) int8
+</span><span data-line="19">- num_children_5_to_15 (5000,) int8
+</span><span data-line="20">- num_children_16_to_17 (5000,) int8
+</span><span data-line="21">- num_college_age      (5000,) int8
+</span><span data-line="22">- num_young_adults     (5000,) int8
+</span><span data-line="23">- home_is_urban        (5000,) bool
+</span><span data-line="24">- home_is_rural        (5000,) bool
+</span><span data-line="25">- median_value_of_time (5000,) float32
+</span><span data-line="26">- random_vot           (5000,) float32
 </span></pre></div>
 </div>
 </div>
@@ -663,10 +692,10 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">{&#39;annotate_households&#39;,
-</span><span data-line="2"> &#39;annotate_landuse&#39;,
-</span><span data-line="3"> &#39;annotate_persons&#39;,
-</span><span data-line="4"> &#39;household_value_of_time&#39;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">frozenset({&#39;annotate_households&#39;,
+</span><span data-line="2">           &#39;annotate_landuse&#39;,
+</span><span data-line="3">           &#39;annotate_persons&#39;,
+</span><span data-line="4">           &#39;household_value_of_time&#39;})
 </span></pre></div>
 </div>
 </div>
@@ -678,7 +707,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=person_id&gt;
 </span><span data-line="2">- person_id            (8212,) int32
 </span><span data-line="3">- household_id         (8212,) int32
 </span><span data-line="4">- age                  (8212,) int32
@@ -687,29 +716,30 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="7">- pemploy              (8212,) int32
 </span><span data-line="8">- pstudent             (8212,) int32
 </span><span data-line="9">- ptype                (8212,) int32
-</span><span data-line="10">- _household_idx_      (8212,) int32
-</span><span data-line="11">- age_16_to_19         (8212,) bool
-</span><span data-line="12">- age_16_p             (8212,) bool
-</span><span data-line="13">- adult                (8212,) bool
-</span><span data-line="14">- male                 (8212,) bool
-</span><span data-line="15">- female               (8212,) bool
-</span><span data-line="16">- has_non_worker       (8212,) bool
-</span><span data-line="17">- has_retiree          (8212,) bool
-</span><span data-line="18">- has_preschool_kid    (8212,) bool
-</span><span data-line="19">- has_driving_kid      (8212,) bool
-</span><span data-line="20">- has_school_kid       (8212,) bool
-</span><span data-line="21">- has_full_time        (8212,) bool
-</span><span data-line="22">- has_part_time        (8212,) bool
-</span><span data-line="23">- has_university       (8212,) bool
-</span><span data-line="24">- student_is_employed  (8212,) bool
-</span><span data-line="25">- nonstudent_to_school (8212,) bool
-</span><span data-line="26">- is_student           (8212,) bool
-</span><span data-line="27">- is_gradeschool       (8212,) bool
-</span><span data-line="28">- is_highschool        (8212,) bool
-</span><span data-line="29">- is_university        (8212,) bool
-</span><span data-line="30">- school_segment       (8212,) int8
-</span><span data-line="31">- is_worker            (8212,) bool
-</span><span data-line="32">- home_zone_id         (8212,) categorical: (25 categories)
+</span><span data-line="10">- _prng_key_           (8212,) key&lt;fry&gt;
+</span><span data-line="11">- _household_idx_      (8212,) int32
+</span><span data-line="12">- age_16_to_19         (8212,) bool
+</span><span data-line="13">- age_16_p             (8212,) bool
+</span><span data-line="14">- adult                (8212,) bool
+</span><span data-line="15">- male                 (8212,) bool
+</span><span data-line="16">- female               (8212,) bool
+</span><span data-line="17">- has_non_worker       (8212,) bool
+</span><span data-line="18">- has_retiree          (8212,) bool
+</span><span data-line="19">- has_preschool_kid    (8212,) bool
+</span><span data-line="20">- has_driving_kid      (8212,) bool
+</span><span data-line="21">- has_school_kid       (8212,) bool
+</span><span data-line="22">- has_full_time        (8212,) bool
+</span><span data-line="23">- has_part_time        (8212,) bool
+</span><span data-line="24">- has_university       (8212,) bool
+</span><span data-line="25">- student_is_employed  (8212,) bool
+</span><span data-line="26">- nonstudent_to_school (8212,) bool
+</span><span data-line="27">- is_student           (8212,) bool
+</span><span data-line="28">- is_gradeschool       (8212,) bool
+</span><span data-line="29">- is_highschool        (8212,) bool
+</span><span data-line="30">- is_university        (8212,) bool
+</span><span data-line="31">- school_segment       (8212,) int8
+</span><span data-line="32">- is_worker            (8212,) bool
+</span><span data-line="33">- home_zone_id         (8212,) categorical: (25 categories)
 </span></pre></div>
 </div>
 </div>
@@ -721,7 +751,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=household_id&gt;
 </span><span data-line="2">- household_id         (5000,) int32
 </span><span data-line="3">- hhsize               (5000,) int8
 </span><span data-line="4">- num_workers          (5000,) int8
@@ -730,22 +760,23 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="7">- HHT                  (5000,) int8
 </span><span data-line="8">- income               (5000,) int32
 </span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
-</span><span data-line="10">- income_in_thousands  (5000,) float32
-</span><span data-line="11">- income_segment       (5000,) int8
-</span><span data-line="12">- family               (5000,) bool
-</span><span data-line="13">- non_family           (5000,) bool
-</span><span data-line="14">- num_drivers          (5000,) int8
-</span><span data-line="15">- num_adults           (5000,) int8
-</span><span data-line="16">- num_children         (5000,) int8
-</span><span data-line="17">- num_young_children   (5000,) int8
-</span><span data-line="18">- num_children_5_to_15 (5000,) int8
-</span><span data-line="19">- num_children_16_to_17 (5000,) int8
-</span><span data-line="20">- num_college_age      (5000,) int8
-</span><span data-line="21">- num_young_adults     (5000,) int8
-</span><span data-line="22">- home_is_urban        (5000,) bool
-</span><span data-line="23">- home_is_rural        (5000,) bool
-</span><span data-line="24">- median_value_of_time (5000,) float32
-</span><span data-line="25">- random_vot           (5000,) float32
+</span><span data-line="10">- _prng_key_           (5000,) key&lt;fry&gt;
+</span><span data-line="11">- income_in_thousands  (5000,) float32
+</span><span data-line="12">- income_segment       (5000,) int8
+</span><span data-line="13">- family               (5000,) bool
+</span><span data-line="14">- non_family           (5000,) bool
+</span><span data-line="15">- num_drivers          (5000,) int8
+</span><span data-line="16">- num_adults           (5000,) int8
+</span><span data-line="17">- num_children         (5000,) int8
+</span><span data-line="18">- num_young_children   (5000,) int8
+</span><span data-line="19">- num_children_5_to_15 (5000,) int8
+</span><span data-line="20">- num_children_16_to_17 (5000,) int8
+</span><span data-line="21">- num_college_age      (5000,) int8
+</span><span data-line="22">- num_young_adults     (5000,) int8
+</span><span data-line="23">- home_is_urban        (5000,) bool
+</span><span data-line="24">- home_is_rural        (5000,) bool
+</span><span data-line="25">- median_value_of_time (5000,) float32
+</span><span data-line="26">- random_vot           (5000,) float32
 </span></pre></div>
 </div>
 </div>
@@ -761,7 +792,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="2">  TIMEPERIOD: [&#39;EA&#39;, &#39;AM&#39;, &#39;MD&#39;, &#39;PM&#39;, &#39;EV&#39;] (ordered=False)
 </span><span data-line="3">  TAZ: [ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
 </span><span data-line="4"> 25] (ordered=False)
-</span><span data-line="5">table households is &lt;mtc.tables.households.Households object at 0x12c5cce50&gt;
+</span><span data-line="5">table households is &lt;mtc.tables.households.Households object at 0x140bb26d0&gt;
 </span><span data-line="6">Validating table &#39;households&#39;...
 </span><span data-line="7">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="8">Field &#39;TAZ&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
@@ -782,14 +813,14 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="23">Field &#39;num_college_age&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
 </span><span data-line="24">Field &#39;num_young_adults&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
 </span><span data-line="25">Field &#39;num_workers&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
-</span><span data-line="26">table tours is &lt;mtc.tables.tours.Tours object at 0x12b2be650&gt;
+</span><span data-line="26">table tours is &lt;mtc.tables.tours.Tours object at 0x1312bcc30&gt;
 </span><span data-line="27">Validating table &#39;tours&#39;...
 </span><span data-line="28">Field &#39;tour_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="29">Field &#39;person_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="30">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="31">Field &#39;_household_idx_&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="32">Field &#39;_person_idx_&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
-</span><span data-line="33">table persons is &lt;mtc.tables.persons.Persons object at 0x12c609a90&gt;
+</span><span data-line="33">table persons is &lt;mtc.tables.persons.Persons object at 0x140bfc830&gt;
 </span><span data-line="34">Validating table &#39;persons&#39;...
 </span><span data-line="35">Field &#39;person_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="36">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
@@ -804,7 +835,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="45">Field &#39;female&#39; validated as &lt;class &#39;bool&#39;&gt;.
 </span><span data-line="46">Field &#39;age_16_to_19&#39; validated as &lt;class &#39;numpy.bool&#39;&gt;.
 </span><span data-line="47">Field &#39;age_16_p&#39; validated as &lt;class &#39;numpy.bool&#39;&gt;.
-</span><span data-line="48">table land_use is &lt;mtc.tables.landuse.LandUse object at 0x12c5e8f50&gt;
+</span><span data-line="48">table land_use is &lt;mtc.tables.landuse.LandUse object at 0x140bba550&gt;
 </span><span data-line="49">Validating table &#39;land_use&#39;...
 </span><span data-line="50">Field &#39;TAZ&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="51">Field &#39;TOTACRE&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
@@ -821,6 +852,9 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="62">Field &#39;FPSEMPN&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="63">Field &#39;HEREMPN&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="64">Field &#39;density_index&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
+</span></pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;Store with keys households, persons, skims, land_use, time_periods, tours&gt;
 </span></pre></div>
 </div>
 </div>
@@ -846,7 +880,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=household_id&gt;
 </span><span data-line="2">- household_id         (5000,) int32
 </span><span data-line="3">- hhsize               (5000,) int8
 </span><span data-line="4">- num_workers          (5000,) int8
@@ -855,23 +889,24 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="7">- HHT                  (5000,) int8
 </span><span data-line="8">- income               (5000,) int32
 </span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
-</span><span data-line="10">- income_in_thousands  (5000,) float32
-</span><span data-line="11">- income_segment       (5000,) int8
-</span><span data-line="12">- family               (5000,) bool
-</span><span data-line="13">- non_family           (5000,) bool
-</span><span data-line="14">- num_drivers          (5000,) int8
-</span><span data-line="15">- num_adults           (5000,) int8
-</span><span data-line="16">- num_children         (5000,) int8
-</span><span data-line="17">- num_young_children   (5000,) int8
-</span><span data-line="18">- num_children_5_to_15 (5000,) int8
-</span><span data-line="19">- num_children_16_to_17 (5000,) int8
-</span><span data-line="20">- num_college_age      (5000,) int8
-</span><span data-line="21">- num_young_adults     (5000,) int8
-</span><span data-line="22">- home_is_urban        (5000,) bool
-</span><span data-line="23">- home_is_rural        (5000,) bool
-</span><span data-line="24">- median_value_of_time (5000,) float32
-</span><span data-line="25">- random_vot           (5000,) float32
-</span><span data-line="26">- auto_ownership_sim   (5000,) int8
+</span><span data-line="10">- _prng_key_           (5000,) key&lt;fry&gt;
+</span><span data-line="11">- income_in_thousands  (5000,) float32
+</span><span data-line="12">- income_segment       (5000,) int8
+</span><span data-line="13">- family               (5000,) bool
+</span><span data-line="14">- non_family           (5000,) bool
+</span><span data-line="15">- num_drivers          (5000,) int8
+</span><span data-line="16">- num_adults           (5000,) int8
+</span><span data-line="17">- num_children         (5000,) int8
+</span><span data-line="18">- num_young_children   (5000,) int8
+</span><span data-line="19">- num_children_5_to_15 (5000,) int8
+</span><span data-line="20">- num_children_16_to_17 (5000,) int8
+</span><span data-line="21">- num_college_age      (5000,) int8
+</span><span data-line="22">- num_young_adults     (5000,) int8
+</span><span data-line="23">- home_is_urban        (5000,) bool
+</span><span data-line="24">- home_is_rural        (5000,) bool
+</span><span data-line="25">- median_value_of_time (5000,) float32
+</span><span data-line="26">- random_vot           (5000,) float32
+</span><span data-line="27">- auto_ownership_sim   (5000,) int8
 </span></pre></div>
 </div>
 </div>
@@ -890,7 +925,7 @@ data-aria-dark="Switch to auto color mode">
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (5_000, 25)</small><table border="1" class="dataframe"><thead><tr><th>household_id</th><th>hhsize</th><th>num_workers</th><th>auto_ownership</th><th>TAZ</th><th>HHT</th><th>income</th><th>home_zone_id</th><th>income_in_thousands</th><th>income_segment</th><th>family</th><th>non_family</th><th>num_drivers</th><th>num_adults</th><th>num_children</th><th>num_young_children</th><th>num_children_5_to_15</th><th>num_children_16_to_17</th><th>num_college_age</th><th>num_young_adults</th><th>home_is_urban</th><th>home_is_rural</th><th>median_value_of_time</th><th>random_vot</th><th>auto_ownership_sim</th></tr><tr><td>i32</td><td>i8</td><td>i8</td><td>i8</td><td>i32</td><td>i8</td><td>i32</td><td>enum</td><td>f32</td><td>i8</td><td>bool</td><td>bool</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>bool</td><td>bool</td><td>f32</td><td>f32</td><td>i8</td></tr></thead><tbody><tr><td>2717868</td><td>2</td><td>1</td><td>1</td><td>25</td><td>1</td><td>361000</td><td>&quot;TAZ-25&quot;</td><td>361.0</td><td>4</td><td>true</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>true</td><td>false</td><td>60.0</td><td>0.351049</td><td>4</td></tr><tr><td>763899</td><td>1</td><td>0</td><td>1</td><td>6</td><td>4</td><td>59220</td><td>&quot;TAZ-6&quot;</td><td>59.220001</td><td>2</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>25.0</td><td>0.489543</td><td>1</td></tr><tr><td>2222791</td><td>2</td><td>2</td><td>2</td><td>9</td><td>2</td><td>197000</td><td>&quot;TAZ-9&quot;</td><td>197.0</td><td>4</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>1.229426</td><td>1</td></tr><tr><td>112477</td><td>1</td><td>1</td><td>0</td><td>17</td><td>6</td><td>2200</td><td>&quot;TAZ-17&quot;</td><td>2.2</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.188264</td><td>1</td></tr><tr><td>370491</td><td>3</td><td>1</td><td>0</td><td>21</td><td>1</td><td>16500</td><td>&quot;TAZ-21&quot;</td><td>16.5</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.640115</td><td>1</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>109218</td><td>1</td><td>1</td><td>0</td><td>10</td><td>4</td><td>15000</td><td>&quot;TAZ-10&quot;</td><td>15.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.933671</td><td>1</td></tr><tr><td>570708</td><td>1</td><td>0</td><td>0</td><td>23</td><td>6</td><td>13100</td><td>&quot;TAZ-23&quot;</td><td>13.1</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.532178</td><td>1</td></tr><tr><td>2762199</td><td>1</td><td>0</td><td>0</td><td>21</td><td>0</td><td>0</td><td>&quot;TAZ-21&quot;</td><td>0.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.651419</td><td>0</td></tr><tr><td>2049372</td><td>1</td><td>1</td><td>1</td><td>18</td><td>4</td><td>103000</td><td>&quot;TAZ-18&quot;</td><td>103.0</td><td>4</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>2.995311</td><td>1</td></tr><tr><td>702559</td><td>2</td><td>0</td><td>0</td><td>13</td><td>1</td><td>14800</td><td>&quot;TAZ-13&quot;</td><td>14.8</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.999762</td><td>1</td></tr></tbody></table></div></div></div>
+<small>shape: (5_000, 26)</small><table border="1" class="dataframe"><thead><tr><th>household_id</th><th>hhsize</th><th>num_workers</th><th>auto_ownership</th><th>TAZ</th><th>HHT</th><th>income</th><th>home_zone_id</th><th>_prng_key_</th><th>income_in_thousands</th><th>income_segment</th><th>family</th><th>non_family</th><th>num_drivers</th><th>num_adults</th><th>num_children</th><th>num_young_children</th><th>num_children_5_to_15</th><th>num_children_16_to_17</th><th>num_college_age</th><th>num_young_adults</th><th>home_is_urban</th><th>home_is_rural</th><th>median_value_of_time</th><th>random_vot</th><th>auto_ownership_sim</th></tr><tr><td>i32</td><td>i8</td><td>i8</td><td>i8</td><td>i32</td><td>i8</td><td>i32</td><td>enum</td><td>u64</td><td>f32</td><td>i8</td><td>bool</td><td>bool</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>bool</td><td>bool</td><td>f32</td><td>f32</td><td>i8</td></tr></thead><tbody><tr><td>2717868</td><td>2</td><td>1</td><td>1</td><td>25</td><td>1</td><td>361000</td><td>&quot;TAZ-25&quot;</td><td>15767225188018600536</td><td>361.0</td><td>4</td><td>true</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>true</td><td>false</td><td>60.0</td><td>1.149056</td><td>1</td></tr><tr><td>763899</td><td>1</td><td>0</td><td>1</td><td>6</td><td>4</td><td>59220</td><td>&quot;TAZ-6&quot;</td><td>14249247257885037026</td><td>59.220001</td><td>2</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>25.0</td><td>0.54027</td><td>0</td></tr><tr><td>2222791</td><td>2</td><td>2</td><td>2</td><td>9</td><td>2</td><td>197000</td><td>&quot;TAZ-9&quot;</td><td>11490395827286565799</td><td>197.0</td><td>4</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>0.921675</td><td>4</td></tr><tr><td>112477</td><td>1</td><td>1</td><td>0</td><td>17</td><td>6</td><td>2200</td><td>&quot;TAZ-17&quot;</td><td>17101579320042102679</td><td>2.2</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.465194</td><td>0</td></tr><tr><td>370491</td><td>3</td><td>1</td><td>0</td><td>21</td><td>1</td><td>16500</td><td>&quot;TAZ-21&quot;</td><td>5222445121369432989</td><td>16.5</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.186729</td><td>1</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>109218</td><td>1</td><td>1</td><td>0</td><td>10</td><td>4</td><td>15000</td><td>&quot;TAZ-10&quot;</td><td>7523481964464160280</td><td>15.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.651696</td><td>1</td></tr><tr><td>570708</td><td>1</td><td>0</td><td>0</td><td>23</td><td>6</td><td>13100</td><td>&quot;TAZ-23&quot;</td><td>13936936436250680516</td><td>13.1</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.033438</td><td>1</td></tr><tr><td>2762199</td><td>1</td><td>0</td><td>0</td><td>21</td><td>0</td><td>0</td><td>&quot;TAZ-21&quot;</td><td>5181451548477488279</td><td>0.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.25592</td><td>0</td></tr><tr><td>2049372</td><td>1</td><td>1</td><td>1</td><td>18</td><td>4</td><td>103000</td><td>&quot;TAZ-18&quot;</td><td>14513684321777940963</td><td>103.0</td><td>4</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>0.980867</td><td>0</td></tr><tr><td>702559</td><td>2</td><td>0</td><td>0</td><td>13</td><td>1</td><td>14800</td><td>&quot;TAZ-13&quot;</td><td>16452319291433101042</td><td>14.8</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>2.292876</td><td>2</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -899,7 +934,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([4, 1, 1, ..., 0, 1, 1], dtype=int8)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([1, 0, 4, ..., 0, 0, 2], dtype=int8)
 </span></pre></div>
 </div>
 </div>
@@ -1015,7 +1050,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([4, 1, 1, ..., 0, 1, 1], dtype=int8)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([1, 0, 4, ..., 0, 0, 2], dtype=int8)
 </span></pre></div>
 </div>
 </div>
@@ -1146,7 +1181,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">calibrate_analytic_share</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">calibration</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">calibrate_analytic_share</span><span class="p">(</span>
 </span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
 </span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span>
 </span><span data-line="4">        <span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
@@ -1165,30 +1200,13 @@ data-aria-dark="Switch to auto color mode">
 </span></pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">  message: Optimization terminated successfully.
-</span><span data-line="2">  success: True
-</span><span data-line="3">   status: 0
-</span><span data-line="4">      fun: 0.012498477473855019
-</span><span data-line="5">        x: [ 1.679e+00  6.343e+00 -3.334e+00 -2.961e+00]
-</span><span data-line="6">      nit: 17
-</span><span data-line="7">      jac: [ 1.570e-06 -3.571e-06 -1.522e-06  5.138e-07]
-</span><span data-line="8"> hess_inv: [[ 4.255e+01  4.628e+01 -7.460e-01  5.284e+01]
-</span><span data-line="9">            [ 4.628e+01  9.476e+01 -1.335e+00  7.839e+01]
-</span><span data-line="10">            [-7.460e-01 -1.335e+00  1.021e+00 -1.567e+00]
-</span><span data-line="11">            [ 5.284e+01  7.839e+01 -1.567e+00  1.718e+02]]
-</span><span data-line="12">     nfev: 24
-</span><span data-line="13">     njev: 24
-</span><span data-line="14">   shares: [ 1.250e-01  3.250e-01  4.250e-01  6.097e-06  1.250e-01]
-</span></pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share</span><span class="p">(</span>
 </span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
-</span><span data-line="3"><span class="p">)</span>
+</span><span data-line="3">    <span class="n">param</span><span class="o">=</span><span class="n">calibration</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">],</span>
+</span><span data-line="4"><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
@@ -1244,7 +1262,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../_static/documentation_options.js?v=eb646870"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

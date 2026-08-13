@@ -232,9 +232,8 @@ interface to handle both forms uniformly.</p>
 </section>
 <section id="updating-the-store">
 <h2>Updating the store<a class="headerlink" href="#updating-the-store" title="Link to this heading">#</a></h2>
-<p>A step mutates the <strong>logical simulation state</strong>, but it does not have to
-mutate the same Python object in place. In fact, Traveler’s built-in model
-steps generally use a functional update style:</p>
+<p>A step advances the <strong>logical simulation state</strong> by returning a new value.
+Traveler’s model steps use a functional update style:</p>
 <ol class="arabic simple">
 <li><p>read from the input store;</p></li>
 <li><p>make a shallow store copy or construct a replacement store;</p></li>
@@ -255,8 +254,7 @@ steps generally use a functional update style:</p>
 </span><span data-line="10">            <span class="s2">&quot;households&quot;</span><span class="p">,</span>
 </span><span data-line="11">            <span class="n">income_thousands</span><span class="o">=</span><span class="n">store</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">income</span> <span class="o">/</span> <span class="mi">1_000</span><span class="p">,</span>
 </span><span data-line="12">        <span class="p">)</span>
-</span><span data-line="13">        <span class="n">out</span><span class="o">.</span><span class="n">completed_steps</span> <span class="o">|=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
-</span><span data-line="14">        <span class="k">return</span> <span class="n">out</span>
+</span><span data-line="13">        <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">with_completed_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </span></pre></div>
 </div>
 <p>Running it produces a different store whose household table has the new
@@ -267,9 +265,9 @@ column:</p>
 </span><span data-line="4"><span class="s2">&quot;income_thousands&quot;</span> <span class="ow">in</span> <span class="n">store</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">]</span>  <span class="c1"># False</span>
 </span></pre></div>
 </div>
-<p>An application-specific step is allowed to update the input store directly,
-but it must still return a store. Code that invokes a step should never rely
-on object identity or ignore the return value:</p>
+<p>Application-specific steps should follow the same rule: treat the input store
+as read-only and return the updated store. Code that invokes a step must not
+ignore the return value:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Correct: preserve the state returned by the step.</span>
 </span><span data-line="2"><span class="n">store</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">run_on</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
 </span><span data-line="3">
@@ -277,14 +275,15 @@ on object identity or ignore the return value:</p>
 </span><span data-line="5"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p>This contract allows different step implementations to choose the update
-strategy appropriate to their work while remaining composable.</p>
+<p>This contract keeps steps composable and prevents a failed step from leaving
+partially updated input state behind.</p>
 <section id="completion-metadata">
 <h3>Completion metadata<a class="headerlink" href="#completion-metadata" title="Link to this heading">#</a></h3>
-<p>A step can add its name to <code class="docutils literal notranslate"><span class="pre">store.completed_steps</span></code>. This metadata records
-which phases have run and can be used by validation. In particular, a field
-annotated with <a class="reference internal" href="../../api/generated/traveler.core.stored.from_step.html#traveler.core.stored.from_step" title="traveler.core.stored.from_step"><code class="xref py py-class docutils literal notranslate"><span class="pre">from_step</span></code></a> is not required
-until its producing step is complete.</p>
+<p>A step records its name with <code class="docutils literal notranslate"><span class="pre">store.with_completed_step(name)</span></code>, which returns
+an updated store. The read-only <code class="docutils literal notranslate"><span class="pre">store.completed_steps</span></code> frozenset records which
+phases have run and can be used by validation. In particular, a field annotated
+with <a class="reference internal" href="../../api/generated/traveler.core.stored.from_step.html#traveler.core.stored.from_step" title="traveler.core.stored.from_step"><code class="xref py py-class docutils literal notranslate"><span class="pre">from_step</span></code></a> is not required until its
+producing step is complete.</p>
 <p>Completion tracking is not automatic in the <code class="docutils literal notranslate"><span class="pre">Step</span></code> base class; a concrete
 step decides when its work is complete and records the name as part of its
 returned state. This avoids marking a step complete before all of its updates
@@ -425,7 +424,7 @@ phase of the model.</p>
 <p>A small simulation can combine all of these forms while keeping the control
 flow visible:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">load_inputs</span><span class="p">()</span>
-</span><span data-line="2"><span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">missing_fields</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</span><span data-line="2"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">missing_fields</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 </span><span data-line="3">
 </span><span data-line="4"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
 </span><span data-line="5">    <span class="n">SampleHouseholds</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5_000</span><span class="p">),</span>
@@ -435,7 +434,7 @@ flow visible:</p>
 </span><span data-line="9">    <span class="n">choose_mode</span><span class="p">,</span>
 </span><span data-line="10"><span class="p">)</span>
 </span><span data-line="11">
-</span><span data-line="12"><span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</span><span data-line="12"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 </span><span data-line="13"><span class="n">write_results</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
 </span></pre></div>
 </div>
@@ -497,7 +496,7 @@ replaced without changing how the surrounding simulation is orchestrated.</p>
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=9dc50c57"></script>
+      <script src="../../_static/documentation_options.js?v=eb646870"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
