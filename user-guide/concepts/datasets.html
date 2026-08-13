@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="tomato" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Multi-Dim Datasets - Traveler</title><link rel="shortcut icon" href="../../_static/favicon.png"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Categorical Data" href="categorical.html" /><link rel="prev" title="Tables" href="tables.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Multi-Dim Datasets - Traveler</title><link rel="shortcut icon" href="../../_static/favicon.png"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Categorical Data" href="categorical.html" /><link rel="prev" title="Local file and format I/O" href="io.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=e1a1ceaf" />
@@ -68,12 +68,14 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
 <li class="toctree-l2 _expand"><a class="reference internal" href="store.html">Store</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="tables.html">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="io.html">Local file and format I/O</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Multi-Dim Datasets</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="categorical.html">Categorical Data</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="nested-logit.html">Nested logit choice</a></li>
 </ul>
 </li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../assets.html">Data Download</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../benchmarking.html">Benchmarking</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../development-tasks.html">Development tasks</a></li>
 </ul>
@@ -152,11 +154,11 @@ data-aria-dark="Switch to auto color mode">
   <article class="yue" role="main">
           <section class="tex2jax_ignore mathjax_ignore" id="multi-dim-datasets">
 <h1>Multi-Dim Datasets<a class="headerlink" href="#multi-dim-datasets" title="Link to this heading">#</a></h1>
-<p>Traveler uses <a class="reference internal" href="../../api/generated/traveler.trees.JaxDataset.html#traveler.trees.JaxDataset" title="traveler.trees.JaxDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxDataset</span></code></a> for named collections of JAX arrays that do not
+<p>Traveler uses <a class="reference internal" href="../../api/generated/traveler.tables.JaxDataset.html#traveler.tables.JaxDataset" title="traveler.tables.JaxDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxDataset</span></code></a> for named collections of JAX arrays that do not
 naturally form a table. Each variable has a name, but the variables may have different numbers of
 dimensions and different shapes. This makes a <code class="docutils literal notranslate"><span class="pre">JaxDataset</span></code> useful for multidimensional model inputs
 such as skims, other related level-of-service (LOS) matrices, and accessibility arrays.</p>
-<p>Like a <a class="reference internal" href="../../api/generated/traveler.trees.JaxTable.html#traveler.trees.JaxTable" title="traveler.trees.JaxTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxTable</span></code></a>, a <code class="docutils literal notranslate"><span class="pre">JaxDataset</span></code>:</p>
+<p>Like a <a class="reference internal" href="../../api/generated/traveler.tables.JaxTable.html#traveler.tables.JaxTable" title="traveler.tables.JaxTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxTable</span></code></a>, a <code class="docutils literal notranslate"><span class="pre">JaxDataset</span></code>:</p>
 <ul class="simple">
 <li><p>stores its numerical data as JAX arrays;</p></li>
 <li><p>provides variables through attributes and string keys;</p></li>
@@ -214,7 +216,7 @@ represent one record per row. They can coexist in one <code class="docutils lite
 impose a shared rank or shape.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxDataset</span>
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxDataset</span>
 </span><span data-line="4">
 </span><span data-line="5">
 </span><span data-line="6"><span class="n">distance</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -306,7 +308,7 @@ time-period axes.</p></li>
 particular, <code class="docutils literal notranslate"><span class="pre">&quot;TAZ</span> <span class="pre">TAZ&quot;</span></code> describes a square origin-destination matrix. Different names such as
 <code class="docutils literal notranslate"><span class="pre">&quot;ORIGIN</span> <span class="pre">DESTINATION&quot;</span></code> would describe two axes without asserting that they have the same size.</p>
 <p>The annotations form the data model for a skim-specific subclass:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxDataset</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxDataset</span>
 </span><span data-line="2">
 </span><span data-line="3">
 </span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">Skims</span><span class="p">(</span><span class="n">JaxDataset</span><span class="p">):</span>
@@ -352,10 +354,10 @@ keeping the data directly usable by JAX.</p>
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="tables.html">
+    <a href="io.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Tables</div></div>
+        <span>Previous</span><div class="title">Local file and format I/O</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="categorical.html">
@@ -389,7 +391,7 @@ keeping the data directly usable by JAX.</p>
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

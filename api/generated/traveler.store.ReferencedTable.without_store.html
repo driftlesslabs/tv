@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="tomato" data-content_root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>traveler.store.ReferencedTable.without_store - Traveler</title><link rel="shortcut icon" href="../../_static/favicon.png"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="traveler.store.StoredTable" href="traveler.store.StoredTable.html" /><link rel="prev" title="traveler.store.ReferencedTable.with_store" href="traveler.store.ReferencedTable.with_store.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../_static/extra.css?v=e0fc98bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/code-annotations.css?v=fec28d62" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/><meta property="og:title" content="traveler.store.ReferencedTable.without_store"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../index.html">
+      <img class="light-logo" src="../../_static/driftless-icon.svg" alt="Traveler" height="28" loading="lazy" />
+      <img class="dark-logo" src="../../_static/driftless-icon-dark.svg" alt="Traveler" height="28" loading="lazy" />
+      <strong>Traveler</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../../user-guide/index.html">User Guide</a></li><li class="link"><a href="../../demo-mtc/index.html">Demo</a></li><li class="link"><a href="../index.html">API</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="2"><ul>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.html">traveler</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.log_to_stdout.html">traveler.log_to_stdout</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.assets.html">traveler.assets</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.assets.compress_zst.html">traveler.assets.compress_zst</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.assets.csv_to_parquet.html">traveler.assets.csv_to_parquet</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.assets.display_sha256_checksums.html">traveler.assets.display_sha256_checksums</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.assets.download_asset.html">traveler.assets.download_asset</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.assets.extract_archive.html">traveler.assets.extract_archive</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.assets.extract_zst.html">traveler.assets.extract_zst</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.assets.sha256_checksum.html">traveler.assets.sha256_checksum</a></li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.core.html">traveler.core</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.array_tools.html">traveler.core.array_tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.array_tools.dict_concat.html">traveler.core.array_tools.dict_concat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.array_tools.dict_to_dimension.html">traveler.core.array_tools.dict_to_dimension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.array_tools.dict_to_vector.html">traveler.core.array_tools.dict_to_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.array_tools.pytree_concat.html">traveler.core.array_tools.pytree_concat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.array_tools.IndexedTable.html">traveler.core.array_tools.IndexedTable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.array_tools.IndexedTable.table_name.html">traveler.core.array_tools.IndexedTable.table_name</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.array_tools.Lookup.html">traveler.core.array_tools.Lookup</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.categorical.html">traveler.core.categorical</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.html">traveler.core.categorical.CategoricalArray</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.from_codes_predefined.html">traveler.core.categorical.CategoricalArray.from_codes_predefined</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.from_pandas.html">traveler.core.categorical.CategoricalArray.from_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.from_values.html">traveler.core.categorical.CategoricalArray.from_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.from_values_predefined.html">traveler.core.categorical.CategoricalArray.from_values_predefined</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.take.html">traveler.core.categorical.CategoricalArray.take</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.to_pandas.html">traveler.core.categorical.CategoricalArray.to_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.marked_categories.html">traveler.core.categorical.CategoricalArray.marked_categories</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.ndim.html">traveler.core.categorical.CategoricalArray.ndim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.shape.html">traveler.core.categorical.CategoricalArray.shape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.categorical.CategoricalArray.size.html">traveler.core.categorical.CategoricalArray.size</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.digitize.html">traveler.core.digitize</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.digitize.digitize.html">traveler.core.digitize.digitize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.digitize.is_monotonic_increasing.html">traveler.core.digitize.is_monotonic_increasing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.errors.html">traveler.core.errors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.errors.PerformanceWarning.html">traveler.core.errors.PerformanceWarning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.errors.ValidationError.html">traveler.core.errors.ValidationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.errors.ZoneReindexWarning.html">traveler.core.errors.ZoneReindexWarning</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.hashing.html">traveler.core.hashing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.hashing.alphanum_hash.html">traveler.core.hashing.alphanum_hash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.hashing.hex_hash.html">traveler.core.hashing.hex_hash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.hashing.make_prng_keys.html">traveler.core.hashing.make_prng_keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.hashing.prng_subkey.html">traveler.core.hashing.prng_subkey</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.hashing.rehash.html">traveler.core.hashing.rehash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.hashing.reproducible_hash.html">traveler.core.hashing.reproducible_hash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.hashing.stable_hash.html">traveler.core.hashing.stable_hash</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.lazy.html">traveler.core.lazy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.lazy.lazy.html">traveler.core.lazy.lazy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.lazy.lazy_property.html">traveler.core.lazy.lazy_property</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.multithread.html">traveler.core.multithread</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.multithread.max_num_threads.html">traveler.core.multithread.max_num_threads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.multithread.multithread_op.html">traveler.core.multithread.multithread_op</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.multithread.multithread_op.debug.html">traveler.core.multithread.multithread_op.debug</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.parameters.html">traveler.core.parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.parameters.Parameters.html">traveler.core.parameters.Parameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.clear.html">traveler.core.parameters.Parameters.clear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.copy.html">traveler.core.parameters.Parameters.copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.get.html">traveler.core.parameters.Parameters.get</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.items.html">traveler.core.parameters.Parameters.items</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.keys.html">traveler.core.parameters.Parameters.keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.pop.html">traveler.core.parameters.Parameters.pop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.popitem.html">traveler.core.parameters.Parameters.popitem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.replace.html">traveler.core.parameters.Parameters.replace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.setdefault.html">traveler.core.parameters.Parameters.setdefault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.update.html">traveler.core.parameters.Parameters.update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.parameters.Parameters.values.html">traveler.core.parameters.Parameters.values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.core.typing.html">traveler.core.typing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.typing.get_hinted_shape.html">traveler.core.typing.get_hinted_shape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.typing.Categorical.html">traveler.core.typing.Categorical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.core.typing.TypeMaker.html">traveler.core.typing.TypeMaker</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Categorical.html">traveler.core.typing.TypeMaker.Categorical</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Int8.html">traveler.core.typing.TypeMaker.Int8</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Int16.html">traveler.core.typing.TypeMaker.Int16</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Int32.html">traveler.core.typing.TypeMaker.Int32</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Int64.html">traveler.core.typing.TypeMaker.Int64</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Float32.html">traveler.core.typing.TypeMaker.Float32</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Float64.html">traveler.core.typing.TypeMaker.Float64</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.core.typing.TypeMaker.Bool.html">traveler.core.typing.TypeMaker.Bool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.io.html">traveler.io</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.optimize_omx_file.html">traveler.io.optimize_omx_file</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.read_table.html">traveler.io.read_table</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.OMX.html">traveler.io.OMX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.add_blank_lookup.html">traveler.io.OMX.add_blank_lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.add_blank_matrix.html">traveler.io.OMX.add_blank_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.add_lookup.html">traveler.io.OMX.add_lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.add_matrix.html">traveler.io.OMX.add_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.all_matrix_at.html">traveler.io.OMX.all_matrix_at</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.change_all_atoms_of_type.html">traveler.io.OMX.change_all_atoms_of_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.change_atom_type.html">traveler.io.OMX.change_atom_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.change_mode.html">traveler.io.OMX.change_mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.close.html">traveler.io.OMX.close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.get_dataframe.html">traveler.io.OMX.get_dataframe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.get_reverse_lookup.html">traveler.io.OMX.get_reverse_lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.keys.html">traveler.io.OMX.keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.lookup_to_index.html">traveler.io.OMX.lookup_to_index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.to_dask_arrays.html">traveler.io.OMX.to_dask_arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.to_dataset.html">traveler.io.OMX.to_dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.to_jax_arrays_3d.html">traveler.io.OMX.to_jax_arrays_3d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.to_numpy_arrays_3d.html">traveler.io.OMX.to_numpy_arrays_3d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.shape.html">traveler.io.OMX.shape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OMX.version.html">traveler.io.OMX.version</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.OmxSkims.html">traveler.io.OmxSkims</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OmxSkims.to_dataset.html">traveler.io.OmxSkims.to_dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OmxSkims.to_jax.html">traveler.io.OmxSkims.to_jax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.OmxSkims.to_jax_arrays_3d.html">traveler.io.OmxSkims.to_jax_arrays_3d</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.ZarrSkims.html">traveler.io.ZarrSkims</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.io.ZarrSkims.to_jax.html">traveler.io.ZarrSkims.to_jax</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.OMX_Error.html">traveler.io.OMX_Error</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.OMXBadFormat.html">traveler.io.OMXBadFormat</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.OMXIncompatibleShape.html">traveler.io.OMXIncompatibleShape</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.io.OMXNonUniqueLookup.html">traveler.io.OMXNonUniqueLookup</a></li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.skims.html">traveler.skims</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.skims.skims_data.html">traveler.skims.skims_data</a></li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.steps.html">traveler.steps</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.steps.SampleHouseholds.html">traveler.steps.SampleHouseholds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.SampleHouseholds.run_on.html">traveler.steps.SampleHouseholds.run_on</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.SampleHouseholds.run_via_jax.html">traveler.steps.SampleHouseholds.run_via_jax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.SampleHouseholds.run_via_pandas.html">traveler.steps.SampleHouseholds.run_via_pandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.SampleHouseholds.run_via_polars.html">traveler.steps.SampleHouseholds.run_via_polars</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.steps.Step.html">traveler.steps.Step</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.Step.run_on.html">traveler.steps.Step.run_on</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.steps.compound_step.html">traveler.steps.compound_step</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.compound_step.run_on.html">traveler.steps.compound_step.run_on</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.steps.compute_values.html">traveler.steps.compute_values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.compute_values.compute.html">traveler.steps.compute_values.compute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.compute_values.run_on.html">traveler.steps.compute_values.run_on</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.steps.sample_logsum_simulate.html">traveler.steps.sample_logsum_simulate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.sample_logsum_simulate.run_on.html">traveler.steps.sample_logsum_simulate.run_on</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.sample_logsum_simulate.sample_alternatives.html">traveler.steps.sample_logsum_simulate.sample_alternatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.sample_logsum_simulate.simulate_choice.html">traveler.steps.sample_logsum_simulate.simulate_choice</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.steps.simple_choice.html">traveler.steps.simple_choice</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.analytic_share.html">traveler.steps.simple_choice.analytic_share</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.analytic_share_loss.html">traveler.steps.simple_choice.analytic_share_loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.analytic_share_loss_grad.html">traveler.steps.simple_choice.analytic_share_loss_grad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.calibrate_analytic_share.html">traveler.steps.simple_choice.calibrate_analytic_share</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.initialize_for_store.html">traveler.steps.simple_choice.initialize_for_store</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.logsum.html">traveler.steps.simple_choice.logsum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.probability.html">traveler.steps.simple_choice.probability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.run_on.html">traveler.steps.simple_choice.run_on</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.simulate_choice.html">traveler.steps.simple_choice.simulate_choice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.steps.simple_choice.utility.html">traveler.steps.simple_choice.utility</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="traveler.store.html">traveler.store</a><ul class="current">
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.store.AbstractStore.html">traveler.store.AbstractStore</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.assign_on.html">traveler.store.AbstractStore.assign_on</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.copy.html">traveler.store.AbstractStore.copy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.get_table_type.html">traveler.store.AbstractStore.get_table_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.info.html">traveler.store.AbstractStore.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.push_down_on.html">traveler.store.AbstractStore.push_down_on</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.register_table.html">traveler.store.AbstractStore.register_table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.run_steps.html">traveler.store.AbstractStore.run_steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.table_types.html">traveler.store.AbstractStore.table_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.validate.html">traveler.store.AbstractStore.validate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.with_completed_step.html">traveler.store.AbstractStore.with_completed_step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.with_prng_seed.html">traveler.store.AbstractStore.with_prng_seed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.AbstractStore.completed_steps.html">traveler.store.AbstractStore.completed_steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="traveler.store.ReferencedTable.html">traveler.store.ReferencedTable</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.ReferencedTable.with_index_array.html">traveler.store.ReferencedTable.with_index_array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.ReferencedTable.with_store.html">traveler.store.ReferencedTable.with_store</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">traveler.store.ReferencedTable.without_store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.store.StoredTable.html">traveler.store.StoredTable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.info.html">traveler.store.StoredTable.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.rehash.html">traveler.store.StoredTable.rehash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.table_fields.html">traveler.store.StoredTable.table_fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.to_pandas.html">traveler.store.StoredTable.to_pandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.to_polars.html">traveler.store.StoredTable.to_polars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.validate.html">traveler.store.StoredTable.validate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.with_store.html">traveler.store.StoredTable.with_store</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.without_store.html">traveler.store.StoredTable.without_store</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.global_random_seed.html">traveler.store.StoredTable.global_random_seed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.self_idx.html">traveler.store.StoredTable.self_idx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.table_id_col.html">traveler.store.StoredTable.table_id_col</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.StoredTable.table_name.html">traveler.store.StoredTable.table_name</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.store.WorkingTable.html">traveler.store.WorkingTable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.WorkingTable.with_store.html">traveler.store.WorkingTable.with_store</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.WorkingTable.without_store.html">traveler.store.WorkingTable.without_store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.store.from_step.html">traveler.store.from_step</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.store.from_step.step_name.html">traveler.store.from_step.step_name</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.store.lazy_property.html">traveler.store.lazy_property</a></li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.tables.html">traveler.tables</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.tables.consolidate.html">traveler.tables.consolidate</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.tables.jax_to_polars.html">traveler.tables.jax_to_polars</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.tables.polars_to_jax.html">traveler.tables.polars_to_jax</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.tables.JaxDataset.html">traveler.tables.JaxDataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxDataset.assign.html">traveler.tables.JaxDataset.assign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxDataset.copy.html">traveler.tables.JaxDataset.copy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxDataset.info.html">traveler.tables.JaxDataset.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxDataset.schema.html">traveler.tables.JaxDataset.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxDataset.to_dict.html">traveler.tables.JaxDataset.to_dict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxDataset.validate.html">traveler.tables.JaxDataset.validate</a></li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.tables.JaxTable.html">traveler.tables.JaxTable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.assign.html">traveler.tables.JaxTable.assign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.copy.html">traveler.tables.JaxTable.copy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.from_pandas.html">traveler.tables.JaxTable.from_pandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.from_polars.html">traveler.tables.JaxTable.from_polars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.info.html">traveler.tables.JaxTable.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.schema.html">traveler.tables.JaxTable.schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.to_dict.html">traveler.tables.JaxTable.to_dict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.to_pandas.html">traveler.tables.JaxTable.to_pandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.to_polars.html">traveler.tables.JaxTable.to_polars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.validate.html">traveler.tables.JaxTable.validate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.with_prng_keys.html">traveler.tables.JaxTable.with_prng_keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traveler.tables.JaxTable.shape.html">traveler.tables.JaxTable.shape</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.templates.html">traveler.templates</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.templates.households.html">traveler.templates.households</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.templates.households.Households.html">traveler.templates.households.Households</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.assign.html">traveler.templates.households.Households.assign</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.copy.html">traveler.templates.households.Households.copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.from_pandas.html">traveler.templates.households.Households.from_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.from_polars.html">traveler.templates.households.Households.from_polars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.info.html">traveler.templates.households.Households.info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.schema.html">traveler.templates.households.Households.schema</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.to_dict.html">traveler.templates.households.Households.to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.to_pandas.html">traveler.templates.households.Households.to_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.to_polars.html">traveler.templates.households.Households.to_polars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.validate.html">traveler.templates.households.Households.validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.with_prng_keys.html">traveler.templates.households.Households.with_prng_keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.shape.html">traveler.templates.households.Households.shape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.households.Households.household_id.html">traveler.templates.households.Households.household_id</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.templates.land_use_taz.html">traveler.templates.land_use_taz</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.html">traveler.templates.land_use_taz.LandUseTAZ</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.assign.html">traveler.templates.land_use_taz.LandUseTAZ.assign</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.copy.html">traveler.templates.land_use_taz.LandUseTAZ.copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.from_pandas.html">traveler.templates.land_use_taz.LandUseTAZ.from_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.from_polars.html">traveler.templates.land_use_taz.LandUseTAZ.from_polars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.info.html">traveler.templates.land_use_taz.LandUseTAZ.info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.schema.html">traveler.templates.land_use_taz.LandUseTAZ.schema</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.to_dict.html">traveler.templates.land_use_taz.LandUseTAZ.to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.to_pandas.html">traveler.templates.land_use_taz.LandUseTAZ.to_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.to_polars.html">traveler.templates.land_use_taz.LandUseTAZ.to_polars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.validate.html">traveler.templates.land_use_taz.LandUseTAZ.validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.with_prng_keys.html">traveler.templates.land_use_taz.LandUseTAZ.with_prng_keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.shape.html">traveler.templates.land_use_taz.LandUseTAZ.shape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.land_use_taz.LandUseTAZ.TAZ.html">traveler.templates.land_use_taz.LandUseTAZ.TAZ</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.templates.persons.html">traveler.templates.persons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traveler.templates.persons.Persons.html">traveler.templates.persons.Persons</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.assign.html">traveler.templates.persons.Persons.assign</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.copy.html">traveler.templates.persons.Persons.copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.from_pandas.html">traveler.templates.persons.Persons.from_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.from_polars.html">traveler.templates.persons.Persons.from_polars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.info.html">traveler.templates.persons.Persons.info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.schema.html">traveler.templates.persons.Persons.schema</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.to_dict.html">traveler.templates.persons.Persons.to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.to_pandas.html">traveler.templates.persons.Persons.to_pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.to_polars.html">traveler.templates.persons.Persons.to_polars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.validate.html">traveler.templates.persons.Persons.validate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.with_prng_keys.html">traveler.templates.persons.Persons.with_prng_keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.shape.html">traveler.templates.persons.Persons.shape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traveler.templates.persons.Persons.person_id.html">traveler.templates.persons.Persons.person_id</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="traveler.trees.html">traveler.trees</a><ul>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.trees.AttrPyTree.html">traveler.trees.AttrPyTree</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="traveler.trees.WithTrace.html">traveler.trees.WithTrace</a></li>
+</ul>
+</li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#traveler.store.ReferencedTable.without_store"><code class="docutils literal notranslate"><span class="pre">ReferencedTable.without_store()</span></code></a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+  data-type="github" data-user="driftlesslabs" data-repo="traveler">
+  <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </span>
+  <span class="flex-grow px-2 break-all">
+    
+    
+      <span>traveler</span>
+    
+    <span class="flex text-sm repo-stats-count">
+      <span class="flex items-center pr-3">
+        <iconify-icon icon="lucide:star"></iconify-icon>
+        <strong class="js-repo-stars ml-1">0</strong>
+      </span>
+      <span class="flex items-center">
+        <iconify-icon icon="lucide:git-fork"></iconify-icon>
+        <strong class="js-repo-forks ml-1">0</strong>
+      </span>
+    </span>
+  </span>
+</a><div class="edit-this-page">
+  <a href="https://github.com/driftlesslabs/traveler/blob/main/docs/api/generated/traveler.store.ReferencedTable.without_store.rst">Edit this page</a>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Traveler</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">API reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="traveler.store.html"><span itemprop="name">traveler.store</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="traveler.store.ReferencedTable.html"><span itemprop="name">traveler.store.ReferencedTable</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="4" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">traveler.store.ReferencedTable.without_store</strong>
+        <meta itemprop="position" content="5" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section id="traveler-store-referencedtable-without-store">
+<h1>traveler.store.ReferencedTable.without_store<a class="headerlink" href="#traveler-store-referencedtable-without-store" title="Link to this heading">#</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="traveler.store.ReferencedTable.without_store">
+<span class="sig-prename descclassname"><span class="pre">ReferencedTable.</span></span><span class="sig-name descname"><span class="pre">without_store</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/driftlesslabs/traveler/blob/main/src/traveler/store/_table.py#L634-L642"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#traveler.store.ReferencedTable.without_store" title="Link to this definition">#</a></dt>
+<dd><p>Prepare this stored table for use with JAX tools.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="traveler.store.ReferencedTable.html#traveler.store.ReferencedTable" title="traveler.store.ReferencedTable">ReferencedTable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="traveler.store.ReferencedTable.with_store.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">traveler.store.ReferencedTable.with_store</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="traveler.store.StoredTable.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">traveler.store.StoredTable</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>© 2026, Driftless Labs</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+  <a href="https://github.com/driftlesslabs/traveler" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../_static/documentation_options.js?v=e222ab47"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../../_static/shibuya.js?v=50760d75"></script>
+      <script defer="defer" src="../../_static/code-annotations.js?v=15a4c152"></script>
+      <script defer="defer" src="../../_static/toc-breakpoints.js?v=b079cf6d"></script></body>
+</html>

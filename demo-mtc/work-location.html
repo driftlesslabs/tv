@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="tomato" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Work Location - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Downloading Data" href="data-access.html" /><link rel="prev" title="Auto Ownership" href="auto-ownership.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Work Location Choice - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Loading the Full MTC Dataset" href="data-access.html" /><link rel="prev" title="Household Auto Ownership" href="auto-ownership.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -23,7 +23,7 @@
 }
 </style>
     
-  <meta property="og:type" content="website"/><meta property="og:title" content="Work Location"/>
+  <meta property="og:type" content="website"/><meta property="og:title" content="Work Location Choice"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -79,7 +79,16 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#set-up-traveler-and-the-example-data">Set up Traveler and the example data</a></li>
+<li><a class="reference internal" href="#derive-the-model-inputs">Derive the model inputs</a></li>
+<li><a class="reference internal" href="#configure-the-three-specifications">Configure the three specifications</a></li>
+<li><a class="reference internal" href="#run-the-time-only-baseline">Run the time-only baseline</a></li>
+<li><a class="reference internal" href="#run-full-logsum-enumeration">Run full logsum enumeration</a></li>
+<li><a class="reference internal" href="#run-the-sampled-alternative-model">Run the sampled alternative model</a></li>
+<li><a class="reference internal" href="#inspect-and-compare-the-choices">Inspect and compare the choices</a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
   data-type="github" data-user="driftlesslabs" data-repo="traveler">
   <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
     <iconify-icon icon="simple-icons:github"></iconify-icon>
@@ -122,7 +131,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Work Location</strong>
+        <strong itemprop="name">Work Location Choice</strong>
         <meta itemprop="position" content="3" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -135,49 +144,51 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="work-location">
-<h1>Work Location<a class="headerlink" href="#work-location" title="Link to this heading">#</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="work-location-choice">
+<h1>Work Location Choice<a class="headerlink" href="#work-location-choice" title="Link to this heading">#</a></h1>
+<p>A work-location model evaluates possible destination zones for each person. The simplest specification can use commute time alone, while a richer destination utility can include a tour-mode logsum that summarizes the accessibility of all available travel modes. That richer calculation is informative but expensive when repeated for every person-zone pair.</p>
+<p>This walkthrough prepares the MTC mini data and compares three implementations: a time-only model, a full model that computes mode-choice logsums for every zone, and a sample-of-alternatives model that computes those logsums only for sampled destinations.</p>
+<section id="set-up-traveler-and-the-example-data">
+<h2>Set up Traveler and the example data<a class="headerlink" href="#set-up-traveler-and-the-example-data" title="Link to this heading">#</a></h2>
+<p>We enable informational logging so that the chunked model steps report their progress. Calling <code class="docutils literal notranslate"><span class="pre">max_num_threads()</span></code> without an argument reports the current thread limit without changing it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">mtc</span>
-</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tv</span>
-</span><span data-line="3">
-</span><span data-line="4"><span class="n">tv</span><span class="o">.</span><span class="n">log_to_stdout</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</span><span data-line="5"><span class="n">tv</span><span class="o">.</span><span class="n">max_num_threads</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">mtc</span>
+</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tv</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="n">tv</span><span class="o">.</span><span class="n">log_to_stdout</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</span><span data-line="9"><span class="n">tv</span><span class="o">.</span><span class="n">max_num_threads</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:00.81] DEBUG: Logging to stdout set to level 10
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:00.81] DEBUG: Multithreading is enabled with no explicit limit on number of threads.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:00.99] INFO: Logging to stdout set to level 20
 </span></pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">mtc</span><span class="o">.</span><span class="n">mini</span><span class="p">()</span>
-</span></pre></div>
-</div>
-</div>
-</div>
+<p>The mini loader returns related household, person, tour, land-use, and skim tables. We then select 14,250 households and their associated people and tours. <code class="docutils literal notranslate"><span class="pre">SampleHouseholds</span></code> returns a new store and rebuilds the relationship indexes, so the sampled tables remain aligned.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">SampleHouseholds</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">SampleHouseholds</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">14_250</span><span class="p">))</span>
+</span><span data-line="3"><span class="n">store</span> <span class="o">=</span> <span class="n">mtc</span><span class="o">.</span><span class="n">mini</span><span class="p">()</span>
+</span><span data-line="4"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">SampleHouseholds</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">14_250</span><span class="p">))</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">/Users/jpn/Git/traveler/src/traveler/steps/_sample_households.py:268: UserWarning: n (14250) is greater than the number of households in the store, returning all households.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">/Users/jpn/Git/traveler/src/traveler/steps/_sample_households.py:262: UserWarning: n (14250) is greater than the number of households in the store, returning all households.
 </span><span data-line="2">  return self.run_via_polars(store)
 </span></pre></div>
 </div>
 </div>
 </div>
+<p>The store summary confirms the dimensions that drive the computation: people are the choosers, zones are the alternatives, and the skim matrices provide travel attributes between origins and destinations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -196,60 +207,41 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+</section>
+<section id="derive-the-model-inputs">
+<h2>Derive the model inputs<a class="headerlink" href="#derive-the-model-inputs" title="Link to this heading">#</a></h2>
+<p>Work-location utility depends on fields that are not present in the raw input tables. The MTC <code class="docutils literal notranslate"><span class="pre">initialize</span></code> compound step runs the land-use, person, household, and value-of-time annotations in dependency order and returns a store containing their results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize</span>
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_landuse</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotate_landuse</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="n">annotate_landuse</span>
+</span><span data-line="3"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">initialize</span><span class="p">)</span>
+</span><span data-line="4"><span class="n">store</span><span class="o">.</span><span class="n">completed_steps</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;function mtc.models.annotate_landuse.annotate_landuse(land_use_idx: traveler.core.stored._table.ReferencedTable[mtc.tables.landuse.LandUse], store: mtc.tables.store.Store, param=None)&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.10] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_landuse</span> completed in 0:00:00.06
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.42] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_persons</span> completed in 0:00:00.32
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.58] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_households</span> completed in 0:00:00.16
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.64] INFO: compute_values step <span class=" -Color -Color-Bold">household_value_of_time</span> completed in 0:00:00.06
+</span></pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">frozenset({&#39;annotate_households&#39;,
+</span><span data-line="2">           &#39;annotate_landuse&#39;,
+</span><span data-line="3">           &#39;annotate_persons&#39;,
+</span><span data-line="4">           &#39;household_value_of_time&#39;})
 </span></pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">initialize</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:01.86] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_landuse</span> completed in 0:00:00.06
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.18] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_persons</span> completed in 0:00:00.31
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.34] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_households</span> completed in 0:00:00.16
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.35] DEBUG: Assembling chunks of size 1000000000 for multithreaded operation on 5000 choosers.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.35] DEBUG: Starting multithreaded operation on 1 chunks.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.42] DEBUG: completed chunk 0
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.42] DEBUG: _compute @ /Users/jpn/Git/traveler/src/traveler/steps/_compute_values.py:23 completed in 0.0796 seconds.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.43] INFO: compute_values step <span class=" -Color -Color-Bold">household_value_of_time</span> completed in 0:00:00.08
-</span></pre></div>
-</div>
-</div>
-</div>
+<p>The initialized store has the same table relationships as before, now augmented with the derived fields needed by the destination and lower-level mode-choice utilities.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -268,6 +260,10 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+</section>
+<section id="configure-the-three-specifications">
+<h2>Configure the three specifications<a class="headerlink" href="#configure-the-three-specifications" title="Link to this heading">#</a></h2>
+<p>All three models use the same round-trip time coefficient. The two logsum specifications also receive the tour-mode coefficients and a <code class="docutils literal notranslate"><span class="pre">mu</span></code> parameter that scales the mode-choice logsum in destination utility. Sharing these values isolates the computational strategy as the important difference among the runs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.tour_mode</span><span class="w"> </span><span class="kn">import</span> <span class="n">tour_mode</span>
@@ -276,111 +272,57 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="4">    <span class="n">work_location_no_logsums</span><span class="p">,</span>
 </span><span data-line="5">    <span class="n">work_location_sampled</span><span class="p">,</span>
 </span><span data-line="6"><span class="p">)</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;mu&quot;</span><span class="p">:</span> <span class="mf">0.59</span><span class="p">,</span> <span class="s2">&quot;tour_mode&quot;</span><span class="p">:</span> <span class="n">tour_mode</span><span class="o">.</span><span class="n">param</span><span class="p">}</span>
+</span><span data-line="9"><span class="n">work_location_no_logsums</span><span class="o">.</span><span class="n">param</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="10"><span class="n">work_location</span><span class="o">.</span><span class="n">param</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span data-line="11"><span class="n">work_location_sampled</span><span class="o">.</span><span class="n">param</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="run-the-time-only-baseline">
+<h2>Run the time-only baseline<a class="headerlink" href="#run-the-time-only-baseline" title="Link to this heading">#</a></h2>
+<p>The baseline evaluates all destination zones but omits mode-choice logsums. It is useful both as a fast model and as a reference for seeing how the accessibility term changes choices.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">work_location</span><span class="o">.</span><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;mu&quot;</span><span class="p">:</span> <span class="mf">0.59</span><span class="p">,</span> <span class="s2">&quot;tour_mode&quot;</span><span class="p">:</span> <span class="n">tour_mode</span><span class="o">.</span><span class="n">param</span><span class="p">}</span>
-</span><span data-line="2"><span class="n">work_location_no_logsums</span><span class="o">.</span><span class="n">param</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="3">    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
-</span><span data-line="4">    <span class="s2">&quot;mu&quot;</span><span class="p">:</span> <span class="mf">0.59</span><span class="p">,</span>
-</span><span data-line="5">    <span class="s2">&quot;tour_mode&quot;</span><span class="p">:</span> <span class="n">tour_mode</span><span class="o">.</span><span class="n">param</span><span class="p">,</span>
-</span><span data-line="6"><span class="p">}</span>
-</span><span data-line="7"><span class="n">work_location_sampled</span><span class="o">.</span><span class="n">param</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="8">    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
-</span><span data-line="9">    <span class="s2">&quot;mu&quot;</span><span class="p">:</span> <span class="mf">0.59</span><span class="p">,</span>
-</span><span data-line="10">    <span class="s2">&quot;tour_mode&quot;</span><span class="p">:</span> <span class="n">tour_mode</span><span class="o">.</span><span class="n">param</span><span class="p">,</span>
-</span><span data-line="11"><span class="p">}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">no_logsums_store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">work_location_no_logsums</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="run-full-logsum-enumeration">
+<h2>Run full logsum enumeration<a class="headerlink" href="#run-full-logsum-enumeration" title="Link to this heading">#</a></h2>
+<p>The full specification evaluates the lower-level tour-mode model for every person and every destination. This is the direct formulation of the model and provides the comparison point for the sampled approximation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store1</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">work_location_no_logsums</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.44] DEBUG: Assembling chunks of size 10000 for multithreaded operation on 8212 choosers.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.44] DEBUG: Starting multithreaded operation on 1 chunks.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.53] DEBUG: completed chunk 0
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.54] DEBUG: _enum_choice @ /Users/jpn/Git/traveler/src/traveler/steps/_enum_choice.py:26 completed in 0.1003 seconds.
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">full_logsum_store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">work_location</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="run-the-sampled-alternative-model">
+<h2>Run the sampled alternative model<a class="headerlink" href="#run-the-sampled-alternative-model" title="Link to this heading">#</a></h2>
+<p>The sampled model first uses the inexpensive time-only utility to draw 30 destination slots per person. It computes tour-mode logsums only for those slots, applies the sampling-probability correction, and then simulates the final choice. This preserves the richer utility while avoiding a logsum calculation for every zone.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">work_location</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.54] DEBUG: Assembling chunks of size 2500 for multithreaded operation on 8212 choosers.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.56] DEBUG: Starting multithreaded operation on 4 chunks.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.76] DEBUG: completed chunk 1
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.76] DEBUG: completed chunk 0
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.76] DEBUG: completed chunk 2
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.85] DEBUG: completed chunk 3
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.85] DEBUG: _enum_choice @ /Users/jpn/Git/traveler/src/traveler/steps/_enum_choice.py:26 completed in 0.3120 seconds.
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sampled_logsum_store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">work_location_sampled</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="inspect-and-compare-the-choices">
+<h2>Inspect and compare the choices<a class="headerlink" href="#inspect-and-compare-the-choices" title="Link to this heading">#</a></h2>
+<p>Each step writes its selected TAZ to the returned persons table as <code class="docutils literal notranslate"><span class="pre">work_location_taz</span></code>. The categorical column displays zone labels while retaining compact integer codes for model calculations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store3</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="n">work_location_sampled</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.86] DEBUG: Assembling chunks of size 2500 for multithreaded operation on 8212 choosers.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.86] DEBUG: Starting multithreaded operation on 4 chunks.
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:03.21] DEBUG: completed chunk 1
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:03.21] DEBUG: completed chunk 2
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:03.21] DEBUG: completed chunk 0
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:03.24] DEBUG: completed chunk 3
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:03.24] DEBUG: _choice @ /Users/jpn/Git/traveler/src/traveler/steps/_sample_logsum_simulate.py:96 completed in 0.3851 seconds.
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store1</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sampled_logsum_store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+</span><span data-line="2">    <span class="s2">&quot;person_id&quot;</span><span class="p">,</span> <span class="s2">&quot;home_zone_id&quot;</span><span class="p">,</span> <span class="s2">&quot;work_location_taz&quot;</span>
+</span><span data-line="3"><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
@@ -392,40 +334,33 @@ data-aria-dark="Switch to auto color mode">
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (8_212, 32)</small><table border="1" class="dataframe"><thead><tr><th>person_id</th><th>household_id</th><th>age</th><th>PNUM</th><th>sex</th><th>pemploy</th><th>pstudent</th><th>ptype</th><th>_household_idx_</th><th>age_16_to_19</th><th>age_16_p</th><th>adult</th><th>male</th><th>female</th><th>has_non_worker</th><th>has_retiree</th><th>has_preschool_kid</th><th>has_driving_kid</th><th>has_school_kid</th><th>has_full_time</th><th>has_part_time</th><th>has_university</th><th>student_is_employed</th><th>nonstudent_to_school</th><th>is_student</th><th>is_gradeschool</th><th>is_highschool</th><th>is_university</th><th>school_segment</th><th>is_worker</th><th>home_zone_id</th><th>work_location_taz</th></tr><tr><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>i8</td><td>bool</td><td>enum</td><td>enum</td></tr></thead><tbody><tr><td>25671</td><td>25671</td><td>47</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>3817</td><td>false</td><td>true</td><td>true</td><td>true</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>true</td><td>false</td><td>true</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-8&quot;</td></tr><tr><td>25675</td><td>25675</td><td>27</td><td>1</td><td>2</td><td>3</td><td>1</td><td>3</td><td>4066</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-12&quot;</td></tr><tr><td>25678</td><td>25678</td><td>30</td><td>1</td><td>2</td><td>3</td><td>1</td><td>4</td><td>3498</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-13&quot;</td></tr><tr><td>25683</td><td>25683</td><td>23</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>4539</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25684</td><td>25684</td><td>52</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>4710</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-8&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>7554848</td><td>2863513</td><td>68</td><td>1</td><td>1</td><td>3</td><td>1</td><td>5</td><td>1559</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554855</td><td>2863520</td><td>68</td><td>1</td><td>1</td><td>3</td><td>1</td><td>5</td><td>4711</td><td>false</td><td>true</td><td>true</td><td>false</td><td>true</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>true</td><td>true</td><td>false</td><td>false</td><td>true</td><td>false</td><td>true</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554859</td><td>2863524</td><td>93</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>1148</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>7554887</td><td>2863552</td><td>76</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>371</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-10&quot;</td></tr><tr><td>7554903</td><td>2863568</td><td>82</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>4690</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr></tbody></table></div></div></div>
+<small>shape: (10, 3)</small><table border="1" class="dataframe"><thead><tr><th>person_id</th><th>home_zone_id</th><th>work_location_taz</th></tr><tr><td>i32</td><td>enum</td><td>enum</td></tr></thead><tbody><tr><td>25671</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-5&quot;</td></tr><tr><td>25675</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-5&quot;</td></tr><tr><td>25678</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25683</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25684</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25691</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25692</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25704</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25725</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25734</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr></tbody></table></div></div></div>
 </div>
+<p>The alternatives are simulated rather than selected by a deterministic maximum, so exact row-by-row agreement is not the goal. Still, comparing choices from the same people and stable random streams gives a quick diagnostic of how much the logsum term and destination sampling alter outcomes in this run.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
+</span><span data-line="2">    <span class="s2">&quot;time only vs. full logsums&quot;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+</span><span data-line="3">        <span class="n">no_logsums_store</span><span class="o">.</span><span class="n">persons</span><span class="p">[</span><span class="s2">&quot;work_location_taz&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">codes</span>
+</span><span data-line="4">        <span class="o">==</span> <span class="n">full_logsum_store</span><span class="o">.</span><span class="n">persons</span><span class="p">[</span><span class="s2">&quot;work_location_taz&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">codes</span>
+</span><span data-line="5">    <span class="p">),</span>
+</span><span data-line="6">    <span class="s2">&quot;full logsums vs. sampled logsums&quot;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+</span><span data-line="7">        <span class="n">full_logsum_store</span><span class="o">.</span><span class="n">persons</span><span class="p">[</span><span class="s2">&quot;work_location_taz&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">codes</span>
+</span><span data-line="8">        <span class="o">==</span> <span class="n">sampled_logsum_store</span><span class="o">.</span><span class="n">persons</span><span class="p">[</span><span class="s2">&quot;work_location_taz&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">codes</span>
+</span><span data-line="9">    <span class="p">),</span>
+</span><span data-line="10"><span class="p">}</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div><style>
-.dataframe > thead > tr,
-.dataframe > tbody > tr {
-  text-align: right;
-  white-space: pre-wrap;
-}
-</style>
-<small>shape: (8_212, 32)</small><table border="1" class="dataframe"><thead><tr><th>person_id</th><th>household_id</th><th>age</th><th>PNUM</th><th>sex</th><th>pemploy</th><th>pstudent</th><th>ptype</th><th>_household_idx_</th><th>age_16_to_19</th><th>age_16_p</th><th>adult</th><th>male</th><th>female</th><th>has_non_worker</th><th>has_retiree</th><th>has_preschool_kid</th><th>has_driving_kid</th><th>has_school_kid</th><th>has_full_time</th><th>has_part_time</th><th>has_university</th><th>student_is_employed</th><th>nonstudent_to_school</th><th>is_student</th><th>is_gradeschool</th><th>is_highschool</th><th>is_university</th><th>school_segment</th><th>is_worker</th><th>home_zone_id</th><th>work_location_taz</th></tr><tr><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>i8</td><td>bool</td><td>enum</td><td>enum</td></tr></thead><tbody><tr><td>25671</td><td>25671</td><td>47</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>3817</td><td>false</td><td>true</td><td>true</td><td>true</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>true</td><td>false</td><td>true</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-5&quot;</td></tr><tr><td>25675</td><td>25675</td><td>27</td><td>1</td><td>2</td><td>3</td><td>1</td><td>3</td><td>4066</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-5&quot;</td></tr><tr><td>25678</td><td>25678</td><td>30</td><td>1</td><td>2</td><td>3</td><td>1</td><td>4</td><td>3498</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25683</td><td>25683</td><td>23</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>4539</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25684</td><td>25684</td><td>52</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>4710</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>7554848</td><td>2863513</td><td>68</td><td>1</td><td>1</td><td>3</td><td>1</td><td>5</td><td>1559</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554855</td><td>2863520</td><td>68</td><td>1</td><td>1</td><td>3</td><td>1</td><td>5</td><td>4711</td><td>false</td><td>true</td><td>true</td><td>false</td><td>true</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>true</td><td>true</td><td>false</td><td>false</td><td>true</td><td>false</td><td>true</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554859</td><td>2863524</td><td>93</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>1148</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554887</td><td>2863552</td><td>76</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>371</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554903</td><td>2863568</td><td>82</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>4690</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr></tbody></table></div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store3</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">{&#39;time only vs. full logsums&#39;: Array(0.30017048, dtype=float32),
+</span><span data-line="2"> &#39;full logsums vs. sampled logsums&#39;: Array(0.99318075, dtype=float32)}
 </span></pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><style>
-.dataframe > thead > tr,
-.dataframe > tbody > tr {
-  text-align: right;
-  white-space: pre-wrap;
-}
-</style>
-<small>shape: (8_212, 32)</small><table border="1" class="dataframe"><thead><tr><th>person_id</th><th>household_id</th><th>age</th><th>PNUM</th><th>sex</th><th>pemploy</th><th>pstudent</th><th>ptype</th><th>_household_idx_</th><th>age_16_to_19</th><th>age_16_p</th><th>adult</th><th>male</th><th>female</th><th>has_non_worker</th><th>has_retiree</th><th>has_preschool_kid</th><th>has_driving_kid</th><th>has_school_kid</th><th>has_full_time</th><th>has_part_time</th><th>has_university</th><th>student_is_employed</th><th>nonstudent_to_school</th><th>is_student</th><th>is_gradeschool</th><th>is_highschool</th><th>is_university</th><th>school_segment</th><th>is_worker</th><th>home_zone_id</th><th>work_location_taz</th></tr><tr><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>i32</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>bool</td><td>i8</td><td>bool</td><td>enum</td><td>enum</td></tr></thead><tbody><tr><td>25671</td><td>25671</td><td>47</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>3817</td><td>false</td><td>true</td><td>true</td><td>true</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>true</td><td>false</td><td>true</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-5&quot;</td></tr><tr><td>25675</td><td>25675</td><td>27</td><td>1</td><td>2</td><td>3</td><td>1</td><td>3</td><td>4066</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-5&quot;</td><td>&quot;TAZ-5&quot;</td></tr><tr><td>25678</td><td>25678</td><td>30</td><td>1</td><td>2</td><td>3</td><td>1</td><td>4</td><td>3498</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25683</td><td>25683</td><td>23</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>4539</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>25684</td><td>25684</td><td>52</td><td>1</td><td>1</td><td>3</td><td>1</td><td>4</td><td>4710</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-6&quot;</td><td>&quot;TAZ-6&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>7554848</td><td>2863513</td><td>68</td><td>1</td><td>1</td><td>3</td><td>1</td><td>5</td><td>1559</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554855</td><td>2863520</td><td>68</td><td>1</td><td>1</td><td>3</td><td>1</td><td>5</td><td>4711</td><td>false</td><td>true</td><td>true</td><td>false</td><td>true</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>true</td><td>true</td><td>false</td><td>false</td><td>true</td><td>false</td><td>true</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554859</td><td>2863524</td><td>93</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>1148</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554887</td><td>2863552</td><td>76</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>371</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr><tr><td>7554903</td><td>2863568</td><td>82</td><td>1</td><td>2</td><td>3</td><td>1</td><td>5</td><td>4690</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>false</td><td>2</td><td>false</td><td>&quot;TAZ-20&quot;</td><td>&quot;TAZ-20&quot;</td></tr></tbody></table></div></div></div>
 </div>
+<p>The three stores make the modeling tradeoff explicit. Omitting logsums is cheapest but changes the behavioral specification; full enumeration is the clearest reference implementation; sampling keeps the logsum specification while reducing its most expensive dimension. A production comparison should examine aggregate destination distributions and runtime over repeated runs, not rely only on the illustrative row-level agreement above.</p>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -437,13 +372,13 @@ data-aria-dark="Switch to auto color mode">
     <a href="auto-ownership.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Auto Ownership</div></div>
+        <span>Previous</span><div class="title">Household Auto Ownership</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="data-access.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Downloading Data</div>
+        <div class="title">Loading the Full MTC Dataset</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -471,7 +406,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

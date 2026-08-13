@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="tomato" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Data Validation - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Auto Ownership" href="auto-ownership.html" /><link rel="prev" title="Table Definitions" href="tables.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Validating MTC Model Data - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Household Auto Ownership" href="auto-ownership.html" /><link rel="prev" title="Table Definitions" href="tables.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -23,7 +23,7 @@
 }
 </style>
     
-  <meta property="og:type" content="website"/><meta property="og:title" content="Data Validation"/>
+  <meta property="og:type" content="website"/><meta property="og:title" content="Validating MTC Model Data"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -79,7 +79,15 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#load-a-typed-store">Load a typed store</a></li>
+<li><a class="reference internal" href="#inspect-fields-before-validating">Inspect fields before validating</a></li>
+<li><a class="reference internal" href="#validate-the-currently-available-tour-data">Validate the currently available tour data</a></li>
+<li><a class="reference internal" href="#validate-a-later-workflow-state">Validate a later workflow state</a></li>
+<li><a class="reference internal" href="#diagnose-an-incorrect-result-dtype">Diagnose an incorrect result dtype</a></li>
+<li><a class="reference internal" href="#correct-the-field-and-validate-again">Correct the field and validate again</a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
   data-type="github" data-user="driftlesslabs" data-repo="traveler">
   <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
     <iconify-icon icon="simple-icons:github"></iconify-icon>
@@ -122,7 +130,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Data Validation</strong>
+        <strong itemprop="name">Validating MTC Model Data</strong>
         <meta itemprop="position" content="3" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -135,9 +143,12 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="data-validation">
-<h1>Data Validation<a class="headerlink" href="#data-validation" title="Link to this heading">#</a></h1>
-<p>In this demo, we showcase some data validation tools.  We’ll start by loading the MTC mini data for testing.</p>
+          <section class="tex2jax_ignore mathjax_ignore" id="validating-mtc-model-data">
+<h1>Validating MTC Model Data<a class="headerlink" href="#validating-mtc-model-data" title="Link to this heading">#</a></h1>
+<p>Traveler table classes describe more than column names: their annotations also define expected dtypes, categorical dimensions, and the model steps responsible for derived fields. This walkthrough uses the bundled MTC mini dataset to show how those contracts are inspected, how incomplete workflow state is handled, and how validation errors help diagnose bad model output.</p>
+<section id="load-a-typed-store">
+<h2>Load a typed store<a class="headerlink" href="#load-a-typed-store" title="Link to this heading">#</a></h2>
+<p>The mini loader reads the small example tables, creates their cross-table indexes, generates synthetic tours, and returns an MTC <code class="docutils literal notranslate"><span class="pre">Store</span></code>. We also import JAX for constructing deliberately typed test values and <code class="docutils literal notranslate"><span class="pre">pytest</span></code> for displaying expected validation failures without stopping the notebook.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
@@ -157,6 +168,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+<p>The store class registers a concrete table type for each model table. This registry is what lets Traveler validate a generic stored dataset against application-specific schemas.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">table_types</span><span class="p">()</span>
@@ -172,16 +184,14 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+</section>
+<section id="inspect-fields-before-validating">
+<h2>Inspect fields before validating<a class="headerlink" href="#inspect-fields-before-validating" title="Link to this heading">#</a></h2>
+<p>Stored tables expose their columns as attributes. Here <code class="docutils literal notranslate"><span class="pre">RESACRE</span></code> is the land-use table’s residential-acreage array, and <code class="docutils literal notranslate"><span class="pre">info()</span></code> summarizes all available fields, shapes, and dtypes without dumping the complete data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">lu</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">land_use</span>
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">lu</span><span class="o">.</span><span class="n">RESACRE</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">land_use</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">land_use</span>
+</span><span data-line="2"><span class="n">land_use</span><span class="o">.</span><span class="n">RESACRE</span>
 </span></pre></div>
 </div>
 </div>
@@ -197,7 +207,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">lu</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">land_use</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </div>
@@ -228,11 +238,15 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="24">- TERMINAL             (25,) float32
 </span><span data-line="25">- TAZ                  (25,) int32
 </span><span data-line="26">- county_id            (25,) int8
+</span><span data-line="27">- _prng_key_           (25,) key&lt;fry&gt;
 </span></pre></div>
 </div>
 </div>
 </div>
-<p>Let’s validate the contents of the “tours” table. Before we validate this data, we can see what’s in the table using the <code class="docutils literal notranslate"><span class="pre">info</span></code> method.</p>
+</section>
+<section id="validate-the-currently-available-tour-data">
+<h2>Validate the currently available tour data<a class="headerlink" href="#validate-the-currently-available-tour-data" title="Link to this heading">#</a></h2>
+<p>The tour table combines raw identifiers and categories with fields that will be produced later by a tour-preprocessing step. Its summary shows which columns are present before that step runs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">tours</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -255,7 +269,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
-<p>We can validate the contents of this table using the “validate” method.</p>
+<p>A normal validation checks every field required at the store’s current workflow state. It returns nothing when the contract is satisfied; problems are reported by raising <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">tours</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
@@ -263,8 +277,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
-<p>This method has no return value, but it will raise a <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code> if there is a problem.<br />
-If we want to see the details of the validation process, we can turn on verbose output.</p>
+<p>Verbose validation makes that decision process visible. Notice that fields annotated with <code class="docutils literal notranslate"><span class="pre">from_step(&quot;tour_preprocessor&quot;)</span></code> are skipped: Traveler does not require step-produced data before its source step has run.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">tours</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -288,16 +301,16 @@ If we want to see the details of the validation process, we can turn on verbose 
 </div>
 </div>
 </div>
-<p>You’ll notice that some of the fields in this table were skipped.  That’s because they
-are not “raw” data, but they are expected to come from some model component that
-has not yet been run.  We can tell the validation tool which steps have been run
-by passing it a <code class="docutils literal notranslate"><span class="pre">sources</span></code> argument, and then the validation of fields created by
-those steps will not be skipped.</p>
+</section>
+<section id="validate-a-later-workflow-state">
+<h2>Validate a later workflow state<a class="headerlink" href="#validate-a-later-workflow-state" title="Link to this heading">#</a></h2>
+<p>We can ask the validator to behave as though <code class="docutils literal notranslate"><span class="pre">tour_preprocessor</span></code> has completed. The same table must then contain every field attributed to that step, so the untouched mini data correctly fails validation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">tv</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">tv</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
 </span><span data-line="2">    <span class="n">store</span><span class="o">.</span><span class="n">tours</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tour_preprocessor&quot;</span><span class="p">])</span>
-</span><span data-line="3"><span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
@@ -314,8 +327,10 @@ those steps will not be skipped.</p>
 </div>
 </div>
 </div>
-<p>If we manually add the required fields to the table, we can emulate what the step would do,
-and pass validation, but only if they are the correct dtypes.</p>
+</section>
+<section id="diagnose-an-incorrect-result-dtype">
+<h2>Diagnose an incorrect result dtype<a class="headerlink" href="#diagnose-an-incorrect-result-dtype" title="Link to this heading">#</a></h2>
+<p>To emulate the preprocessor, we functionally assign all of its required outputs to a returned store. Most values below have suitable scalar types, but <code class="docutils literal notranslate"><span class="pre">is_joint</span></code> is intentionally a floating-point value even though the schema requires a boolean. Validation now gets past the missing-field checks and identifies the narrower dtype problem.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">assign_on</span><span class="p">(</span>
@@ -329,9 +344,10 @@ and pass validation, but only if they are the correct dtypes.</p>
 </span><span data-line="9">    <span class="n">number_of_participants</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">int8</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
 </span><span data-line="10"><span class="p">)</span>
 </span><span data-line="11">
-</span><span data-line="12"><span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">tv</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="12"><span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">tv</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
 </span><span data-line="13">    <span class="n">store</span><span class="o">.</span><span class="n">tours</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tour_preprocessor&quot;</span><span class="p">])</span>
-</span><span data-line="14"><span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="14">
+</span><span data-line="15"><span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
@@ -342,7 +358,10 @@ and pass validation, but only if they are the correct dtypes.</p>
 </div>
 </div>
 </div>
-<p>Let’s try again, using the correct dtypes.</p>
+</section>
+<section id="correct-the-field-and-validate-again">
+<h2>Correct the field and validate again<a class="headerlink" href="#correct-the-field-and-validate-again" title="Link to this heading">#</a></h2>
+<p>Because <code class="docutils literal notranslate"><span class="pre">assign_on</span></code> returns a new store, correcting the bad field is another explicit state transition. Once <code class="docutils literal notranslate"><span class="pre">is_joint</span></code> is replaced by a boolean value, the tour table satisfies the contract expected after preprocessing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">assign_on</span><span class="p">(</span>
@@ -355,6 +374,8 @@ and pass validation, but only if they are the correct dtypes.</p>
 </div>
 </div>
 </div>
+<p>The important point is that validation follows the model workflow. Raw inputs can be valid before derived fields exist, while a store representing a later stage must contain correctly shaped and typed results from every completed step.</p>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -372,7 +393,7 @@ and pass validation, but only if they are the correct dtypes.</p>
     <a href="auto-ownership.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Auto Ownership</div>
+        <div class="title">Household Auto Ownership</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -400,7 +421,7 @@ and pass validation, but only if they are the correct dtypes.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

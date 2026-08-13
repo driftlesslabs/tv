@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="tomato" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Auto Ownership - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Work Location" href="work-location.html" /><link rel="prev" title="Data Validation" href="data-validation.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Household Auto Ownership - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Work Location Choice" href="work-location.html" /><link rel="prev" title="Validating MTC Model Data" href="data-validation.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -23,7 +23,7 @@
 }
 </style>
     
-  <meta property="og:type" content="website"/><meta property="og:title" content="Auto Ownership"/>
+  <meta property="og:type" content="website"/><meta property="og:title" content="Household Auto Ownership"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -79,7 +79,17 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#set-up-the-example">Set up the example</a></li>
+<li><a class="reference internal" href="#load-and-sample-the-mtc-population">Load and sample the MTC population</a></li>
+<li><a class="reference internal" href="#inspect-the-sampled-inputs">Inspect the sampled inputs</a></li>
+<li><a class="reference internal" href="#derive-the-explanatory-variables">Derive the explanatory variables</a></li>
+<li><a class="reference internal" href="#simulate-auto-ownership-choices">Simulate auto-ownership choices</a></li>
+<li><a class="reference internal" href="#trace-the-utility-calculation">Trace the utility calculation</a></li>
+<li><a class="reference internal" href="#compare-simulated-and-analytic-shares">Compare simulated and analytic shares</a></li>
+<li><a class="reference internal" href="#calibrate-to-target-shares">Calibrate to target shares</a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
   data-type="github" data-user="driftlesslabs" data-repo="traveler">
   <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
     <iconify-icon icon="simple-icons:github"></iconify-icon>
@@ -122,7 +132,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Auto Ownership</strong>
+        <strong itemprop="name">Household Auto Ownership</strong>
         <meta itemprop="position" content="3" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -135,24 +145,46 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="auto-ownership">
-<h1>Auto Ownership<a class="headerlink" href="#auto-ownership" title="Link to this heading">#</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="household-auto-ownership">
+<h1>Household Auto Ownership<a class="headerlink" href="#household-auto-ownership" title="Link to this heading">#</a></h1>
+<p>The MTC auto-ownership model predicts how many vehicles each household owns,
+using five alternatives: zero, one, two, three, or four-or-more vehicles. Its
+utilities combine household composition and income with characteristics of the
+home zone.</p>
+<p>This walkthrough follows the complete model workflow. We load and sample a
+typed store, derive the explanatory variables required by the utilities,
+simulate household choices, inspect a utility trace, and finally calibrate
+selected alternative-specific constants to match target market shares.</p>
+<section id="set-up-the-example">
+<h2>Set up the example<a class="headerlink" href="#set-up-the-example" title="Link to this heading">#</a></h2>
+<p>Informational logging makes the execution of model steps visible without
+exposing lower-level debugging output. JAX is used later for a compact summary
+of simulated choices.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tv</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="n">tv</span><span class="o">.</span><span class="n">log_to_stdout</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tv</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="n">tv</span><span class="o">.</span><span class="n">log_to_stdout</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:00.85] INFO: Logging to stdout set to level 20
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:00.86] INFO: Logging to stdout set to level 20
 </span></pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="load-and-sample-the-mtc-population">
+<h2>Load and sample the MTC population<a class="headerlink" href="#load-and-sample-the-mtc-population" title="Link to this heading">#</a></h2>
+<p>The bundled mini dataset contains typed household, person, tour, land-use, and
+skim tables. It is large enough to exercise chunked JAX calculations while
+remaining convenient for an executable documentation example.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">mtc</span>
@@ -168,6 +200,10 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">SampleHouseholds</span></code> selects 100,000 households and carries along their related
+people and tours. The step returns a new store with rebuilt relationship
+indexes, leaving the input store unchanged. A fixed default seed makes the
+sample reproducible.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">SampleHouseholds</span>
@@ -183,9 +219,15 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+</section>
+<section id="inspect-the-sampled-inputs">
+<h2>Inspect the sampled inputs<a class="headerlink" href="#inspect-the-sampled-inputs" title="Link to this heading">#</a></h2>
+<p>A few rows are enough to establish the structure of the chooser table.
+Households carry observed vehicle counts and basic demographic fields; the
+model will write its simulated result to a separate column.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </div>
@@ -285,80 +327,16 @@ data-aria-dark="Switch to auto color mode">
       <td>21</td>
       <td>5222445121369432989</td>
     </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>109218</th>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>10</td>
-      <td>4</td>
-      <td>15000</td>
-      <td>10</td>
-      <td>7523481964464160280</td>
-    </tr>
-    <tr>
-      <th>570708</th>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>23</td>
-      <td>6</td>
-      <td>13100</td>
-      <td>23</td>
-      <td>13936936436250680516</td>
-    </tr>
-    <tr>
-      <th>2762199</th>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>21</td>
-      <td>0</td>
-      <td>0</td>
-      <td>21</td>
-      <td>5181451548477488279</td>
-    </tr>
-    <tr>
-      <th>2049372</th>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>18</td>
-      <td>4</td>
-      <td>103000</td>
-      <td>18</td>
-      <td>14513684321777940963</td>
-    </tr>
-    <tr>
-      <th>702559</th>
-      <td>2</td>
-      <td>0</td>
-      <td>0</td>
-      <td>13</td>
-      <td>1</td>
-      <td>14800</td>
-      <td>13</td>
-      <td>16452319291433101042</td>
-    </tr>
   </tbody>
 </table>
-<p>5000 rows × 8 columns</p>
 </div></div></div>
 </div>
+<p>Person records provide the ages and employment attributes used to derive
+household counts such as adults, drivers, workers, and children in different
+age bands.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </div>
@@ -465,83 +443,12 @@ data-aria-dark="Switch to auto color mode">
       <td>16193036017997595926</td>
       <td>4710</td>
     </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>7554848</th>
-      <td>2863513</td>
-      <td>68</td>
-      <td>1</td>
-      <td>1</td>
-      <td>3</td>
-      <td>3</td>
-      <td>5</td>
-      <td>12657125112145005282</td>
-      <td>1559</td>
-    </tr>
-    <tr>
-      <th>7554855</th>
-      <td>2863520</td>
-      <td>68</td>
-      <td>1</td>
-      <td>1</td>
-      <td>3</td>
-      <td>3</td>
-      <td>5</td>
-      <td>15310746177928554435</td>
-      <td>4711</td>
-    </tr>
-    <tr>
-      <th>7554859</th>
-      <td>2863524</td>
-      <td>93</td>
-      <td>1</td>
-      <td>2</td>
-      <td>3</td>
-      <td>3</td>
-      <td>5</td>
-      <td>15991084268004204639</td>
-      <td>1148</td>
-    </tr>
-    <tr>
-      <th>7554887</th>
-      <td>2863552</td>
-      <td>76</td>
-      <td>1</td>
-      <td>2</td>
-      <td>3</td>
-      <td>3</td>
-      <td>5</td>
-      <td>16995667094222658877</td>
-      <td>371</td>
-    </tr>
-    <tr>
-      <th>7554903</th>
-      <td>2863568</td>
-      <td>82</td>
-      <td>1</td>
-      <td>2</td>
-      <td>3</td>
-      <td>3</td>
-      <td>5</td>
-      <td>4454040046226196150</td>
-      <td>4690</td>
-    </tr>
   </tbody>
 </table>
-<p>8212 rows × 9 columns</p>
 </div></div></div>
 </div>
+<p>The store summary shows the complete set of tables that can be resolved while
+a model expression is evaluated.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -560,6 +467,19 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+</section>
+<section id="derive-the-explanatory-variables">
+<h2>Derive the explanatory variables<a class="headerlink" href="#derive-the-explanatory-variables" title="Link to this heading">#</a></h2>
+<p>The raw tables do not yet contain every variable referenced by auto-ownership
+utility. Four compute steps prepare them in dependency order:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">annotate_landuse</span></code> calculates density measures for each zone.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">annotate_persons</span></code> derives demographic flags and each person’s home zone.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">annotate_households</span></code> aggregates person attributes and derives household
+segments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">household_value_of_time</span></code> assigns deterministic random and median
+value-of-time fields.</p></li>
+</ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_households</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -567,16 +487,17 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="3">    <span class="n">household_value_of_time</span><span class="p">,</span>
 </span><span data-line="4"><span class="p">)</span>
 </span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_landuse</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotate_landuse</span>
-</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_persons</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span data-line="7">    <span class="n">annotate_persons</span><span class="p">,</span>
-</span><span data-line="8"><span class="p">)</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.annotate_persons</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotate_persons</span>
 </span></pre></div>
 </div>
 </div>
 </div>
+<p>Before those steps run, <code class="docutils literal notranslate"><span class="pre">info()</span></code> exposes which declared fields are already
+available and which are still expected from model components.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</span><span data-line="2"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </div>
@@ -591,100 +512,52 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="8">- income               (5000,) int32
 </span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
 </span><span data-line="10">- _prng_key_           (5000,) key&lt;fry&gt;
+</span><span data-line="11">&lt;JaxTable id_col=person_id&gt;
+</span><span data-line="12">- person_id            (8212,) int32
+</span><span data-line="13">- household_id         (8212,) int32
+</span><span data-line="14">- age                  (8212,) int32
+</span><span data-line="15">- PNUM                 (8212,) int32
+</span><span data-line="16">- sex                  (8212,) int32
+</span><span data-line="17">- pemploy              (8212,) int32
+</span><span data-line="18">- pstudent             (8212,) int32
+</span><span data-line="19">- ptype                (8212,) int32
+</span><span data-line="20">- _prng_key_           (8212,) key&lt;fry&gt;
+</span><span data-line="21">- _household_idx_      (8212,) int32
 </span></pre></div>
 </div>
 </div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">run_steps</span></code> passes each returned store to the next step. Keeping that returned
+value makes the state transition explicit and preserves the original input
+semantics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">annotate_landuse</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">annotate_persons</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">annotate_households</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">household_value_of_time</span><span class="p">,</span>
+</span><span data-line="6"><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=person_id&gt;
-</span><span data-line="2">- person_id            (8212,) int32
-</span><span data-line="3">- household_id         (8212,) int32
-</span><span data-line="4">- age                  (8212,) int32
-</span><span data-line="5">- PNUM                 (8212,) int32
-</span><span data-line="6">- sex                  (8212,) int32
-</span><span data-line="7">- pemploy              (8212,) int32
-</span><span data-line="8">- pstudent             (8212,) int32
-</span><span data-line="9">- ptype                (8212,) int32
-</span><span data-line="10">- _prng_key_           (8212,) key&lt;fry&gt;
-</span><span data-line="11">- _household_idx_      (8212,) int32
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.01] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_landuse</span> completed in 0:00:00.05
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.29] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_persons</span> completed in 0:00:00.28
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.43] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_households</span> completed in 0:00:00.14
+</span></pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.49] INFO: compute_values step <span class=" -Color -Color-Bold">household_value_of_time</span> completed in 0:00:00.06
 </span></pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># household_value_of_time.__step__._compute_values.chunk_size = 10_000_000</span>
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># type: ignore</span>
-</span><span data-line="2"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
-</span><span data-line="3">    <span class="n">annotate_landuse</span><span class="p">,</span> <span class="n">annotate_persons</span><span class="p">,</span> <span class="n">annotate_households</span><span class="p">,</span> <span class="n">household_value_of_time</span>
-</span><span data-line="4"><span class="p">)</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.13] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_landuse</span> completed in 0:00:00.06
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.45] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_persons</span> completed in 0:00:00.31
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.61] INFO: compute_values step <span class=" -Color -Color-Bold">annotate_households</span> completed in 0:00:00.16
-</span></pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">[00:02.67] INFO: compute_values step <span class=" -Color -Color-Bold">household_value_of_time</span> completed in 0:00:00.06
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=household_id&gt;
-</span><span data-line="2">- household_id         (5000,) int32
-</span><span data-line="3">- hhsize               (5000,) int8
-</span><span data-line="4">- num_workers          (5000,) int8
-</span><span data-line="5">- auto_ownership       (5000,) int8
-</span><span data-line="6">- TAZ                  (5000,) int32
-</span><span data-line="7">- HHT                  (5000,) int8
-</span><span data-line="8">- income               (5000,) int32
-</span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
-</span><span data-line="10">- _prng_key_           (5000,) key&lt;fry&gt;
-</span><span data-line="11">- income_in_thousands  (5000,) float32
-</span><span data-line="12">- income_segment       (5000,) int8
-</span><span data-line="13">- family               (5000,) bool
-</span><span data-line="14">- non_family           (5000,) bool
-</span><span data-line="15">- num_drivers          (5000,) int8
-</span><span data-line="16">- num_adults           (5000,) int8
-</span><span data-line="17">- num_children         (5000,) int8
-</span><span data-line="18">- num_young_children   (5000,) int8
-</span><span data-line="19">- num_children_5_to_15 (5000,) int8
-</span><span data-line="20">- num_children_16_to_17 (5000,) int8
-</span><span data-line="21">- num_college_age      (5000,) int8
-</span><span data-line="22">- num_young_adults     (5000,) int8
-</span><span data-line="23">- home_is_urban        (5000,) bool
-</span><span data-line="24">- home_is_rural        (5000,) bool
-</span><span data-line="25">- median_value_of_time (5000,) float32
-</span><span data-line="26">- random_vot           (5000,) float32
-</span></pre></div>
-</div>
-</div>
-</div>
+<p>The store records completed step names as workflow metadata. Validation uses
+this state when deciding which step-produced fields are required.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">completed_steps</span>
@@ -700,50 +573,9 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=person_id&gt;
-</span><span data-line="2">- person_id            (8212,) int32
-</span><span data-line="3">- household_id         (8212,) int32
-</span><span data-line="4">- age                  (8212,) int32
-</span><span data-line="5">- PNUM                 (8212,) int32
-</span><span data-line="6">- sex                  (8212,) int32
-</span><span data-line="7">- pemploy              (8212,) int32
-</span><span data-line="8">- pstudent             (8212,) int32
-</span><span data-line="9">- ptype                (8212,) int32
-</span><span data-line="10">- _prng_key_           (8212,) key&lt;fry&gt;
-</span><span data-line="11">- _household_idx_      (8212,) int32
-</span><span data-line="12">- age_16_to_19         (8212,) bool
-</span><span data-line="13">- age_16_p             (8212,) bool
-</span><span data-line="14">- adult                (8212,) bool
-</span><span data-line="15">- male                 (8212,) bool
-</span><span data-line="16">- female               (8212,) bool
-</span><span data-line="17">- has_non_worker       (8212,) bool
-</span><span data-line="18">- has_retiree          (8212,) bool
-</span><span data-line="19">- has_preschool_kid    (8212,) bool
-</span><span data-line="20">- has_driving_kid      (8212,) bool
-</span><span data-line="21">- has_school_kid       (8212,) bool
-</span><span data-line="22">- has_full_time        (8212,) bool
-</span><span data-line="23">- has_part_time        (8212,) bool
-</span><span data-line="24">- has_university       (8212,) bool
-</span><span data-line="25">- student_is_employed  (8212,) bool
-</span><span data-line="26">- nonstudent_to_school (8212,) bool
-</span><span data-line="27">- is_student           (8212,) bool
-</span><span data-line="28">- is_gradeschool       (8212,) bool
-</span><span data-line="29">- is_highschool        (8212,) bool
-</span><span data-line="30">- is_university        (8212,) bool
-</span><span data-line="31">- school_segment       (8212,) int8
-</span><span data-line="32">- is_worker            (8212,) bool
-</span><span data-line="33">- home_zone_id         (8212,) categorical: (25 categories)
-</span></pre></div>
-</div>
-</div>
-</div>
+<p>The household summary now includes the counts, density-related lookups, income
+segment, and value-of-time data consumed by the auto-ownership utility
+function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -781,6 +613,9 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+<p>A final store-level validation checks the derived arrays against their
+declared shapes and dtypes. Safe coercion is allowed, while unrelated fields
+that are not needed in this walkthrough may remain absent.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">coerce</span><span class="o">=</span><span class="s2">&quot;safe&quot;</span><span class="p">,</span> <span class="n">missing_fields</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
@@ -792,7 +627,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="2">  TIMEPERIOD: [&#39;EA&#39;, &#39;AM&#39;, &#39;MD&#39;, &#39;PM&#39;, &#39;EV&#39;] (ordered=False)
 </span><span data-line="3">  TAZ: [ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
 </span><span data-line="4"> 25] (ordered=False)
-</span><span data-line="5">table households is &lt;mtc.tables.households.Households object at 0x140bb26d0&gt;
+</span><span data-line="5">table households is &lt;mtc.tables.households.Households object at 0x11f18e7b0&gt;
 </span><span data-line="6">Validating table &#39;households&#39;...
 </span><span data-line="7">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="8">Field &#39;TAZ&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
@@ -813,14 +648,14 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="23">Field &#39;num_college_age&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
 </span><span data-line="24">Field &#39;num_young_adults&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
 </span><span data-line="25">Field &#39;num_workers&#39; validated as &lt;class &#39;numpy.int8&#39;&gt;.
-</span><span data-line="26">table tours is &lt;mtc.tables.tours.Tours object at 0x1312bcc30&gt;
+</span><span data-line="26">table tours is &lt;mtc.tables.tours.Tours object at 0x11e621940&gt;
 </span><span data-line="27">Validating table &#39;tours&#39;...
 </span><span data-line="28">Field &#39;tour_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="29">Field &#39;person_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="30">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="31">Field &#39;_household_idx_&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="32">Field &#39;_person_idx_&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
-</span><span data-line="33">table persons is &lt;mtc.tables.persons.Persons object at 0x140bfc830&gt;
+</span><span data-line="33">table persons is &lt;mtc.tables.persons.Persons object at 0x1342bd0d0&gt;
 </span><span data-line="34">Validating table &#39;persons&#39;...
 </span><span data-line="35">Field &#39;person_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="36">Field &#39;household_id&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
@@ -835,7 +670,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="45">Field &#39;female&#39; validated as &lt;class &#39;bool&#39;&gt;.
 </span><span data-line="46">Field &#39;age_16_to_19&#39; validated as &lt;class &#39;numpy.bool&#39;&gt;.
 </span><span data-line="47">Field &#39;age_16_p&#39; validated as &lt;class &#39;numpy.bool&#39;&gt;.
-</span><span data-line="48">table land_use is &lt;mtc.tables.landuse.LandUse object at 0x140bba550&gt;
+</span><span data-line="48">table land_use is &lt;mtc.tables.landuse.LandUse object at 0x134282150&gt;
 </span><span data-line="49">Validating table &#39;land_use&#39;...
 </span><span data-line="50">Field &#39;TAZ&#39; validated as &lt;class &#39;numpy.int32&#39;&gt;.
 </span><span data-line="51">Field &#39;TOTACRE&#39; validated as &lt;class &#39;numpy.float32&#39;&gt;.
@@ -859,61 +694,30 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </div>
 </div>
+</section>
+<section id="simulate-auto-ownership-choices">
+<h2>Simulate auto-ownership choices<a class="headerlink" href="#simulate-auto-ownership-choices" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">auto_ownership</span></code> step evaluates utility for all five vehicle-count
+alternatives, converts those utilities to multinomial-logit probabilities, and
+draws one alternative using each household’s stable random stream. <code class="docutils literal notranslate"><span class="pre">run_on</span></code>
+writes the result to <code class="docutils literal notranslate"><span class="pre">auto_ownership_sim</span></code> in a returned store.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.models.auto_ownership</span><span class="w"> </span><span class="kn">import</span> <span class="n">auto_ownership</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">simulated_store</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">run_on</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 </div>
+<p>Keeping the observed and simulated columns side by side makes their roles
+clear: <code class="docutils literal notranslate"><span class="pre">auto_ownership</span></code> came from the input population, while
+<code class="docutils literal notranslate"><span class="pre">auto_ownership_sim</span></code> is this model run’s prediction.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">run_on</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=household_id&gt;
-</span><span data-line="2">- household_id         (5000,) int32
-</span><span data-line="3">- hhsize               (5000,) int8
-</span><span data-line="4">- num_workers          (5000,) int8
-</span><span data-line="5">- auto_ownership       (5000,) int8
-</span><span data-line="6">- TAZ                  (5000,) int32
-</span><span data-line="7">- HHT                  (5000,) int8
-</span><span data-line="8">- income               (5000,) int32
-</span><span data-line="9">- home_zone_id         (5000,) categorical: (25 categories)
-</span><span data-line="10">- _prng_key_           (5000,) key&lt;fry&gt;
-</span><span data-line="11">- income_in_thousands  (5000,) float32
-</span><span data-line="12">- income_segment       (5000,) int8
-</span><span data-line="13">- family               (5000,) bool
-</span><span data-line="14">- non_family           (5000,) bool
-</span><span data-line="15">- num_drivers          (5000,) int8
-</span><span data-line="16">- num_adults           (5000,) int8
-</span><span data-line="17">- num_children         (5000,) int8
-</span><span data-line="18">- num_young_children   (5000,) int8
-</span><span data-line="19">- num_children_5_to_15 (5000,) int8
-</span><span data-line="20">- num_children_16_to_17 (5000,) int8
-</span><span data-line="21">- num_college_age      (5000,) int8
-</span><span data-line="22">- num_young_adults     (5000,) int8
-</span><span data-line="23">- home_is_urban        (5000,) bool
-</span><span data-line="24">- home_is_rural        (5000,) bool
-</span><span data-line="25">- median_value_of_time (5000,) float32
-</span><span data-line="26">- random_vot           (5000,) float32
-</span><span data-line="27">- auto_ownership_sim   (5000,) int8
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store2</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">simulated_store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+</span><span data-line="2">    <span class="s2">&quot;household_id&quot;</span><span class="p">,</span> <span class="s2">&quot;auto_ownership&quot;</span><span class="p">,</span> <span class="s2">&quot;auto_ownership_sim&quot;</span>
+</span><span data-line="3"><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
@@ -925,25 +729,25 @@ data-aria-dark="Switch to auto color mode">
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (5_000, 26)</small><table border="1" class="dataframe"><thead><tr><th>household_id</th><th>hhsize</th><th>num_workers</th><th>auto_ownership</th><th>TAZ</th><th>HHT</th><th>income</th><th>home_zone_id</th><th>_prng_key_</th><th>income_in_thousands</th><th>income_segment</th><th>family</th><th>non_family</th><th>num_drivers</th><th>num_adults</th><th>num_children</th><th>num_young_children</th><th>num_children_5_to_15</th><th>num_children_16_to_17</th><th>num_college_age</th><th>num_young_adults</th><th>home_is_urban</th><th>home_is_rural</th><th>median_value_of_time</th><th>random_vot</th><th>auto_ownership_sim</th></tr><tr><td>i32</td><td>i8</td><td>i8</td><td>i8</td><td>i32</td><td>i8</td><td>i32</td><td>enum</td><td>u64</td><td>f32</td><td>i8</td><td>bool</td><td>bool</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>i8</td><td>bool</td><td>bool</td><td>f32</td><td>f32</td><td>i8</td></tr></thead><tbody><tr><td>2717868</td><td>2</td><td>1</td><td>1</td><td>25</td><td>1</td><td>361000</td><td>&quot;TAZ-25&quot;</td><td>15767225188018600536</td><td>361.0</td><td>4</td><td>true</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>true</td><td>false</td><td>60.0</td><td>1.149056</td><td>1</td></tr><tr><td>763899</td><td>1</td><td>0</td><td>1</td><td>6</td><td>4</td><td>59220</td><td>&quot;TAZ-6&quot;</td><td>14249247257885037026</td><td>59.220001</td><td>2</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>25.0</td><td>0.54027</td><td>0</td></tr><tr><td>2222791</td><td>2</td><td>2</td><td>2</td><td>9</td><td>2</td><td>197000</td><td>&quot;TAZ-9&quot;</td><td>11490395827286565799</td><td>197.0</td><td>4</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>0.921675</td><td>4</td></tr><tr><td>112477</td><td>1</td><td>1</td><td>0</td><td>17</td><td>6</td><td>2200</td><td>&quot;TAZ-17&quot;</td><td>17101579320042102679</td><td>2.2</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.465194</td><td>0</td></tr><tr><td>370491</td><td>3</td><td>1</td><td>0</td><td>21</td><td>1</td><td>16500</td><td>&quot;TAZ-21&quot;</td><td>5222445121369432989</td><td>16.5</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.186729</td><td>1</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>109218</td><td>1</td><td>1</td><td>0</td><td>10</td><td>4</td><td>15000</td><td>&quot;TAZ-10&quot;</td><td>7523481964464160280</td><td>15.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>0.651696</td><td>1</td></tr><tr><td>570708</td><td>1</td><td>0</td><td>0</td><td>23</td><td>6</td><td>13100</td><td>&quot;TAZ-23&quot;</td><td>13936936436250680516</td><td>13.1</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.033438</td><td>1</td></tr><tr><td>2762199</td><td>1</td><td>0</td><td>0</td><td>21</td><td>0</td><td>0</td><td>&quot;TAZ-21&quot;</td><td>5181451548477488279</td><td>0.0</td><td>1</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>1.25592</td><td>0</td></tr><tr><td>2049372</td><td>1</td><td>1</td><td>1</td><td>18</td><td>4</td><td>103000</td><td>&quot;TAZ-18&quot;</td><td>14513684321777940963</td><td>103.0</td><td>4</td><td>false</td><td>false</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>60.0</td><td>0.980867</td><td>0</td></tr><tr><td>702559</td><td>2</td><td>0</td><td>0</td><td>13</td><td>1</td><td>14800</td><td>&quot;TAZ-13&quot;</td><td>16452319291433101042</td><td>14.8</td><td>1</td><td>false</td><td>false</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>false</td><td>false</td><td>15.0</td><td>2.292876</td><td>2</td></tr></tbody></table></div></div></div>
+<small>shape: (10, 3)</small><table border="1" class="dataframe"><thead><tr><th>household_id</th><th>auto_ownership</th><th>auto_ownership_sim</th></tr><tr><td>i32</td><td>i8</td><td>i8</td></tr></thead><tbody><tr><td>2717868</td><td>1</td><td>1</td></tr><tr><td>763899</td><td>1</td><td>0</td></tr><tr><td>2222791</td><td>2</td><td>4</td></tr><tr><td>112477</td><td>0</td><td>0</td></tr><tr><td>370491</td><td>0</td><td>1</td></tr><tr><td>226880</td><td>0</td><td>0</td></tr><tr><td>568499</td><td>0</td><td>0</td></tr><tr><td>27956</td><td>0</td><td>1</td></tr><tr><td>110706</td><td>0</td><td>0</td></tr><tr><td>2307193</td><td>1</td><td>4</td></tr></tbody></table></div></div></div>
 </div>
+</section>
+<section id="trace-the-utility-calculation">
+<h2>Trace the utility calculation<a class="headerlink" href="#trace-the-utility-calculation" title="Link to this heading">#</a></h2>
+<p>For model debugging, the utility function can return selected intermediate
+expressions alongside the alternative utilities. The trace below exposes
+income and driver indicators, then combines them with each vehicle-count
+utility for the first few households.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">simulate_choice</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([1, 0, 4, ..., 0, 0, 2], dtype=int8)
-</span></pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">utility_trace</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">utility</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">trace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">auto_ownership</span><span class="o">.</span><span class="n">utility</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">trace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span>
+</span><span data-line="3"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+</span><span data-line="4">    <span class="p">{</span>
+</span><span data-line="5">        <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;utility_</span><span class="si">{</span><span class="n">cars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">values</span> <span class="k">for</span> <span class="n">cars</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">utility_trace</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+</span><span data-line="6">        <span class="o">**</span><span class="n">utility_trace</span><span class="o">.</span><span class="n">trace</span><span class="p">,</span>
+</span><span data-line="7">    <span class="p">}</span>
+</span><span data-line="8"><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </div>
@@ -966,6 +770,11 @@ data-aria-dark="Switch to auto color mode">
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>utility_0</th>
+      <th>utility_1</th>
+      <th>utility_2</th>
+      <th>utility_3</th>
+      <th>utility_4</th>
       <th>income_in_thousands</th>
       <th>three_drivers</th>
       <th>two_drivers</th>
@@ -974,111 +783,115 @@ data-aria-dark="Switch to auto color mode">
   <tbody>
     <tr>
       <th>0</th>
+      <td>0.0</td>
+      <td>0.835464</td>
+      <td>-5.751639</td>
+      <td>-153.313644</td>
+      <td>1.481800</td>
       <td>361.000031</td>
       <td>False</td>
       <td>True</td>
     </tr>
     <tr>
       <th>1</th>
+      <td>0.0</td>
+      <td>1.060974</td>
+      <td>-10.055627</td>
+      <td>-19.713758</td>
+      <td>-3.026466</td>
       <td>59.220001</td>
       <td>False</td>
       <td>False</td>
     </tr>
     <tr>
       <th>2</th>
+      <td>0.0</td>
+      <td>0.666410</td>
+      <td>-4.723795</td>
+      <td>-125.842300</td>
+      <td>1.350800</td>
       <td>197.000015</td>
       <td>False</td>
       <td>True</td>
     </tr>
     <tr>
       <th>3</th>
+      <td>0.0</td>
+      <td>0.556440</td>
+      <td>-5.401515</td>
+      <td>-67.820976</td>
+      <td>-4.297120</td>
       <td>2.200000</td>
       <td>False</td>
       <td>False</td>
     </tr>
     <tr>
       <th>4</th>
+      <td>0.0</td>
+      <td>1.232409</td>
+      <td>-0.439981</td>
+      <td>-50.280209</td>
+      <td>-0.273450</td>
       <td>16.500000</td>
-      <td>False</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>4995</th>
-      <td>15.000001</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>4996</th>
-      <td>13.100000</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>4997</th>
-      <td>0.000000</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>4998</th>
-      <td>103.000008</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>4999</th>
-      <td>14.800001</td>
       <td>False</td>
       <td>True</td>
     </tr>
   </tbody>
 </table>
-<p>5000 rows × 3 columns</p>
 </div></div></div>
 </div>
+</section>
+<section id="compare-simulated-and-analytic-shares">
+<h2>Compare simulated and analytic shares<a class="headerlink" href="#compare-simulated-and-analytic-shares" title="Link to this heading">#</a></h2>
+<p>A simulated run contains random choice variation. The analytic share instead
+averages each household’s modeled probabilities, giving the model’s expected
+aggregate distribution without drawing choices. On a large sample the
+simulated shares should be close, but not identical, to that expectation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">simulate_choice</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">analytic_shares</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+</span><span data-line="2"><span class="n">simulated_shares</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">simulated_store</span><span class="o">.</span><span class="n">households</span><span class="p">[</span><span class="s2">&quot;auto_ownership_sim&quot;</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="mi">5</span>
+</span><span data-line="4"><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">simulated_store</span><span class="o">.</span><span class="n">households</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="p">{</span><span class="s2">&quot;analytic&quot;</span><span class="p">:</span> <span class="n">analytic_shares</span><span class="p">,</span> <span class="s2">&quot;simulated&quot;</span><span class="p">:</span> <span class="n">simulated_shares</span><span class="p">}</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([1, 0, 4, ..., 0, 0, 2], dtype=int8)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">{&#39;analytic&#39;: Array([0.26307496, 0.5855463 , 0.02963491, 0.00279747, 0.11894631],      dtype=float32),
+</span><span data-line="2"> &#39;simulated&#39;: Array([0.264 , 0.5864, 0.0268, 0.0034, 0.1194], dtype=float32)}
 </span></pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="calibrate-to-target-shares">
+<h2>Calibrate to target shares<a class="headerlink" href="#calibrate-to-target-shares" title="Link to this heading">#</a></h2>
+<p>Suppose an external control total says the desired distribution is 10%, 30%,
+40%, 10%, and 10% across the five alternatives. We will adjust only the
+constants for one through four-or-more vehicles; the zero-vehicle utility
+remains the reference.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">target_shares</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}</span>
+</span><span data-line="2"><span class="n">calibration_parameters</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="3">    <span class="s2">&quot;coef_cars1_asc&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="s2">&quot;coef_cars2_asc&quot;</span><span class="p">,</span>
+</span><span data-line="5">    <span class="s2">&quot;coef_cars3_asc&quot;</span><span class="p">,</span>
+</span><span data-line="6">    <span class="s2">&quot;coef_cars4_asc&quot;</span><span class="p">,</span>
+</span><span data-line="7"><span class="p">]</span>
 </span></pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([0.26307496, 0.5855463 , 0.02963491, 0.00279747, 0.11894631],      dtype=float32)
-</span></pre></div>
 </div>
-</div>
-</div>
+<p>The calibration objective is the squared difference between analytic and
+target shares. Its gradient is available through JAX for every parameter;
+displaying only the four selected components shows the direction available to
+the optimizer.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share_loss</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
-</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="4">        <span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="5">        <span class="mi">1</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
-</span><span data-line="6">        <span class="mi">2</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
-</span><span data-line="7">        <span class="mi">3</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="8">        <span class="mi">4</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="9">    <span class="p">},</span>
-</span><span data-line="10"><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share_loss</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">target_shares</span><span class="o">=</span><span class="n">target_shares</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
@@ -1090,133 +903,125 @@ data-aria-dark="Switch to auto color mode">
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">g</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share_loss_grad</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
-</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="4">        <span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="5">        <span class="mi">1</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
-</span><span data-line="6">        <span class="mi">2</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
-</span><span data-line="7">        <span class="mi">3</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="8">        <span class="mi">4</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="9">    <span class="p">},</span>
-</span><span data-line="10"><span class="p">)</span>
-</span><span data-line="11">
-</span><span data-line="12"><span class="n">g</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gradient</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share_loss_grad</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">target_shares</span><span class="o">=</span><span class="n">target_shares</span><span class="p">)</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">gradient</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">calibration_parameters</span><span class="p">}</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">AutoOwnershipParams(
-</span><span data-line="2">    coef_cars1_asc=Array(0.07327148, dtype=float32, weak_type=True),
-</span><span data-line="3">    coef_cars1_asc_county=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="4">    coef_cars1_asc_marin=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="5">    coef_cars1_asc_san_francisco=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="6">    coef_cars1_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="7">    coef_cars1_density_0_10_no_workers=Array(0.22252251, dtype=float32, weak_type=True),
-</span><span data-line="8">    coef_cars1_density_10_up_no_workers=Array(1.7848635, dtype=float32, weak_type=True),
-</span><span data-line="9">    coef_cars1_density_10_up_workers=Array(2.4006515, dtype=float32, weak_type=True),
-</span><span data-line="10">    coef_cars1_drivers_2=Array(0.03263084, dtype=float32, weak_type=True),
-</span><span data-line="11">    coef_cars1_drivers_3=Array(0.00229748, dtype=float32, weak_type=True),
-</span><span data-line="12">    coef_cars1_drivers_4_up=Array(0.0008286, dtype=float32, weak_type=True),
-</span><span data-line="13">    coef_cars1_hh_income_0_30k=Array(1.5066861, dtype=float32, weak_type=True),
-</span><span data-line="14">    coef_cars1_hh_income_30_up=Array(1.8867602, dtype=float32, weak_type=True),
-</span><span data-line="15">    coef_cars1_num_workers_clip_3=Array(0.07202546, dtype=float32, weak_type=True),
-</span><span data-line="16">    coef_cars1_persons_16_17=Array(0.00185995, dtype=float32, weak_type=True),
-</span><span data-line="17">    coef_cars1_persons_18_24=Array(0.01011639, dtype=float32, weak_type=True),
-</span><span data-line="18">    coef_cars1_persons_25_34=Array(0.02964097, dtype=float32, weak_type=True),
-</span><span data-line="19">    coef_cars1_presence_children_0_4=Array(0.00396558, dtype=float32, weak_type=True),
-</span><span data-line="20">    coef_cars1_presence_children_5_17=Array(0.00998919, dtype=float32, weak_type=True),
-</span><span data-line="21">    coef_cars234_asc_marin=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="22">    coef_cars234_presence_children_0_4=Array(-0.00331472, dtype=float32, weak_type=True),
-</span><span data-line="23">    coef_cars2_asc=Array(-0.02221743, dtype=float32, weak_type=True),
-</span><span data-line="24">    coef_cars2_asc_county=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="25">    coef_cars2_asc_san_francisco=Array(-0.02221743, dtype=float32, weak_type=True),
-</span><span data-line="26">    coef_cars2_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="27">    coef_cars2_density_0_10_no_workers=Array(-0.02364007, dtype=float32, weak_type=True),
-</span><span data-line="28">    coef_cars2_density_10_up_no_workers=Array(-0.21981671, dtype=float32, weak_type=True),
-</span><span data-line="29">    coef_cars2_density_10_up_workers=Array(-0.34944877, dtype=float32, weak_type=True),
-</span><span data-line="30">    coef_cars2_drivers_2=Array(-0.0156795, dtype=float32, weak_type=True),
-</span><span data-line="31">    coef_cars2_drivers_3=Array(-0.00141119, dtype=float32, weak_type=True),
-</span><span data-line="32">    coef_cars2_drivers_4_up=Array(-0.00030825, dtype=float32, weak_type=True),
-</span><span data-line="33">    coef_cars2_hh_income_0_30k=Array(-0.586473, dtype=float32, weak_type=True),
-</span><span data-line="34">    coef_cars2_hh_income_30_up=Array(-0.94900423, dtype=float32, weak_type=True),
-</span><span data-line="35">    coef_cars2_num_workers_clip_3=Array(-0.03074503, dtype=float32, weak_type=True),
-</span><span data-line="36">    coef_cars2_persons_16_17=Array(-0.0006489, dtype=float32, weak_type=True),
-</span><span data-line="37">    coef_cars2_persons_18_24=Array(-0.00259443, dtype=float32, weak_type=True),
-</span><span data-line="38">    coef_cars2_persons_25_34=Array(-0.01191693, dtype=float32, weak_type=True),
-</span><span data-line="39">    coef_cars2_presence_children_5_17=Array(-0.00367055, dtype=float32, weak_type=True),
-</span><span data-line="40">    coef_cars34_asc_county=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="41">    coef_cars34_asc_san_francisco=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="42">    coef_cars34_density_0_10_no_workers=Array(-0.00011447, dtype=float32, weak_type=True),
-</span><span data-line="43">    coef_cars34_density_10_up_no_workers=Array(-7.9052865e-05, dtype=float32, weak_type=True),
-</span><span data-line="44">    coef_cars34_persons_16_17=Array(-0.00098679, dtype=float32, weak_type=True),
-</span><span data-line="45">    coef_cars34_persons_18_24=Array(-0.00365545, dtype=float32, weak_type=True),
-</span><span data-line="46">    coef_cars34_persons_25_34=Array(-0.01036393, dtype=float32, weak_type=True),
-</span><span data-line="47">    coef_cars34_presence_children_5_17=Array(-0.00444413, dtype=float32, weak_type=True),
-</span><span data-line="48">    coef_cars3_asc=Array(0.00015584, dtype=float32, weak_type=True),
-</span><span data-line="49">    coef_cars3_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="50">    coef_cars3_drivers_2=Array(0.00024149, dtype=float32, weak_type=True),
-</span><span data-line="51">    coef_cars3_drivers_3=Array(5.5594464e-05, dtype=float32, weak_type=True),
-</span><span data-line="52">    coef_cars3_drivers_4_up=Array(-2.7979536e-07, dtype=float32, weak_type=True),
-</span><span data-line="53">    coef_cars3_hh_income_0_30k=Array(0.0056824, dtype=float32, weak_type=True),
-</span><span data-line="54">    coef_cars3_hh_income_30_up=Array(0.01130291, dtype=float32, weak_type=True),
-</span><span data-line="55">    coef_cars3_num_workers_clip_3=Array(0.00050934, dtype=float32, weak_type=True),
-</span><span data-line="56">    coef_cars4_asc=Array(-0.01873321, dtype=float32, weak_type=True),
-</span><span data-line="57">    coef_cars4_auto_time_saving_per_worker=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="58">    coef_cars4_drivers_2=Array(-0.01417157, dtype=float32, weak_type=True),
-</span><span data-line="59">    coef_cars4_drivers_3=Array(-0.00117014, dtype=float32, weak_type=True),
-</span><span data-line="60">    coef_cars4_drivers_4_up=Array(-0.00054256, dtype=float32, weak_type=True),
-</span><span data-line="61">    coef_cars4_hh_income_0_30k=Array(-0.50299746, dtype=float32, weak_type=True),
-</span><span data-line="62">    coef_cars4_hh_income_30_up=Array(-0.76541436, dtype=float32, weak_type=True),
-</span><span data-line="63">    coef_cars4_num_workers_clip_3=Array(-0.0266102, dtype=float32, weak_type=True),
-</span><span data-line="64">    coef_retail_auto_no_workers=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="65">    coef_retail_auto_workers=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="66">    coef_retail_non_motor=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="67">    coef_retail_transit_no_workers=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="68">    coef_retail_transit_workers=Array(0., dtype=float32, weak_type=True),
-</span><span data-line="69">)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">{&#39;coef_cars1_asc&#39;: Array(0.07327148, dtype=float32, weak_type=True),
+</span><span data-line="2"> &#39;coef_cars2_asc&#39;: Array(-0.02221743, dtype=float32, weak_type=True),
+</span><span data-line="3"> &#39;coef_cars3_asc&#39;: Array(0.00015584, dtype=float32, weak_type=True),
+</span><span data-line="4"> &#39;coef_cars4_asc&#39;: Array(-0.01873321, dtype=float32, weak_type=True)}
 </span></pre></div>
 </div>
 </div>
 </div>
+<p>The calibration helper passes that objective and gradient to SciPy. It returns
+an optimizer result containing a new parameter collection and the final
+analytic shares; it does not mutate the model’s original parameters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">calibration</span> <span class="o">=</span> <span class="n">auto_ownership</span><span class="o">.</span><span class="n">calibrate_analytic_share</span><span class="p">(</span>
 </span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
-</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="4">        <span class="mi">0</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="5">        <span class="mi">1</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
-</span><span data-line="6">        <span class="mi">2</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
-</span><span data-line="7">        <span class="mi">3</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="8">        <span class="mi">4</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-</span><span data-line="9">    <span class="p">},</span>
-</span><span data-line="10">    <span class="n">calib_params</span><span class="o">=</span><span class="p">[</span>
-</span><span data-line="11">        <span class="s2">&quot;coef_cars1_asc&quot;</span><span class="p">,</span>
-</span><span data-line="12">        <span class="s2">&quot;coef_cars2_asc&quot;</span><span class="p">,</span>
-</span><span data-line="13">        <span class="s2">&quot;coef_cars3_asc&quot;</span><span class="p">,</span>
-</span><span data-line="14">        <span class="s2">&quot;coef_cars4_asc&quot;</span><span class="p">,</span>
-</span><span data-line="15">    <span class="p">],</span>
-</span><span data-line="16"><span class="p">)</span>
+</span><span data-line="3">    <span class="n">target_shares</span><span class="o">=</span><span class="n">target_shares</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">calib_params</span><span class="o">=</span><span class="n">calibration_parameters</span><span class="p">,</span>
+</span><span data-line="5"><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 </div>
+<p>The fitted constants show exactly what the optimizer changed. All other
+utility coefficients remain at their original values.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">auto_ownership</span><span class="o">.</span><span class="n">analytic_share</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">store</span><span class="p">,</span>
-</span><span data-line="3">    <span class="n">param</span><span class="o">=</span><span class="n">calibration</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">],</span>
-</span><span data-line="4"><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+</span><span data-line="2">    <span class="p">{</span>
+</span><span data-line="3">        <span class="s2">&quot;before&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">auto_ownership</span><span class="o">.</span><span class="n">param</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">calibration_parameters</span><span class="p">],</span>
+</span><span data-line="4">        <span class="s2">&quot;after&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">calibration</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">calibration_parameters</span><span class="p">],</span>
+</span><span data-line="5">    <span class="p">},</span>
+</span><span data-line="6">    <span class="n">index</span><span class="o">=</span><span class="n">calibration_parameters</span><span class="p">,</span>
+</span><span data-line="7"><span class="p">)</span>
 </span></pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">Array([1.2501623e-01, 3.2500395e-01, 4.2497578e-01, 6.0965403e-06,
-</span><span data-line="2">       1.2499795e-01], dtype=float32)
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>before</th>
+      <th>after</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>coef_cars1_asc</th>
+      <td>1.1865</td>
+      <td>1.679031</td>
+    </tr>
+    <tr>
+      <th>coef_cars2_asc</th>
+      <td>-1.0846</td>
+      <td>6.342871</td>
+    </tr>
+    <tr>
+      <th>coef_cars3_asc</th>
+      <td>-3.2502</td>
+      <td>-3.333954</td>
+    </tr>
+    <tr>
+      <th>coef_cars4_asc</th>
+      <td>-5.3130</td>
+      <td>-2.961099</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Finally, we compare the fitted analytic shares with the requested controls. A
+successful calibration should bring the modeled vector close to the target
+while leaving the reusable <code class="docutils literal notranslate"><span class="pre">auto_ownership</span></code> step itself unchanged.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
+</span><span data-line="2">    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">calibration</span><span class="o">.</span><span class="n">success</span><span class="p">,</span>
+</span><span data-line="3">    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target_shares</span><span class="p">,</span>
+</span><span data-line="4">    <span class="s2">&quot;fitted&quot;</span><span class="p">:</span> <span class="n">calibration</span><span class="p">[</span><span class="s2">&quot;shares&quot;</span><span class="p">],</span>
+</span><span data-line="5"><span class="p">}</span>
+</span></pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">{&#39;success&#39;: True,
+</span><span data-line="2"> &#39;target&#39;: {0: 0.1, 1: 0.3, 2: 0.4, 3: 0.1, 4: 0.1},
+</span><span data-line="3"> &#39;fitted&#39;: Array([1.2501623e-01, 3.2500395e-01, 4.2497578e-01, 6.0965403e-06,
+</span><span data-line="4">        1.2499795e-01], dtype=float32)}
 </span></pre></div>
 </div>
 </div>
 </div>
+<p>This sequence separates four concerns that are easy to blur together:
+preparing valid model inputs, computing utility, drawing reproducible choices,
+and fitting aggregate controls. Traveler uses the same typed store and
+functional state transitions throughout, so each stage can be inspected or
+validated independently.</p>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -1228,13 +1033,13 @@ data-aria-dark="Switch to auto color mode">
     <a href="data-validation.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Data Validation</div></div>
+        <span>Previous</span><div class="title">Validating MTC Model Data</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="work-location.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Work Location</div>
+        <div class="title">Work Location Choice</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -1262,7 +1067,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

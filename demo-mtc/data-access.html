@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="tomato" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Downloading Data - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="API reference" href="../api/index.html" /><link rel="prev" title="Work Location" href="work-location.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Loading the Full MTC Dataset - Traveler</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="API reference" href="../api/index.html" /><link rel="prev" title="Work Location Choice" href="work-location.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -23,7 +23,7 @@
 }
 </style>
     
-  <meta property="og:type" content="website"/><meta property="og:title" content="Downloading Data"/>
+  <meta property="og:type" content="website"/><meta property="og:title" content="Loading the Full MTC Dataset"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -79,7 +79,13 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#load-the-regional-data">Load the regional data</a></li>
+<li><a class="reference internal" href="#inspect-the-regional-geography">Inspect the regional geography</a></li>
+<li><a class="reference internal" href="#inspect-the-synthetic-population">Inspect the synthetic population</a></li>
+<li><a class="reference internal" href="#where-to-go-next">Where to go next</a></li>
+</ul>
+</div><a class="js-repo-stats repo-stats flex items-center" href="https://github.com/driftlesslabs/traveler"
   data-type="github" data-user="driftlesslabs" data-repo="traveler">
   <span class="w-8 flex items-center justify-around shrink-0 text-3xl">
     <iconify-icon icon="simple-icons:github"></iconify-icon>
@@ -122,7 +128,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Downloading Data</strong>
+        <strong itemprop="name">Loading the Full MTC Dataset</strong>
         <meta itemprop="position" content="3" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -135,19 +141,19 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="downloading-data">
-<h1>Downloading Data<a class="headerlink" href="#downloading-data" title="Link to this heading">#</a></h1>
-<p>The MTC example included with <code class="docutils literal notranslate"><span class="pre">traveler</span></code> includes a small test data set directly in the
-Git repository.  This small dataset is suitable for testing and use training purposes,
-but for evaluating runtime performance it is much better to have the “full” MTC data.
-The full data is much larger, and not suitable for inclusion or tracking directly in
-the Git repository. Instead, it can be downloaded separately using tools available in
-the <code class="docutils literal notranslate"><span class="pre">mtc</span></code> package.</p>
+          <section class="tex2jax_ignore mathjax_ignore" id="loading-the-full-mtc-dataset">
+<h1>Loading the Full MTC Dataset<a class="headerlink" href="#loading-the-full-mtc-dataset" title="Link to this heading">#</a></h1>
+<p>Traveler includes a compact MTC dataset in the repository so that examples and tests run quickly. For performance experiments and larger demonstrations, the companion <code class="docutils literal notranslate"><span class="pre">mtc</span></code> package can instead load the full regional dataset.</p>
+<p>This walkthrough downloads that dataset into a local cache, assembles its tables into a typed Traveler store, and inspects the main dimensions of the resulting model data. The first run requires a network connection and enough disk space for the archive; later runs reuse the cached files.</p>
+<section id="load-the-regional-data">
+<h2>Load the regional data<a class="headerlink" href="#load-the-regional-data" title="Link to this heading">#</a></h2>
+<p>The public <code class="docutils literal notranslate"><span class="pre">mtc.full</span></code> loader handles the complete workflow: locating cached files, downloading and unpacking missing data, converting source CSV files to Parquet, loading the typed tables, and creating a small set of synthetic tours for demonstration.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">mtc</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="n">store</span> <span class="o">=</span> <span class="n">mtc</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="4"><span class="n">store</span>
 </span></pre></div>
 </div>
 </div>
@@ -156,9 +162,16 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
 </span><span data-line="2">  return OmxSkims(
 </span></pre></div>
 </div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;Store with keys households, persons, land_use, skims, time_periods, tours&gt;
+</span></pre></div>
 </div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">skims</span></code> in the full data encompass 1,454 zones.</p>
+</div>
+<p>The returned <code class="docutils literal notranslate"><span class="pre">Store</span></code> keeps the related land-use, household, person, tour, and skim data together. Its typed table definitions let downstream model steps validate fields and navigate relationships without repeatedly rebuilding indexes.</p>
+</section>
+<section id="inspect-the-regional-geography">
+<h2>Inspect the regional geography<a class="headerlink" href="#inspect-the-regional-geography" title="Link to this heading">#</a></h2>
+<p>Travel-time, distance, and cost matrices are held in the <code class="docutils literal notranslate"><span class="pre">skims</span></code> dataset. The full MTC skims cover 1,454 traffic analysis zones and include both two-dimensional and time-dependent arrays.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">skims</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -192,7 +205,7 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
 </div>
 </div>
 </div>
-<p>The land use data is a matching table with 1,454 rows.</p>
+<p>The land-use table uses the same zone system. Each row describes one TAZ with population, employment, acreage, parking, enrollment, and other zonal attributes used by model expressions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">land_use</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -226,11 +239,15 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
 </span><span data-line="24">- TERMINAL             (1454,) float32
 </span><span data-line="25">- TAZ                  (1454,) int32
 </span><span data-line="26">- county_id            (1454,) int8
+</span><span data-line="27">- _prng_key_           (1454,) key&lt;fry&gt;
 </span></pre></div>
 </div>
 </div>
 </div>
-<p>There is also a synthetic population with 2.8 million households.</p>
+</section>
+<section id="inspect-the-synthetic-population">
+<h2>Inspect the synthetic population<a class="headerlink" href="#inspect-the-synthetic-population" title="Link to this heading">#</a></h2>
+<p>The full synthetic population contains roughly 2.8 million households. Household records carry home-zone, income, size, worker, and observed auto-ownership fields; later model steps can add derived fields to a returned store.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">households</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -238,7 +255,7 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=household_id&gt;
 </span><span data-line="2">- household_id         (2875192,) int32
 </span><span data-line="3">- hhsize               (2875192,) int8
 </span><span data-line="4">- num_workers          (2875192,) int8
@@ -247,11 +264,12 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
 </span><span data-line="7">- HHT                  (2875192,) int8
 </span><span data-line="8">- income               (2875192,) int32
 </span><span data-line="9">- home_zone_id         (2875192,) categorical: (1454 categories)
+</span><span data-line="10">- _prng_key_           (2875192,) key&lt;fry&gt;
 </span></pre></div>
 </div>
 </div>
 </div>
-<p>Those households vary in size, containing a total of 7.5 million persons.</p>
+<p>Those households contain roughly 7.5 million people. The loader also creates the household index used to align every person with the corresponding household row, allowing model code to move between the two tables efficiently.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span><span class="o">.</span><span class="n">persons</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -259,7 +277,7 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span data-line="1">&lt;JaxTable id_col=person_id&gt;
 </span><span data-line="2">- person_id            (7566527,) int32
 </span><span data-line="3">- household_id         (7566527,) int32
 </span><span data-line="4">- age                  (7566527,) int32
@@ -268,11 +286,17 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
 </span><span data-line="7">- pemploy              (7566527,) int32
 </span><span data-line="8">- pstudent             (7566527,) int32
 </span><span data-line="9">- ptype                (7566527,) int32
-</span><span data-line="10">- _household_idx_      (7566527,) int32
+</span><span data-line="10">- _prng_key_           (7566527,) key&lt;fry&gt;
+</span><span data-line="11">- _household_idx_      (7566527,) int32
 </span></pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="where-to-go-next">
+<h2>Where to go next<a class="headerlink" href="#where-to-go-next" title="Link to this heading">#</a></h2>
+<p>At this point the full regional inputs have the same typed interface as the bundled mini data, so the model walkthroughs can use either store without changing their core expressions. Use the mini loader while developing and testing; switch to this full loader when the objective is a realistic scale or performance measurement.</p>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -284,7 +308,7 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
     <a href="work-location.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Work Location</div></div>
+        <span>Previous</span><div class="title">Work Location Choice</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="../api/index.html">
@@ -318,7 +342,7 @@ the <code class="docutils literal notranslate"><span class="pre">mtc</span></cod
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>

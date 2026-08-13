@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="tomato" data-content_root="../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tables - Traveler</title><link rel="shortcut icon" href="../../_static/favicon.png"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Multi-Dim Datasets" href="datasets.html" /><link rel="prev" title="Store" href="store.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tables - Traveler</title><link rel="shortcut icon" href="../../_static/favicon.png"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Local file and format I/O" href="io.html" /><link rel="prev" title="Store" href="store.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=e1a1ceaf" />
@@ -68,12 +68,14 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
 <li class="toctree-l2 _expand"><a class="reference internal" href="store.html">Store</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="io.html">Local file and format I/O</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="datasets.html">Multi-Dim Datasets</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="categorical.html">Categorical Data</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="nested-logit.html">Nested logit choice</a></li>
 </ul>
 </li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../assets.html">Data Download</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../benchmarking.html">Benchmarking</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../development-tasks.html">Development tasks</a></li>
 </ul>
@@ -155,7 +157,7 @@ data-aria-dark="Switch to auto color mode">
   <article class="yue" role="main">
           <section class="tex2jax_ignore mathjax_ignore" id="tables">
 <h1>Tables<a class="headerlink" href="#tables" title="Link to this heading">#</a></h1>
-<p>Traveler uses <a class="reference internal" href="../../api/generated/traveler.trees.JaxTable.html#traveler.trees.JaxTable" title="traveler.trees.JaxTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxTable</span></code></a> for rectangular (tabular) model data
+<p>Traveler uses <a class="reference internal" href="../../api/generated/traveler.tables.JaxTable.html#traveler.tables.JaxTable" title="traveler.tables.JaxTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxTable</span></code></a> for rectangular (tabular) model data
 that will be consumed by JAX. A <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code> is similar in shape to a Polars
 <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>: both have named columns and a common number of rows. The
 difference is what the columns contain and what kind of work each object is
@@ -170,6 +172,26 @@ JAX transformations and device execution.</p>
 share an API. They are representations used on opposite sides of a conversion
 boundary.</p>
 </div>
+<p>File loading belongs to <a class="reference internal" href="../../api/generated/traveler.io.html#module-traveler.io" title="traveler.io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traveler.io</span></code></a>, separate from the in-memory
+table representations described here. Its <a class="reference internal" href="../../api/generated/traveler.io.read_table.html#traveler.io.read_table" title="traveler.io.read_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_table()</span></code></a>
+function reads CSV and Parquet files into Polars, can select or rename source
+columns, and can cast columns from a typed table schema:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">mtc.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">Households</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_table</span>
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
+</span><span data-line="4">
+</span><span data-line="5">
+</span><span data-line="6"><span class="n">frame</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span>
+</span><span data-line="7">    <span class="s2">&quot;households.parquet&quot;</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;household_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;household_id&quot;</span><span class="p">,</span> <span class="s2">&quot;HHID&quot;</span><span class="p">],</span> <span class="s2">&quot;income&quot;</span><span class="p">:</span> <span class="s2">&quot;income&quot;</span><span class="p">},</span>
+</span><span data-line="9">    <span class="n">schema</span><span class="o">=</span><span class="n">Households</span><span class="p">,</span>
+</span><span data-line="10"><span class="p">)</span>
+</span><span data-line="11"><span class="n">table</span> <span class="o">=</span> <span class="n">JaxTable</span><span class="o">.</span><span class="n">from_polars</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Keeping file I/O here and conversion on <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code> makes the boundary
+explicit: Polars handles file formats and preparation, while <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code>
+handles numerical model state.</p>
 <section id="from-polars-to-jax-and-back">
 <h2>From Polars to JAX and back<a class="headerlink" href="#from-polars-to-jax-and-back" title="Link to this heading">#</a></h2>
 <p>A <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code> column is normally a one-dimensional JAX array. All such columns
@@ -267,7 +289,7 @@ not contain a second household table.</p>
 </section>
 <section id="workingtable">
 <h2><code class="docutils literal notranslate"><span class="pre">WorkingTable</span></code><a class="headerlink" href="#workingtable" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../../api/generated/traveler.core.stored.WorkingTable.html#traveler.core.stored.WorkingTable" title="traveler.core.stored.WorkingTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkingTable</span></code></a> is the abstract base class for
+<p><a class="reference internal" href="../../api/generated/traveler.store.WorkingTable.html#traveler.store.WorkingTable" title="traveler.store.WorkingTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkingTable</span></code></a> is the abstract base class for
 the two forms of table view. It defines the small protocol that Traveler steps
 can rely on:</p>
 <ul class="simple">
@@ -279,13 +301,13 @@ constructing a <code class="docutils literal notranslate"><span class="pre">Work
 </section>
 <section id="storedtable">
 <h2><code class="docutils literal notranslate"><span class="pre">StoredTable</span></code><a class="headerlink" href="#storedtable" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../../api/generated/traveler.core.stored.StoredTable.html#traveler.core.stored.StoredTable" title="traveler.core.stored.StoredTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StoredTable</span></code></a> connects an application-specific
+<p><a class="reference internal" href="../../api/generated/traveler.store.StoredTable.html#traveler.store.StoredTable" title="traveler.store.StoredTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StoredTable</span></code></a> connects an application-specific
 table definition to a store. A subclass declares the store key that holds the
 underlying <code class="docutils literal notranslate"><span class="pre">JaxTable</span></code>, column fields, and optionally relationships or derived
 attributes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.stored</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoredTable</span>
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoredTable</span>
 </span><span data-line="4">
 </span><span data-line="5">
 </span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">Households</span><span class="p">(</span><span class="n">StoredTable</span><span class="p">):</span>
@@ -347,7 +369,7 @@ that expects a pytree.</p>
 </section>
 <section id="referencedtable">
 <h2><code class="docutils literal notranslate"><span class="pre">ReferencedTable</span></code><a class="headerlink" href="#referencedtable" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../../api/generated/traveler.core.stored.ReferencedTable.html#traveler.core.stored.ReferencedTable" title="traveler.core.stored.ReferencedTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferencedTable</span></code></a> is the detached form of a
+<p><a class="reference internal" href="../../api/generated/traveler.store.ReferencedTable.html#traveler.store.ReferencedTable" title="traveler.store.ReferencedTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferencedTable</span></code></a> is the detached form of a
 <code class="docutils literal notranslate"><span class="pre">StoredTable</span></code>. It keeps only the information needed to reconstruct the view:</p>
 <ul class="simple">
 <li><p>the name of the table in a store;</p></li>
@@ -405,10 +427,10 @@ arrays in the store’s <code class="docutils literal notranslate"><span class="
         <span>Previous</span><div class="title">Store</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="datasets.html">
+    <a href="io.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Multi-Dim Datasets</div>
+        <div class="title">Local file and format I/O</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -436,7 +458,7 @@ arrays in the store’s <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

@@ -68,12 +68,14 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
 <li class="toctree-l2 _expand"><a class="reference internal" href="store.html">Store</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="tables.html">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="io.html">Local file and format I/O</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="datasets.html">Multi-Dim Datasets</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="categorical.html">Categorical Data</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Steps</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="nested-logit.html">Nested logit choice</a></li>
 </ul>
 </li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../assets.html">Data Download</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../benchmarking.html">Benchmarking</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../development-tasks.html">Development tasks</a></li>
 </ul>
@@ -195,7 +197,7 @@ while adding fields to the household table.</p>
 derivation, or completion tracking;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">param</span></code>, a dictionary or <a class="reference internal" href="../../api/generated/traveler.core.parameters.Parameters.html#traveler.core.parameters.Parameters" title="traveler.core.parameters.Parameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></a>
 object containing model coefficients or settings; and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>, the typed <a class="reference internal" href="../../api/generated/traveler.core.stored.StoredTable.html#traveler.core.stored.StoredTable" title="traveler.core.stored.StoredTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StoredTable</span></code></a> class that the
+<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>, the typed <a class="reference internal" href="../../api/generated/traveler.store.StoredTable.html#traveler.store.StoredTable" title="traveler.store.StoredTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StoredTable</span></code></a> class that the
 step primarily operates on.</p></li>
 </ul>
 <p>Not every step needs parameters or a primary table. The only universal
@@ -203,7 +205,7 @@ behavior is accepting a store and returning a store.</p>
 </section>
 <section id="running-a-sequence">
 <h2>Running a sequence<a class="headerlink" href="#running-a-sequence" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../../api/generated/traveler.core.store.AbstractStore.run_steps.html#traveler.core.store.AbstractStore.run_steps" title="traveler.core.store.AbstractStore.run_steps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_steps()</span></code></a> executes its arguments
+<p><a class="reference internal" href="../../api/generated/traveler.store.AbstractStore.run_steps.html#traveler.store.AbstractStore.run_steps" title="traveler.store.AbstractStore.run_steps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_steps()</span></code></a> executes its arguments
 in order. Internally, it keeps the return value from each step and supplies it
 to the next one:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">store</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span>
@@ -282,7 +284,7 @@ partially updated input state behind.</p>
 <p>A step records its name with <code class="docutils literal notranslate"><span class="pre">store.with_completed_step(name)</span></code>, which returns
 an updated store. The read-only <code class="docutils literal notranslate"><span class="pre">store.completed_steps</span></code> frozenset records which
 phases have run and can be used by validation. In particular, a field annotated
-with <a class="reference internal" href="../../api/generated/traveler.core.stored.from_step.html#traveler.core.stored.from_step" title="traveler.core.stored.from_step"><code class="xref py py-class docutils literal notranslate"><span class="pre">from_step</span></code></a> is not required until its
+with <a class="reference internal" href="../../api/generated/traveler.store.from_step.html#traveler.store.from_step" title="traveler.store.from_step"><code class="xref py py-class docutils literal notranslate"><span class="pre">from_step</span></code></a> is not required until its
 producing step is complete.</p>
 <p>Completion tracking is not automatic in the <code class="docutils literal notranslate"><span class="pre">Step</span></code> base class; a concrete
 step decides when its work is complete and records the name as part of its
@@ -295,7 +297,7 @@ have succeeded.</p>
 <p><a class="reference internal" href="../../api/generated/traveler.steps.compute_values.html#traveler.steps.compute_values" title="traveler.steps.compute_values"><code class="xref py py-class docutils literal notranslate"><span class="pre">compute_values</span></code></a> turns a three-argument function
 into a step. The function receives:</p>
 <ol class="arabic simple">
-<li><p>a detached <a class="reference internal" href="../../api/generated/traveler.core.stored.ReferencedTable.html#traveler.core.stored.ReferencedTable" title="traveler.core.stored.ReferencedTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferencedTable</span></code></a> identifying
+<li><p>a detached <a class="reference internal" href="../../api/generated/traveler.store.ReferencedTable.html#traveler.store.ReferencedTable" title="traveler.store.ReferencedTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferencedTable</span></code></a> identifying
 the records being processed;</p></li>
 <li><p>the store, for access to other model data; and</p></li>
 <li><p>a parameter object.</p></li>
@@ -304,7 +306,7 @@ the records being processed;</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameters</span>
-</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.stored</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReferencedTable</span>
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReferencedTable</span>
 </span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.steps</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_values</span>
 </span><span data-line="6">
 </span><span data-line="7">
@@ -496,7 +498,7 @@ replaced without changing how the surrounding simulation is orchestrated.</p>
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

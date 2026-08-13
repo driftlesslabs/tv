@@ -68,12 +68,14 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
 <li class="toctree-l2 _expand"><a class="reference internal" href="store.html">Store</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="tables.html">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="io.html">Local file and format I/O</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="datasets.html">Multi-Dim Datasets</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Categorical Data</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="nested-logit.html">Nested logit choice</a></li>
 </ul>
 </li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../assets.html">Data Download</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../benchmarking.html">Benchmarking</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../development-tasks.html">Development tasks</a></li>
 </ul>
@@ -236,8 +238,8 @@ between calls.</p>
 <td><p>Runtime categorical value</p></td>
 <td><p>Yes: JAX codes plus category metadata</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CategoricalType</span></code></p></td>
-<td><p>Builds a shape- and category-aware annotation</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TypeMaker.Categorical(...)</span></code></p></td>
+<td><p>Declares shape, categories, and ordering</p></td>
 <td><p>No</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Categorical</span></code></p></td>
@@ -247,14 +249,11 @@ between calls.</p>
 </tbody>
 </table>
 </div>
-<p><a class="reference internal" href="../../api/generated/traveler.core.typing.CategoricalType.html#traveler.core.typing.CategoricalType" title="traveler.core.typing.CategoricalType"><code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalType</span></code></a> is the annotation helper
-behind <code class="docutils literal notranslate"><span class="pre">TypeMaker.Categorical</span></code>. It binds a symbolic array shape to a category
-definition and produces a <code class="docutils literal notranslate"><span class="pre">typing.Annotated</span></code> type whose underlying runtime
-type is <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code>. Application code normally uses it through a
-<a class="reference internal" href="../../api/generated/traveler.core.typing.TypeMaker.html#traveler.core.typing.TypeMaker" title="traveler.core.typing.TypeMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeMaker</span></code></a> rather than constructing a
-<code class="docutils literal notranslate"><span class="pre">CategoricalType</span></code> directly:</p>
+<p><a class="reference internal" href="../../api/generated/traveler.core.typing.TypeMaker.html#traveler.core.typing.TypeMaker" title="traveler.core.typing.TypeMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeMaker</span></code></a> binds a symbolic array shape to a
+category definition through its <code class="docutils literal notranslate"><span class="pre">Categorical(...)</span></code> factory. The result is a
+<code class="docutils literal notranslate"><span class="pre">typing.Annotated</span></code> type whose underlying runtime type is <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeMaker</span>
-</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.trees</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">JaxTable</span>
 </span><span data-line="3">
 </span><span data-line="4">
 </span><span data-line="5"><span class="n">trip</span> <span class="o">=</span> <span class="n">TypeMaker</span><span class="p">(</span><span class="s2">&quot;trip&quot;</span><span class="p">)</span>
@@ -272,11 +271,11 @@ type is <code class="docutils literal notranslate"><span class="pre">Categorical
 </span><span data-line="4">shape:        &quot;trip&quot;
 </span></pre></div>
 </div>
-<p><a class="reference internal" href="../../api/generated/traveler.core.typing.Categorical.html#traveler.core.typing.Categorical" title="traveler.core.typing.Categorical"><code class="xref py py-class docutils literal notranslate"><span class="pre">Categorical</span></code></a> provides another annotation
-form for a named category family. It is used in typed stored-table views when
-the category values are defined elsewhere:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.stored</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoredTable</span>
-</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.core.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Categorical</span>
+<p><a class="reference internal" href="../../api/generated/traveler.core.typing.Categorical.html#traveler.core.typing.Categorical" title="traveler.core.typing.Categorical"><code class="xref py py-class docutils literal notranslate"><span class="pre">Categorical</span></code></a> provides the corresponding
+annotation form for a named category family. It is used when the category
+values are defined elsewhere, such as by another table in the same store:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler</span><span class="w"> </span><span class="kn">import</span> <span class="n">Categorical</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">traveler.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">StoredTable</span>
 </span><span data-line="3">
 </span><span data-line="4">
 </span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">Tours</span><span class="p">(</span><span class="n">StoredTable</span><span class="p">):</span>
@@ -286,20 +285,11 @@ the category values are defined elsewhere:</p>
 </span><span data-line="9">    <span class="n">destination</span><span class="p">:</span> <span class="n">Categorical</span><span class="o">.</span><span class="n">TAZ</span>
 </span></pre></div>
 </div>
-<p>Accessing <code class="docutils literal notranslate"><span class="pre">Categorical.TAZ</span></code> creates a lightweight categorical type whose
-<code class="docutils literal notranslate"><span class="pre">mark</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;TAZ&quot;</span></code>. Both fields therefore declare that they use the same
+<p>Accessing <code class="docutils literal notranslate"><span class="pre">Categorical.TAZ</span></code> produces a categorical annotation carrying the
+group name <code class="docutils literal notranslate"><span class="pre">&quot;TAZ&quot;</span></code>. Both fields therefore declare that they use the same
 category family. The actual columns returned by <code class="docutils literal notranslate"><span class="pre">tours.origin</span></code> and
 <code class="docutils literal notranslate"><span class="pre">tours.destination</span></code> are still <code class="docutils literal notranslate"><span class="pre">CategoricalArray</span></code> instances; <code class="docutils literal notranslate"><span class="pre">Categorical</span></code> is
-schema information, not an alternative container.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>There is also a lower-level metaclass named
-<a class="reference internal" href="../../api/generated/traveler.core.categorical.CategoricalType.html#traveler.core.categorical.CategoricalType" title="traveler.core.categorical.CategoricalType"><code class="xref py py-class docutils literal notranslate"><span class="pre">traveler.core.categorical.CategoricalType</span></code></a> that makes annotation
-forms such as <code class="docutils literal notranslate"><span class="pre">CategoricalArray[...]</span></code> possible. It serves the same general
-annotation layer and is not categorical data itself. Normal table and dataset
-schemas should prefer <code class="docutils literal notranslate"><span class="pre">TypeMaker.Categorical</span></code>, while stored-table views use
-<code class="docutils literal notranslate"><span class="pre">Categorical.GROUP</span></code> when they need to name a shared category family.</p>
-</div>
+only an annotation namespace, not another data container.</p>
 </section>
 <section id="creating-and-loading-categorical-data">
 <h2>Creating and loading categorical data<a class="headerlink" href="#creating-and-loading-categorical-data" title="Link to this heading">#</a></h2>
@@ -508,7 +498,7 @@ together.</p>
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

@@ -68,12 +68,14 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Concepts</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Store</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="tables.html">Tables</a></li>
+<li class="toctree-l2 _expand"><a class="reference internal" href="io.html">Local file and format I/O</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="datasets.html">Multi-Dim Datasets</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="categorical.html">Categorical Data</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="steps.html">Steps</a></li>
 <li class="toctree-l2 _expand"><a class="reference internal" href="nested-logit.html">Nested logit choice</a></li>
 </ul>
 </li>
+<li class="toctree-l1 _expand"><a class="reference internal" href="../assets.html">Data Download</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../benchmarking.html">Benchmarking</a></li>
 <li class="toctree-l1 _expand"><a class="reference internal" href="../development-tasks.html">Development tasks</a></li>
 </ul>
@@ -158,7 +160,7 @@ data-aria-dark="Switch to auto color mode">
 <p>A <strong>store</strong> is the in-memory state of a Traveler model. It gathers the data a
 model needs under stable names so that model steps can receive one coherent
 object instead of a long collection of loosely related arguments.</p>
-<p>Traveler provides the <a class="reference internal" href="../../api/generated/traveler.core.store.AbstractStore.html#traveler.core.store.AbstractStore" title="traveler.core.store.AbstractStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractStore</span></code></a> base
+<p>Traveler provides the <a class="reference internal" href="../../api/generated/traveler.store.AbstractStore.html#traveler.store.AbstractStore" title="traveler.store.AbstractStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractStore</span></code></a> base
 class. An application normally subclasses it and calls the concrete class
 <code class="docutils literal notranslate"><span class="pre">Store</span></code>, because different applications work with different collections of
 tables.</p>
@@ -233,7 +235,7 @@ name, provenance, or which steps have completed.</p>
 <h2>What can a store contain?<a class="headerlink" href="#what-can-a-store-contain" title="Link to this heading">#</a></h2>
 <p>A store commonly contains:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../../api/generated/traveler.trees.JaxTable.html#traveler.trees.JaxTable" title="traveler.trees.JaxTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxTable</span></code></a> objects containing model records;</p></li>
+<li><p><a class="reference internal" href="../../api/generated/traveler.tables.JaxTable.html#traveler.tables.JaxTable" title="traveler.tables.JaxTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">JaxTable</span></code></a> objects containing model records;</p></li>
 <li><p>JAX arrays and categorical arrays;</p></li>
 <li><p>supporting mappings, parameters, lookup values, or other model inputs;</p></li>
 <li><p>application-specific table objects that describe relationships and derived
@@ -350,7 +352,7 @@ explicitly, produce a new store:</p>
     </div>
   </div>
 </footer>
-      <script src="../../_static/documentation_options.js?v=eb646870"></script>
+      <script src="../../_static/documentation_options.js?v=e222ab47"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
